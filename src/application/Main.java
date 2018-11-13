@@ -78,6 +78,7 @@ public class Main extends Application {
 		primaryStage.setTitle("Snake vs Block");
 		primaryStage.setScene(scene);
 		Scanner sc = new Scanner(System.in);
+		System.out.println("0 to load old game. 1 to play new game");
 		int c = sc.nextInt();
 		if (c == 0) {
 			loadOldGame();

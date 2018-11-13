@@ -50,14 +50,16 @@ public class Block {
 		r.setArcHeight(30);
 		r.setArcWidth(30);
 		r.setX(LOCATION_X);
-		r.setY(LOCATION_Y);
-		r.setTranslateY(translate_Y);
+		r.setY(translate_Y+LOCATION_Y);
+		//r.setTranslateY(translate_Y-100);
 		stack = new StackPane();
+		System.out.println(val+" value");
 		Text text = new Text(Integer.toString(val));
 		stack.getChildren().addAll(r, text);
 		stack.setLayoutX(LOCATION_X);
 		stack.setLayoutY(LOCATION_Y);
 		stack.setTranslateY(translate_Y);
+		
 	}
 
 	public int getLocationX() {

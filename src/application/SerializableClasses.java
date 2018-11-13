@@ -26,7 +26,7 @@ class SerializableBlock implements Serializable {
 	}
 
 	public Block constructBlock(Main main) {
-		Block block = new Block(width, height, color, value, eaten, LOCATION_X, LOCATION_Y, LOCATION_Y + Translate_Y);
+		Block block = new Block(width, height, color, value, eaten, LOCATION_X, LOCATION_Y, Translate_Y);
 		main.getRoot().getChildren().add(block.getStack());
 		return block;
 	}
@@ -48,7 +48,7 @@ class SerializableWall implements Serializable {
 	}
 
 	public Wall constructWall(Main main) {
-		Wall wall = new Wall(LOCATION_X, LOCATION_Y, LOCATION_Y + Translate_Y, height);
+		Wall wall = new Wall(LOCATION_X, LOCATION_Y, Translate_Y, height);
 		main.getRoot().getChildren().add(wall.getRect());
 		return wall;
 	}
@@ -97,7 +97,7 @@ class SerializableBall extends Token implements Serializable {
 	}
 
 	public Ball constructBall(Main main) {
-		Ball ball = new Ball(LOCATION_X, LOCATION_Y, LOCATION_Y + Translate_Y, radius, color, eaten, value);
+		Ball ball = new Ball(LOCATION_X, LOCATION_Y, Translate_Y, radius, color, eaten, value);
 		main.getRoot().getChildren().add(ball.getPane());
 		return ball;
 	}
@@ -114,7 +114,7 @@ class SerializableShield extends Token implements Serializable {
 
 	public Shield constructShield(Main main) {
 		Shield shield = new Shield(LOCATION_X, LOCATION_Y);
-		shield.getStack().setTranslateY(LOCATION_Y + Translate_Y);
+		shield.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(shield.getStack());
 		return shield;
 	}
@@ -131,7 +131,7 @@ class SerializableMagnet extends Token implements Serializable {
 
 	public Magnet constructMagnet(Main main) {
 		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y);
-		magnet.getStack().setTranslateY(LOCATION_Y + Translate_Y);
+		magnet.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(magnet.getStack());
 		return magnet;
 	}
@@ -148,7 +148,7 @@ class SerializableDB extends Token implements Serializable {
 
 	public DestroyBlock constructDB(Main main) {
 		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y);
-		DB.getStack().setTranslateY(LOCATION_Y + Translate_Y);
+		DB.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(DB.getStack());
 		return DB;
 	}
@@ -166,7 +166,7 @@ class SerializableCoin extends Token implements Serializable {
 	}
 
 	public Coin constructCoin(Main main) {
-		Coin coin = new Coin(LOCATION_X, LOCATION_Y, LOCATION_Y + Translate_Y, eaten);
+		Coin coin = new Coin(LOCATION_X, LOCATION_Y, Translate_Y, eaten);
 		main.getRoot().getChildren().add(coin.getStack());
 		return coin;
 	}

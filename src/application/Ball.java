@@ -35,12 +35,12 @@ public class Ball extends Token {
 		this.color = Color.web(color);
 		this.LOCATION_X = lOCATION_X;
 		this.LOCATION_Y = lOCATION_Y;
-		circle = new Circle(LOCATION_X, LOCATION_Y, radius, this.color);
+		circle = new Circle(LOCATION_X, translateY+LOCATION_Y, radius, this.color);
 		Text t = new Text(Integer.toString(value));
 		Pane.getChildren().addAll(circle, t);
 		Pane.setLayoutX(LOCATION_X);
 		Pane.setLayoutY(LOCATION_Y);
-		circle.setTranslateY(translateY);
+//		circle.setTranslateY(translateY+LOCATION_Y);
 		Pane.setTranslateY(translateY);
 	}
 
