@@ -1,5 +1,7 @@
 package application;
 
+import java.io.Serializable;
+
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,11 +29,35 @@ public class Block {
 		r.setArcHeight(30);
 		r.setArcWidth(30);
 		r.setX(LOCATION_X);
-		r.setY(-50);
+		r.setY(LOCATION_Y);
 		stack = new StackPane();
 		stack.getChildren().addAll(r, text);
 		stack.setLayoutX(LOCATION_X);
 		stack.setLayoutY(LOCATION_Y);
+	}
+
+	public Block(int width, int height, String color, int val, boolean eaten, int lOCATION_X, int lOCATION_Y,
+			double translate_Y) {
+		// TODO Auto-generated constructor stub
+		this.LOCATION_X = lOCATION_X;
+		this.LOCATION_Y = lOCATION_Y;
+		this.width = width;
+		this.height = height;
+		value = val;
+		this.eaten = eaten;
+		this.color = Color.web(color);
+		Rectangle r = new Rectangle(width, height, this.color);
+		r.setArcHeight(30);
+		r.setArcWidth(30);
+		r.setX(LOCATION_X);
+		r.setY(LOCATION_Y);
+		r.setTranslateY(translate_Y);
+		stack = new StackPane();
+		Text text = new Text(Integer.toString(val));
+		stack.getChildren().addAll(r, text);
+		stack.setLayoutX(LOCATION_X);
+		stack.setLayoutY(LOCATION_Y);
+		stack.setTranslateY(translate_Y);
 	}
 
 	public int getLocationX() {

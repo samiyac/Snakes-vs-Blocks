@@ -16,15 +16,16 @@ public class Snake extends Circle {
 	private int length = 4;
 	private int LOCATION_X;
 	private int LOCATION_Y;
-	private final int radius;
+	private final double radius;
 	private Color color;
 
-	public Snake(int x, int y, int r, Color col)
+	public Snake(int x, int y, double r, Color col)
 
 	{
 		LOCATION_X = x;
 		LOCATION_Y = y;
-		radius = r;
+		this.radius = r;
+		System.out.println(radius + " init");
 		color = col;
 		for (int i = 0; i < 4; i++) {
 			if (i == 0) {
@@ -37,6 +38,29 @@ public class Snake extends Circle {
 			}
 		}
 
+	}
+
+	public Snake(int length, int lOCATION_X, int lOCATION_Y, double snakeHeadPosX, double radius, String color,
+			Main main) {
+		this.length = length;
+		this.LOCATION_X = lOCATION_X;
+		this.LOCATION_Y = lOCATION_Y;
+		this.radius = (int) radius;
+		this.color = Color.web(color);
+		for (int i = 0; i < length; i++) {
+			if (i == 0) {
+				Circle c = new Circle(lOCATION_X, (lOCATION_Y + 2 * i * radius), radius, Color.RED);
+				System.out.println(radius + " radius");
+				c.setCenterX(lOCATION_X);
+				snakeLength.add(c);
+			} else {
+				Circle c = new Circle(lOCATION_X, (lOCATION_Y + 2 * i * radius), radius, this.color);
+				snakeLength.add(c);
+			}
+		}
+		for (int i = 0; i < length; i++) {
+			snakeLength.get(i).setCenterX(snakeHeadPosX);
+		}
 	}
 
 	public static ArrayList<Circle> getSnakeLength() {
@@ -128,10 +152,10 @@ public class Snake extends Circle {
 			main.setVelocity(-0.2);
 			main.updateScore(1);
 		}
-		if (length>0) {
+		if (length > 0) {
 			block.setEaten(true);
 			block.getStack().setVisible(false);
-			
+
 			main.setBlockHit(false);
 		} else {
 			System.exit(0);
@@ -154,12 +178,12 @@ public class Snake extends Circle {
 				if (block.getValue() == 0 && length > 0) {
 					block.setEaten(true);
 					block.getStack().setVisible(false);
-					main.PlayBurst(block.getStack().getBoundsInParent(),false);
+					main.PlayBurst(block.getStack().getBoundsInParent(), false);
 				} else if (length == 0) {
 					System.exit(0);
 				}
 				System.out.println("play");
-				if(main.getHitBlock()==block) {
+				if (main.getHitBlock() == block) {
 					main.setBlockHit(false);
 				}
 			}
@@ -171,7 +195,7 @@ public class Snake extends Circle {
 		private final Block block;
 		private int value;
 		private final Main main;
-		private boolean intersecting=true;
+		private boolean intersecting = true;
 
 		public SnakeEatsHandler(Block block, int value, Main main) {
 			// TODO Auto-generated constructor stub
@@ -193,14 +217,14 @@ public class Snake extends Circle {
 					value--;
 					block.updateValue(value);
 					main.updateScore(1);
-				} else if(intersecting) {
-					intersecting=false;
-					if(main.getHitBlock()==block) {
+				} else if (intersecting) {
+					intersecting = false;
+					if (main.getHitBlock() == block) {
 						main.setHitBlock(null);
 						main.setBlockHit(false);
 						System.out.println("blockhandle");
 					}
-				} 
+				}
 			}
 		}
 	}

@@ -18,7 +18,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -29,29 +28,36 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main extends Application {
 
-	private final ArrayList<ArrayList<Block>> BlockOnScreen = new ArrayList<>();
-	private final ArrayList<ArrayList<Ball>> BallsOnScreen = new ArrayList<>();
-	private final ArrayList<ArrayList<Wall>> WallsOnScreen = new ArrayList<>();
-	private final ArrayList<ArrayList<Coin>> CoinsOnScreen = new ArrayList<>();
+	private ArrayList<ArrayList<Block>> BlockOnScreen;
+	private ArrayList<ArrayList<Ball>> BallsOnScreen;
+	private ArrayList<ArrayList<Wall>> WallsOnScreen;
+	private ArrayList<ArrayList<Coin>> CoinsOnScreen;
 	private Shield ShieldOnScreen;
 	private Magnet MagnetOnScreen;
 	private DestroyBlock DestroyBlockOnScreen;
-	private final Snake snake = new Snake(250, 500, 10, Color.YELLOW);
-	private int score = 0;
-	private double velocity = 7;
+	private Snake snake;
+	private int score;
+	private double velocity;
 	private Text scoreLabel;
 	ChoiceBox<String> dropDownMenu;
-	private boolean BLOCK_HIT = false;
+	private boolean BLOCK_HIT;
 	private Block hitBlock;
-	private boolean shield = false;
+	private boolean shield;
 	private final Media music;
 	private final MediaPlayer playerTokensBalls;
 	private final Media blockMusic;
@@ -59,10 +65,10 @@ public class Main extends Application {
 	private final static Group root = new Group();
 	private final Scene scene = new Scene(root, 500, 1000, Color.BLACK);
 
-	public Main() {
-		music = new Media(new File("mariotrim.wav").toURI().toString());
+	public Main() throws IOException, ClassNotFoundException {
+		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
 		playerTokensBalls = new MediaPlayer(music);
-		blockMusic = new Media(new File("block.wav").toURI().toString());
+		blockMusic = new Media(new File("sound/block.wav").toURI().toString());
 		playerBlock = new MediaPlayer(blockMusic);
 		playerBlock.setVolume(0.3);
 	}
@@ -71,7 +77,14 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Snake vs Block");
 		primaryStage.setScene(scene);
-		setGame();
+		Scanner sc = new Scanner(System.in);
+		int c = sc.nextInt();
+		if (c == 0) {
+			loadOldGame();
+		} else {
+			setNewGame();
+		}
+
 		primaryStage.show();
 		scene.setOnKeyPressed(e -> {
 			// System.out.println(snake.getSnakeLength().get(0).getCenterX());
@@ -102,11 +115,124 @@ public class Main extends Application {
 		CoinAnimation();
 		WallAnimation();
 		SnakeAnimation();
+
+		primaryStage.setOnCloseRequest(event -> {
+			System.out.println("Stage is closing");
+			try {
+				saveGameState();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
 	}
 
-	public void setGame() {
-		for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
-			root.getChildren().add(Snake.getSnakeLength().get(i));
+	public void loadOldGame() throws IOException, ClassNotFoundException {
+		try {
+			ObjectInputStream is = new ObjectInputStream(new FileInputStream("SnakeVsBlock"));
+			ArrayList<ArrayList<SerializableBlock>> serializableBlocks = (ArrayList<ArrayList<SerializableBlock>>) is
+					.readObject();
+			ArrayList<ArrayList<SerializableBall>> serializableBalls = (ArrayList<ArrayList<SerializableBall>>) is
+					.readObject();
+			ArrayList<ArrayList<SerializableWall>> serializableWalls = (ArrayList<ArrayList<SerializableWall>>) is
+					.readObject();
+			ArrayList<ArrayList<SerializableCoin>> serializableCoins = (ArrayList<ArrayList<SerializableCoin>>) is
+					.readObject();
+			SerializableShield serializableShield = (SerializableShield) is.readObject();
+			SerializableMagnet serializableMagnet = (SerializableMagnet) is.readObject();
+			SerializableDB serializableDB = (SerializableDB) is.readObject();
+			SerializableSnake serializableSnake = (SerializableSnake) is.readObject();
+			score = (Integer) is.readObject();
+			velocity = (Double) is.readObject();
+			BLOCK_HIT = (Boolean) is.readObject();
+			shield = (Boolean) is.readObject();
+			is.close();
+
+			SerializableClasses SC = new SerializableClasses();
+
+			BlockOnScreen = SC.constructBlockList(serializableBlocks, this);
+			BallsOnScreen = SC.constructBallList(serializableBalls, this);
+			WallsOnScreen = SC.constructWallList(serializableWalls, this);
+			CoinsOnScreen = SC.constructCoinList(serializableCoins, this);
+
+			if (serializableShield.getLOCATION_X() != -2000 && serializableShield.getLOCATION_Y() != -2000) {
+				ShieldOnScreen = serializableShield.constructShield(this);
+			}
+			if (serializableMagnet.getLOCATION_X() != -2000 && serializableMagnet.getLOCATION_Y() != -2000) {
+				MagnetOnScreen = serializableMagnet.constructMagnet(this);
+			}
+
+			if (serializableDB.getLOCATION_X() != -2000 && serializableDB.getLOCATION_Y() != -2000) {
+				DestroyBlockOnScreen = serializableDB.constructDB(this);
+			}
+
+			snake = serializableSnake.constructSnake(this);
+			for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
+				root.getChildren().add(Snake.getSnakeLength().get(i));
+			}
+			setDropDownBox();
+			setScore();
+		} catch (FileNotFoundException e1) {
+			System.err.println("No old game");
+			setNewGame();
+		}
+	}
+
+	public void saveGameState() throws FileNotFoundException, IOException {
+		SerializableClasses SC = new SerializableClasses();
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("SnakeVsBlock"));
+		os.writeObject(SC.constructSerializableBlockList(BlockOnScreen));
+		os.writeObject(SC.constructSerializableBallList(BallsOnScreen));
+		os.writeObject(SC.constructSerializableWallList(WallsOnScreen));
+		os.writeObject(SC.constructSerializableCoinList(CoinsOnScreen));
+		if (ShieldOnScreen != null) {
+			float X = ShieldOnScreen.getLOCATION_X();
+			float Y = ShieldOnScreen.getLOCATION_Y();
+			double translateY = ShieldOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableShield(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableShield(-2000, -2000, -2000));
+		}
+		if (MagnetOnScreen != null) {
+			float X = MagnetOnScreen.getLOCATION_X();
+			float Y = MagnetOnScreen.getLOCATION_Y();
+			double translateY = MagnetOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableMagnet(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableMagnet(-2000, -2000, -2000));
+		}
+		if (DestroyBlockOnScreen != null) {
+			float X = DestroyBlockOnScreen.getLOCATION_X();
+			float Y = DestroyBlockOnScreen.getLOCATION_Y();
+			double translateY = DestroyBlockOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableDB(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableDB(-2000, -2000, -2000));
+		}
+
+		os.writeObject(new SerializableSnake(snake));
+		os.writeObject(score);
+		os.writeObject(velocity);
+		os.writeObject(BLOCK_HIT);
+		os.writeObject(shield);
+		os.close();
+	}
+
+	public void setNewGame() {
+		BlockOnScreen = new ArrayList<>();
+		BallsOnScreen = new ArrayList<>();
+		WallsOnScreen = new ArrayList<>();
+		CoinsOnScreen = new ArrayList<>();
+		snake = new Snake(250, 500, 10, Color.YELLOW);
+		score = 0;
+		velocity = 6;
+		BLOCK_HIT = false;
+		shield = false;
+		for (int i = 0; i < snake.getSnakeLength().size(); i++) {
+			root.getChildren().add(snake.getSnakeLength().get(i));
 		}
 		setDropDownBox();
 		setWalls();
@@ -117,6 +243,7 @@ public class Main extends Application {
 	}
 
 	private void setScore() {
+		System.out.println(score);
 		scoreLabel = new Text("Score : " + score);
 		scoreLabel.setX(400);
 		scoreLabel.setY(50);
@@ -317,7 +444,15 @@ public class Main extends Application {
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
 			if (!BLOCK_HIT) {
-				snakeIntersectBlock();
+				try {
+					snakeIntersectBlock();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				snakeIntersectBall();
 				snakeIntersectsDB();
 				snakeIntersectsShield();
@@ -779,8 +914,7 @@ public class Main extends Application {
 		}
 
 		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
-			// int c = (int) (Math.random() * 3);
-			int c = 0;
+			int c = (int) (Math.random() * 3);
 			if (c == 0) {
 				setMagnet(-1000);
 			}
@@ -930,7 +1064,7 @@ public class Main extends Application {
 		return true;
 	}
 
-	public void snakeIntersectBlock() {
+	public void snakeIntersectBlock() throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		Circle snakeHead = Snake.getSnakeLength().get(0);
 		for (int i = 0; i < BlockOnScreen.size(); i++) {
