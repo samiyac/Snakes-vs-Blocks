@@ -19,6 +19,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -41,7 +44,7 @@ public class Main extends Application {
 	private Shield ShieldOnScreen;
 	private Magnet MagnetOnScreen;
 	private DestroyBlock DestroyBlockOnScreen;
-	private final Snake snake = new Snake(250, 550, 10, Color.YELLOW);
+	private final Snake snake = new Snake(250, 500, 10, Color.YELLOW);
 	private int score = 0;
 	private double velocity = 7;
 	private Text scoreLabel;
@@ -49,12 +52,20 @@ public class Main extends Application {
 	private boolean BLOCK_HIT = false;
 	private Block hitBlock;
 	private boolean shield = false;
-	private final Media music = new Media(new File("mariotrim.wav").toURI().toString());
-	private final MediaPlayer playerTokensBalls = new MediaPlayer(music);
-	private final Media blockMusic = new Media(new File("block.wav").toURI().toString());
-	private final MediaPlayer playerBlock = new MediaPlayer(blockMusic);
+	private final Media music;
+	private final MediaPlayer playerTokensBalls;
+	private final Media blockMusic;
+	private final MediaPlayer playerBlock;
 	private final static Group root = new Group();
 	private final Scene scene = new Scene(root, 500, 1000, Color.BLACK);
+
+	public Main() {
+		music = new Media(new File("mariotrim.wav").toURI().toString());
+		playerTokensBalls = new MediaPlayer(music);
+		blockMusic = new Media(new File("block.wav").toURI().toString());
+		playerBlock = new MediaPlayer(blockMusic);
+		playerBlock.setVolume(0.3);
+	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -396,6 +407,59 @@ public class Main extends Application {
 		}
 	}
 
+	public void CoinAttractionAnimation() {
+		KeyFrame kf = new KeyFrame(Duration.seconds(0.5), new CoinAttractionHandler());
+		Timeline timeline = new Timeline(kf);
+		timeline.setCycleCount(6);
+		timeline.play();
+	}
+
+	private class CoinAttractionHandler implements EventHandler<ActionEvent> {
+
+		public void handle(ActionEvent event) {
+			int inc = 0;
+			for (int i = 0; i < CoinsOnScreen.size(); i++) {
+				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
+					Coin temp = CoinsOnScreen.get(i).get(j);
+					double checkx = temp.getLOCATION_X();
+					double checky = temp.getStack().getTranslateY();
+					Circle snakeHead = snake.getSnakeLength().get(0);
+
+					if (!temp.isEaten() && Math.abs(checkx - snakeHead.getCenterX()) < 150 && checky > 300
+							&& checky < 700) {
+						temp.setEaten(true);
+						Path path = new Path();
+						path.getElements().add(new MoveTo(checkx, checky));
+						path.getElements().add(new LineTo(snakeHead.getCenterX(), 500));
+						path.setOpacity(0);
+						PathTransition move = new PathTransition();
+						move.setDuration(Duration.seconds(0.3));
+						move.setPath(path);
+						move.setNode(temp.getStack());
+						move.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+						move.setCycleCount(1);
+						move.setAutoReverse(true);
+						root.getChildren().add(path);
+						move.play();
+						move.setOnFinished(new EventHandler<ActionEvent>() {
+
+							@Override
+							public void handle(ActionEvent arg0) {
+								// TODO Auto-generated method stub
+								root.getChildren().remove(path);
+								root.getChildren().remove(temp.getStack());
+							}
+						});
+						CoinsOnScreen.get(i).remove(j);
+						inc += 1;
+					}
+				}
+			}
+			updateScore(inc);
+		}
+
+	}
+
 	private void checkBlockScroll() {
 		int[] distance = { -100, -200 };
 		int c = (int) (Math.random() * 2);
@@ -715,7 +779,8 @@ public class Main extends Application {
 		}
 
 		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
-			int c = (int) (Math.random() * 3);
+			// int c = (int) (Math.random() * 3);
+			int c = 0;
 			if (c == 0) {
 				setMagnet(-1000);
 			}
@@ -963,43 +1028,8 @@ public class Main extends Application {
 		if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())) {
 			playerTokensBalls.stop();
 			playerTokensBalls.play();
-			int inc = 0;
-			// System.out.println("Magnet Active ");
 			MagnetOnScreen.getStack().setVisible(false);
-			for (int i = 0; i < CoinsOnScreen.size(); i++) {
-				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
-					Coin temp = CoinsOnScreen.get(i).get(j);
-					float checkx = temp.getLOCATION_X();
-					float checky = temp.getLOCATION_Y();
-					// System.out.println("Coin on screen " + checkx + " " + checky);
-					if (checkx > 50 && checkx < 300 && checky > -100 && checky < 200) {
-						System.out.println("move");
-						PathTransition move = new PathTransition();
-						move.setNode(temp.getStack());
-						move.setDuration(Duration.millis(100));
-						Line l = new Line();
-						l.setStartX(checkx);
-						
-						l.setEndX(snakeHead.getCenterX());
-						l.setStartY(checky);
-						l.setEndY(500);
-						System.out.println(snakeHead.getCenterX()+" "+checkx);
-						move.setPath(l);
-
-						move.setOrientation(PathTransition.OrientationType.NONE);
-						move.setAutoReverse(false);
-						move.play();
-						// temp.getStack().setVisible(false);
-						inc += 1;
-						// temp.setEaten(true);
-					//	temp.getStack().setVisible(false);
-
-						CoinsOnScreen.remove(CoinsOnScreen.get(i).get(j));
-					}
-				}
-			}
-			updateScore(inc);
-
+			CoinAttractionAnimation();
 		}
 	}
 
