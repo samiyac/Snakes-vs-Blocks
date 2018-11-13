@@ -105,7 +105,7 @@ class Coin extends Token {
 		super(x, y);
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
-		stack.setLayoutX(x);
+		stack.setTranslateX(x);
 		stack.setTranslateY(y);
 		stack.getChildren().addAll(I);
 	}
