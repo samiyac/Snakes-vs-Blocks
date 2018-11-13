@@ -68,12 +68,10 @@ class SerializableSnake implements Serializable {
 		LOCATION_Y = snake.getLOCATION_Y();
 		snakeHeadPosX = snake.getSnakeLength().get(0).getCenterX();
 		radius = snake.getSnakeLength().get(0).getRadius();
-		System.out.println(radius);
 		color = snake.getColor().toString();
 	}
 
 	public Snake constructSnake(Main main) {
-		System.out.println(radius + " rad");
 		Snake snake = new Snake(length, LOCATION_X, LOCATION_Y, snakeHeadPosX, radius, color, main);
 		return snake;
 	}

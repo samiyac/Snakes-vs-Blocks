@@ -244,7 +244,7 @@ public class Main extends Application {
 	}
 
 	private void setScore() {
-		System.out.println(score);
+		System.out.println(score+" score");
 		scoreLabel = new Text("Score : " + score);
 		scoreLabel.setX(400);
 		scoreLabel.setY(50);
@@ -893,6 +893,7 @@ public class Main extends Application {
 
 	public void checkTokenScroll() {
 		// TODO Auto-generated method stub
+
 		if (MagnetOnScreen != null) {
 			StackPane magnet = MagnetOnScreen.getStack();
 			if (magnet.getTranslateY() >= 1400) {
@@ -915,6 +916,7 @@ public class Main extends Application {
 		}
 
 		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
+			System.out.println("setting");
 			int c = (int) (Math.random() * 3);
 			if (c == 0) {
 				setMagnet(-1000);
@@ -930,15 +932,17 @@ public class Main extends Application {
 
 	public void setMagnet(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set magnet");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Magnet M = new Magnet(x, y);
-		root.getChildren().addAll(M.getStack());
+		root.getChildren().add(M.getStack());
 		MagnetOnScreen = M;
 	}
 
 	public void setShield(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set shield");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Shield S = new Shield(x, y);
@@ -948,6 +952,7 @@ public class Main extends Application {
 
 	public void setDB(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set DB");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		DestroyBlock DB = new DestroyBlock(x, y);

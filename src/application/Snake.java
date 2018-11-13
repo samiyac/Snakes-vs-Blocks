@@ -25,7 +25,6 @@ public class Snake extends Circle {
 		LOCATION_X = x;
 		LOCATION_Y = y;
 		this.radius = r;
-		System.out.println(radius + " init");
 		color = col;
 		for (int i = 0; i < 4; i++) {
 			if (i == 0) {
@@ -50,7 +49,6 @@ public class Snake extends Circle {
 		for (int i = 0; i < length; i++) {
 			if (i == 0) {
 				Circle c = new Circle(lOCATION_X, (lOCATION_Y + 2 * i * radius), radius, Color.RED);
-				System.out.println(radius + " radius");
 				c.setCenterX(lOCATION_X);
 				snakeLength.add(c);
 			} else {

@@ -53,7 +53,6 @@ public class Block {
 		r.setY(translate_Y+LOCATION_Y);
 		//r.setTranslateY(translate_Y-100);
 		stack = new StackPane();
-		System.out.println(val+" value");
 		Text text = new Text(Integer.toString(val));
 		stack.getChildren().addAll(r, text);
 		stack.setLayoutX(LOCATION_X);
