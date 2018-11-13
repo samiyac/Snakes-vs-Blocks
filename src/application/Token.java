@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
-abstract public class Token  implements Serializable {
+abstract public class Token implements Serializable {
 	protected float LOCATION_X;
 	protected float LOCATION_Y;
 
@@ -32,7 +32,8 @@ abstract public class Token  implements Serializable {
 }
 
 class Shield extends Token {
-	private final String IMAGE_SRC = "file:"+System.getProperty("user.dir")+ "/src/application/images/protection.png";
+	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
+			+ "/src/application/images/protection.png";
 	private final StackPane stack;
 
 	public Shield(float x, float y) {
@@ -45,6 +46,16 @@ class Shield extends Token {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Shield(float x, float y, double translate_Y) {
+		// TODO Auto-generated constructor stub
+		super(x, y);
+		ImageView I = new ImageView(IMAGE_SRC);
+		stack = new StackPane();
+		stack.setLayoutX(x);
+		stack.setTranslateY(translate_Y);
+		stack.getChildren().addAll(I);
+	}
+
 	public String getIMAGE_SRC() {
 		return IMAGE_SRC;
 	}
@@ -55,7 +66,8 @@ class Shield extends Token {
 }
 
 class DestroyBlock extends Token {
-	private final String IMAGE_SRC = "file:"+System.getProperty("user.dir")+"/src/application/images/blockchain.png";
+	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
+			+ "/src/application/images/blockchain.png";
 	private final StackPane stack;
 
 	public DestroyBlock(float x, float y) {
@@ -64,7 +76,16 @@ class DestroyBlock extends Token {
 		stack = new StackPane();
 		stack.setLayoutX(x);
 		stack.setTranslateY(y);
-		System.out.println(x+" DB "+y);
+		stack.getChildren().addAll(I);
+	}
+
+	public DestroyBlock(float x, float y, double translate_Y) {
+		// TODO Auto-generated constructor stub
+		super(x, y);
+		ImageView I = new ImageView(IMAGE_SRC);
+		stack = new StackPane();
+		stack.setLayoutX(x);
+		stack.setTranslateY(translate_Y);
 		stack.getChildren().addAll(I);
 	}
 
@@ -78,15 +99,25 @@ class DestroyBlock extends Token {
 }
 
 class Magnet extends Token {
-	private final String IMAGE_SRC = "file:"+System.getProperty("user.dir")+"/src/application/images/horseshoe.png";
+	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/horseshoe.png";
 	private final StackPane stack;
 
 	public Magnet(float x, float y) {
 		super(x, y);
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
-		stack.setLayoutX(x);
+		stack.setTranslateX(x);
 		stack.setTranslateY(y);
+		stack.getChildren().addAll(I);
+	}
+
+	public Magnet(float x, float y, double translate_Y) {
+		// TODO Auto-generated constructor stub
+		super(x, y);
+		ImageView I = new ImageView(IMAGE_SRC);
+		stack = new StackPane();
+		stack.setTranslateX(x);
+		stack.setTranslateY(translate_Y);
 		stack.getChildren().addAll(I);
 	}
 
@@ -100,7 +131,7 @@ class Magnet extends Token {
 }
 
 class Coin extends Token {
-	private final String IMAGE_SRC = "file:"+System.getProperty("user.dir")+"/src/application/images/dollar.png";
+	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/dollar.png";
 	private final StackPane stack;
 	private boolean eaten = false;
 
@@ -121,7 +152,7 @@ class Coin extends Token {
 		stack.setTranslateX(lOCATION_X);
 		stack.setTranslateY(translate_Y);
 		stack.getChildren().addAll(I);
-		eaten=eaten2;
+		eaten = eaten2;
 	}
 
 	public String getIMAGE_SRC() {

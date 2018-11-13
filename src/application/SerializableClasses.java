@@ -108,11 +108,11 @@ class SerializableShield extends Token implements Serializable {
 	public SerializableShield(float X, float Y, double translateY) {
 		// TODO Auto-generated constructor stub
 		super(X, Y);
+		Translate_Y=translateY;
 	}
 
 	public Shield constructShield(Main main) {
-		Shield shield = new Shield(LOCATION_X, LOCATION_Y);
-		shield.getStack().setTranslateY(Translate_Y);
+		Shield shield = new Shield(LOCATION_X, LOCATION_Y, Translate_Y);
 		main.getRoot().getChildren().add(shield.getStack());
 		return shield;
 	}
@@ -125,11 +125,12 @@ class SerializableMagnet extends Token implements Serializable {
 	public SerializableMagnet(float X, float Y, double translateY) {
 		// TODO Auto-generated constructor stub
 		super(X, Y);
+		Translate_Y=translateY;
 	}
 
 	public Magnet constructMagnet(Main main) {
-		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y);
-		magnet.getStack().setTranslateY(Translate_Y);
+		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y, Translate_Y);
+//		magnet.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(magnet.getStack());
 		return magnet;
 	}
@@ -142,11 +143,12 @@ class SerializableDB extends Token implements Serializable {
 	public SerializableDB(float X, float Y, double translateY) {
 		// TODO Auto-generated constructor stub
 		super(X, Y);
+		Translate_Y=translateY;
 	}
 
 	public DestroyBlock constructDB(Main main) {
-		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y);
-		DB.getStack().setTranslateY(Translate_Y);
+		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y, Translate_Y);
+//		DB.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(DB.getStack());
 		return DB;
 	}
@@ -180,6 +182,9 @@ public class SerializableClasses {
 			for (SerializableBlock sBlock : serializableBlocks.get(i)) {
 				Block temp = sBlock.constructBlock(main);
 				blocks.get(i).add(temp);
+				if(temp.isEaten()) {
+					temp.getStack().setVisible(false);
+				}
 			}
 		}
 		return blocks;
@@ -193,6 +198,9 @@ public class SerializableClasses {
 			for (SerializableBall sBall : serializableBalls.get(i)) {
 				Ball temp = sBall.constructBall(main);
 				balls.get(i).add(temp);
+				if(temp.isEaten()) {
+					temp.getPane().setVisible(false);
+				}
 			}
 		}
 		return balls;
@@ -219,6 +227,9 @@ public class SerializableClasses {
 			for (SerializableCoin sCoin : serializableCoins.get(i)) {
 				Coin temp = sCoin.constructCoin(main);
 				coins.get(i).add(temp);
+				if(temp.isEaten()) {
+					temp.getStack().setVisible(false);
+				}
 			}
 		}
 		return coins;
