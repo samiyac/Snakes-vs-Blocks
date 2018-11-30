@@ -1,5 +1,8 @@
 package application;
 
+import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,8 +10,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class Snake extends Circle {
@@ -16,15 +21,15 @@ public class Snake extends Circle {
 	private int length = 4;
 	private int LOCATION_X;
 	private int LOCATION_Y;
-	private final double radius;
+	private final int radius;
 	private Color color;
-
-	public Snake(int x, int y, double r, Color col)
+	private LeaderBoardList l = new LeaderBoardList();
+	public Snake(int x, int y, int r, Color col)
 
 	{
 		LOCATION_X = x;
 		LOCATION_Y = y;
-		this.radius = r;
+		radius = r;
 		color = col;
 		for (int i = 0; i < 4; i++) {
 			if (i == 0) {
@@ -37,10 +42,13 @@ public class Snake extends Circle {
 			}
 		}
 
+
+
+
 	}
 
 	public Snake(int length, int lOCATION_X, int lOCATION_Y, double snakeHeadPosX, double radius, String color,
-			Main main) {
+				 Main main) {
 		this.length = length;
 		this.LOCATION_X = lOCATION_X;
 		this.LOCATION_Y = lOCATION_Y;
@@ -60,6 +68,7 @@ public class Snake extends Circle {
 			snakeLength.get(i).setCenterX(snakeHeadPosX);
 		}
 	}
+
 
 	public static ArrayList<Circle> getSnakeLength() {
 		return snakeLength;
@@ -97,7 +106,6 @@ public class Snake extends Circle {
 		for (int i = 0; i < snakeLength.size(); i++) {
 			snakeLength.get(i).setCenterX(snakeLength.get(i).getCenterX() + 10);
 		}
-
 	}
 
 	public void moveL() {
@@ -121,6 +129,7 @@ public class Snake extends Circle {
 			snakeLength.add(c);
 			length++;
 			main.setVelocity(0.2);
+			main.updateLength();
 		}
 
 	}
@@ -149,14 +158,26 @@ public class Snake extends Circle {
 			length--;
 			main.setVelocity(-0.2);
 			main.updateScore(1);
+			main.updateLength();
 		}
-		if (length > 0) {
+		if (length>0) {
 			block.setEaten(true);
 			block.getStack().setVisible(false);
 
 			main.setBlockHit(false);
 		} else {
-			System.exit(0);
+			//System.exit(0
+			int x = main.getScore();
+			String Date = java.time.LocalDate.now().toString();
+			Node n = new Node(x,Date);
+			l.board.add(n);
+			//System.out.println(n+" "+d+" "+t);
+			l.serialise();
+			l.printList();
+			// System.exit(0);
+			main.setEnd(true);
+			main.endgame();
+
 		}
 	}
 
@@ -176,14 +197,26 @@ public class Snake extends Circle {
 				if (block.getValue() == 0 && length > 0) {
 					block.setEaten(true);
 					block.getStack().setVisible(false);
-					main.PlayBurst(block.getStack().getBoundsInParent(), false);
-				} else if (length == 0) {
-					System.exit(0);
+					main.PlayBurst(block.getStack().getBoundsInParent(),false);
 				}
-				System.out.println("play");
-				if (main.getHitBlock() == block) {
+					else if (length == 0) {
+					int x = main.getScore();
+					String Date = java.time.LocalDate.now().toString();
+					Node n = new Node(x,Date);
+						l.board.add(n);
+						//System.out.println(x+" "+d+" "+t);
+						l.serialise();
+						l.printList();
+						main.setEnd(true);
+						main.endgame();
+						//System.exit(0);
+					}
+
+				//System.out.println("play");
+				if(main.getHitBlock()==block) {
 					main.setBlockHit(false);
 				}
+
 			}
 		});
 	}
@@ -193,7 +226,7 @@ public class Snake extends Circle {
 		private final Block block;
 		private int value;
 		private final Main main;
-		private boolean intersecting = true;
+		private boolean intersecting=true;
 
 		public SnakeEatsHandler(Block block, int value, Main main) {
 			// TODO Auto-generated constructor stub
@@ -212,12 +245,13 @@ public class Snake extends Circle {
 					snakeLength.remove(length - 1);
 					length--;
 					main.setVelocity(-0.2);
+					main.updateLength();
 					value--;
 					block.updateValue(value);
 					main.updateScore(1);
-				} else if (intersecting) {
-					intersecting = false;
-					if (main.getHitBlock() == block) {
+				} else if(intersecting) {
+					intersecting=false;
+					if(main.getHitBlock()==block) {
 						main.setHitBlock(null);
 						main.setBlockHit(false);
 						System.out.println("blockhandle");

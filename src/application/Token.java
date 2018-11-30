@@ -1,9 +1,9 @@
 package application;
 
-import java.io.Serializable;
-
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+
+import java.io.Serializable;
 
 abstract public class Token implements Serializable {
 	protected float LOCATION_X;
@@ -32,8 +32,7 @@ abstract public class Token implements Serializable {
 }
 
 class Shield extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
-			+ "/src/application/images/protection.png";
+	private final String IMAGE_SRC = "file:C:/Users/lenovo/Downloads/Snakes-vs-Blocks-master/Snakes-vs-Blocks-master/src/application/protection.png";
 	private final StackPane stack;
 
 	public Shield(float x, float y) {
@@ -45,7 +44,6 @@ class Shield extends Token {
 		stack.getChildren().addAll(I);
 		// TODO Auto-generated constructor stub
 	}
-
 	public Shield(float x, float y, double translate_Y) {
 		// TODO Auto-generated constructor stub
 		super(x, y);
@@ -55,6 +53,8 @@ class Shield extends Token {
 		stack.setTranslateY(translate_Y);
 		stack.getChildren().addAll(I);
 	}
+
+
 
 	public String getIMAGE_SRC() {
 		return IMAGE_SRC;
@@ -66,8 +66,7 @@ class Shield extends Token {
 }
 
 class DestroyBlock extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
-			+ "/src/application/images/blockchain.png";
+	private final String IMAGE_SRC = "file:C:/Users/lenovo/Downloads/Snakes-vs-Blocks-master/Snakes-vs-Blocks-master/src/application/blockchain.png";
 	private final StackPane stack;
 
 	public DestroyBlock(float x, float y) {
@@ -99,14 +98,16 @@ class DestroyBlock extends Token {
 }
 
 class Magnet extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/horseshoe.png";
+
+
+	private final String IMAGE_SRC = "file:C:/Users/lenovo/Downloads/Snakes-vs-Blocks-master/Snakes-vs-Blocks-master/src/application/horseshoe.png";
 	private final StackPane stack;
 
 	public Magnet(float x, float y) {
 		super(x, y);
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
-		stack.setTranslateX(x);
+		stack.setLayoutX(x);
 		stack.setTranslateY(y);
 		stack.getChildren().addAll(I);
 	}
@@ -121,6 +122,7 @@ class Magnet extends Token {
 		stack.getChildren().addAll(I);
 	}
 
+
 	public String getIMAGE_SRC() {
 		return IMAGE_SRC;
 	}
@@ -131,7 +133,7 @@ class Magnet extends Token {
 }
 
 class Coin extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/dollar.png";
+	private final String IMAGE_SRC = "file:C:/Users/lenovo/Desktop/application/dollar.png";
 	private final StackPane stack;
 	private boolean eaten = false;
 
@@ -154,6 +156,7 @@ class Coin extends Token {
 		stack.getChildren().addAll(I);
 		eaten = eaten2;
 	}
+
 
 	public String getIMAGE_SRC() {
 		return IMAGE_SRC;

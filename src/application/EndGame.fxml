@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="500.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="btn2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="500.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.EndGame">
    <children>
-      <Button layoutX="169.0" layoutY="591.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="162.0" text="Play Again" />
+      <Button fx:id="btn2" layoutX="169.0" layoutY="591.0" mnemonicParsing="false" onAction="#PlayAgain" prefHeight="39.0" prefWidth="162.0" text="Play Again" />
       <TextField alignment="CENTER" editable="false" layoutX="9.0" layoutY="58.0" prefHeight="39.0" prefWidth="482.0" style="-fx-background-color: BLACK; -fx-text-fill: PINK;" text="   GAME OVER ">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="47.0" />
          </font>
       </TextField>
-      <TextField editable="false" layoutX="92.0" layoutY="190.0" prefHeight="87.0" prefWidth="335.0" style="-fx-background-color: BLACK; -fx-text-fill: YELLOW;" text="SCORE">
+      <TextField editable="false" layoutX="92.0" layoutY="190.0" prefHeight="87.0" prefWidth="335.0" style="-fx-background-color: BLACK; -fx-text-fill: YELLOW;" text="              SCORE">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="28.0" />
          </font>
       </TextField>
+      <Button layoutX="-357.0" layoutY="234.0" mnemonicParsing="false" text="Button" />
+      <Button fx:id="btn" layoutX="169.0" layoutY="529.0" mnemonicParsing="false" onAction="#showLeaderboard" prefHeight="39.0" prefWidth="162.0" text="LeaderBoard" />
+      <Button fx:id="bt1" layoutX="172.0" layoutY="461.0" mnemonicParsing="false" onAction="#SystemClose" prefHeight="39.0" prefWidth="157.0" text="Exit" />
+      <Label fx:id="scoreD" layoutX="161.0" layoutY="303.0" prefHeight="87.0" prefWidth="162.0" text="Label" />
    </children>
 </Pane>
