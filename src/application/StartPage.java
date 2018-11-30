@@ -7,7 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class StartPage {
 
@@ -18,6 +22,7 @@ public class StartPage {
 
     public StartPage() {
         s=Main.stage;
+        
     }
 
     @FXML
@@ -38,7 +43,7 @@ public class StartPage {
         Main m = new Main();
        // Stage s = new Stage();
         try{
-            m.setGame();
+            m.setNewGame();;
 
         }
         catch (Exception p){
@@ -51,7 +56,13 @@ public class StartPage {
 
         try{
             Main m =new Main();
-            m.setGame();
+            File tmpDir = new File("SnakeVsBlock");
+            boolean exists = tmpDir.exists();
+            if(exists) {
+            	m.ResumeGame();
+            }else {
+            	
+            }
             
         }
         catch (Exception E){

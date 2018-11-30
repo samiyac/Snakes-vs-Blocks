@@ -30,86 +30,62 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main extends Application {
 
-	private  ArrayList<ArrayList<Block>> BlockOnScreen = new ArrayList<>();
-	private  ArrayList<ArrayList<Ball>> BallsOnScreen = new ArrayList<>();
-	private  ArrayList<ArrayList<Wall>> WallsOnScreen = new ArrayList<>();
-	private  ArrayList<ArrayList<Coin>> CoinsOnScreen = new ArrayList<>();
+	private ArrayList<ArrayList<Block>> BlockOnScreen;
+	private ArrayList<ArrayList<Ball>> BallsOnScreen;
+	private ArrayList<ArrayList<Wall>> WallsOnScreen;
+	private ArrayList<ArrayList<Coin>> CoinsOnScreen;
 	private Shield ShieldOnScreen;
 	private Magnet MagnetOnScreen;
-	private boolean end;
 	private DestroyBlock DestroyBlockOnScreen;
-	private  Snake snake;
-	private int score = 0;
-	private double velocity = 7;
+	private Snake snake;
+	private int score;
+	private double velocity;
 	private Text scoreLabel;
 	ChoiceBox<String> dropDownMenu;
-	private boolean BLOCK_HIT = false;
+	private boolean BLOCK_HIT;
 	private Block hitBlock;
-	private boolean shield = false;
+	private boolean shield;
 	private final Media music;
 	private final MediaPlayer playerTokensBalls;
 	private final Media blockMusic;
 	private final MediaPlayer playerBlock;
-	private  Group root;
-	private  Scene scene;
+	// private final static Group root = new Group();
+	// private final Scene scene = new Scene(root, 500, 1000, Color.BLACK);
+	private boolean end;
+	private Group root;
+	private Scene scene;
 	static Stage stage;
 	private Text lengthLabel;
 	private int bonusCoin;
 	private static int c;
 
-
-	public Group getRoot() {
-		return root;
-	}
-
-	public  int getScore() {
-		return score;
-	}
-
 	public Main() {
-		music = new Media(new File("mariotrim.wav").toURI().toString());
+		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
 		playerTokensBalls = new MediaPlayer(music);
-		blockMusic = new Media(new File("block.wav").toURI().toString());
+		blockMusic = new Media(new File("sound/block.wav").toURI().toString());
 		playerBlock = new MediaPlayer(blockMusic);
 		playerBlock.setVolume(0.3);
 		root = new Group();
 
-
 	}
 
-
-
-
-
-
-	public void setEnd(boolean end) {
-		this.end = end;
-	}
-
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public void endgame(){
-		System.out.println("call endgame");
-		EndGame e = new EndGame(stage,score);
-		try {
-			e.loadEndScreen();
-		}
-		catch (Exception E){
-			System.out.println(E);
-		}
-	}
-
-
-
-	public void startpage(Stage primaryStage)throws Exception{
+	public void startpage(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Snake vs Block");
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartPage.fxml"));
 		Parent root1 = (Parent) fxmlLoader.load();
@@ -117,9 +93,9 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	public  Main refer(){
-		return this;
-	}
+	// public Main refer() {
+	// return this;
+	// }
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -128,60 +104,43 @@ public class Main extends Application {
 
 	}
 
-	public void ResumeGame() throws Exception{
-		loadOldGame();
-	}
-
-
-
-
 	public void playgame(Stage s) {
 
-		scene = new Scene(root, 500, 1000, Color.BLACK);;
+		scene = new Scene(root, 500, 1000, Color.BLACK);
 		s.setScene(scene);
 		s.show();
 
-
 		try {
-			Scanner sc = new Scanner(System.in);
-			System.out.println("0 to load old game. 1 to play new game");
-			c = sc.nextInt();
 
-			if (c == 0) {
-				loadOldGame();
-			} else {
-				setNewGame();
-			}
+			setNewGame();
 
-		}
-		catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e);
 			System.out.println("wow");
 		}
 
-
 		scene.setOnKeyPressed(e -> {
 			// System.out.println(snake.getSnakeLength().get(0).getCenterX());
 			switch (e.getCode()) {
-				case LEFT: {
-					snake.moveL();
-					lengthLabel.setX(lengthLabel.getX()-10);
-					if (isWall() || isBlock()
-							|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() < 20)) {
-						snake.moveR();
-						lengthLabel.setX(lengthLabel.getX()+10);
-					}
-				}
-				break;
-				case RIGHT: {
+			case LEFT: {
+				snake.moveL();
+				lengthLabel.setX(lengthLabel.getX() - 10);
+				if (isWall() || isBlock()
+						|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() < 20)) {
 					snake.moveR();
-					lengthLabel.setX(lengthLabel.getX()+10);
-					if (isWall() || isBlock()
-							|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() > 480)) {
-						snake.moveL();
-						lengthLabel.setX(lengthLabel.getX()-10);
-					}
+					lengthLabel.setX(lengthLabel.getX() + 10);
 				}
+			}
+				break;
+			case RIGHT: {
+				snake.moveR();
+				lengthLabel.setX(lengthLabel.getX() + 10);
+				if (isWall() || isBlock()
+						|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() > 480)) {
+					snake.moveL();
+					lengthLabel.setX(lengthLabel.getX() - 10);
+				}
+			}
 				break;
 			}
 
@@ -196,61 +155,25 @@ public class Main extends Application {
 
 		s.setOnCloseRequest(event -> {
 			System.out.println("Stage is closing");
-			try {
-				saveGameState();
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			if (!end) {
+				try {
+					saveGameState();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 
-
 	}
 
-
-	public void saveGameState() throws FileNotFoundException, IOException {
-		SerializableClasses SC = new SerializableClasses();
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("SnakeVsBlock"));
-		os.writeObject(SC.constructSerializableBlockList(BlockOnScreen));
-		os.writeObject(SC.constructSerializableBallList(BallsOnScreen));
-		os.writeObject(SC.constructSerializableWallList(WallsOnScreen));
-		os.writeObject(SC.constructSerializableCoinList(CoinsOnScreen));
-		if (ShieldOnScreen != null) {
-			float X = ShieldOnScreen.getLOCATION_X();
-			float Y = ShieldOnScreen.getLOCATION_Y();
-			double translateY = ShieldOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableShield(X, Y, translateY));
-		} else {
-			os.writeObject(new SerializableShield(-2000, -2000, -2000));
-		}
-		if (MagnetOnScreen != null) {
-			float X = MagnetOnScreen.getLOCATION_X();
-			float Y = MagnetOnScreen.getLOCATION_Y();
-			double translateY = MagnetOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableMagnet(X, Y, translateY));
-		} else {
-			os.writeObject(new SerializableMagnet(-2000, -2000, -2000));
-		}
-		if (DestroyBlockOnScreen != null) {
-			float X = DestroyBlockOnScreen.getLOCATION_X();
-			float Y = DestroyBlockOnScreen.getLOCATION_Y();
-			double translateY = DestroyBlockOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableDB(X, Y, translateY));
-		} else {
-			os.writeObject(new SerializableDB(-2000, -2000, -2000));
-		}
-
-		os.writeObject(new SerializableSnake(snake));
-		os.writeObject(score);
-		os.writeObject(velocity);
-		os.writeObject(BLOCK_HIT);
-		os.writeObject(shield);
-		os.close();
+	public void ResumeGame() throws Exception {
+		playgame(stage);
+		loadOldGame();
 	}
-
 
 	public void loadOldGame() throws IOException, ClassNotFoundException {
 		try {
@@ -304,10 +227,48 @@ public class Main extends Application {
 		}
 	}
 
+	public void saveGameState() throws FileNotFoundException, IOException {
+		SerializableClasses SC = new SerializableClasses();
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("SnakeVsBlock"));
+		os.writeObject(SC.constructSerializableBlockList(BlockOnScreen));
+		os.writeObject(SC.constructSerializableBallList(BallsOnScreen));
+		os.writeObject(SC.constructSerializableWallList(WallsOnScreen));
+		os.writeObject(SC.constructSerializableCoinList(CoinsOnScreen));
+		if (ShieldOnScreen != null) {
+			float X = ShieldOnScreen.getLOCATION_X();
+			float Y = ShieldOnScreen.getLOCATION_Y();
+			double translateY = ShieldOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableShield(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableShield(-2000, -2000, -2000));
+		}
+		if (MagnetOnScreen != null) {
+			float X = MagnetOnScreen.getLOCATION_X();
+			float Y = MagnetOnScreen.getLOCATION_Y();
+			double translateY = MagnetOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableMagnet(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableMagnet(-2000, -2000, -2000));
+		}
+		if (DestroyBlockOnScreen != null) {
+			float X = DestroyBlockOnScreen.getLOCATION_X();
+			float Y = DestroyBlockOnScreen.getLOCATION_Y();
+			double translateY = DestroyBlockOnScreen.getStack().getTranslateY();
+			os.writeObject(new SerializableDB(X, Y, translateY));
+		} else {
+			os.writeObject(new SerializableDB(-2000, -2000, -2000));
+		}
 
+		os.writeObject(new SerializableSnake(snake));
+		os.writeObject(score);
+		os.writeObject(velocity);
+		os.writeObject(BLOCK_HIT);
+		os.writeObject(shield);
+		os.close();
+	}
 
 	public void setNewGame() {
-		//root.getChildren().removeAll();
+		playgame(stage);
 		BlockOnScreen = new ArrayList<>();
 		BallsOnScreen = new ArrayList<>();
 		WallsOnScreen = new ArrayList<>();
@@ -329,28 +290,36 @@ public class Main extends Application {
 		setLengthLabel();
 	}
 
+	// public void setGame() {
+	//
+	// playgame(stage);
+	//
+	// for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
+	// root.getChildren().add(Snake.getSnakeLength().get(i));
+	// }
+	// setDropDownBox();
+	// setWalls();
+	// setBlocks(-100);
+	// setBalls(-100);
+	// setCoins(-100);
+	// setScore();
+	// }
 
-	public void setGame() {
-
-		playgame(stage);
-
-		for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
-			root.getChildren().add(Snake.getSnakeLength().get(i));
+	public void endgame() {
+		System.out.println("call endgame");
+		EndGame e = new EndGame(stage, score);
+		try {
+			e.loadEndScreen();
+		} catch (Exception E) {
+			System.out.println(E);
 		}
-		setDropDownBox();
-		setWalls();
-		setBlocks(-100);
-		setBalls(-100);
-		setCoins(-100);
-		setScore();
 	}
 
-
-	private void setLengthLabel(){
+	private void setLengthLabel() {
 		lengthLabel = new Text();
 		lengthLabel.setX(snake.getLOCATION_X());
-		lengthLabel.setY(snake.getLOCATION_Y()-20);
-		lengthLabel.setText(Integer.toString(snake.getSnakeLength().size()-1));
+		lengthLabel.setY(snake.getLOCATION_Y() - 20);
+		lengthLabel.setText(Integer.toString(snake.getSnakeLength().size() - 1));
 		lengthLabel.setFont(Font.font(15));
 		lengthLabel.setFill(Color.WHITE);
 		lengthLabel.setTextAlignment(TextAlignment.LEFT);
@@ -358,13 +327,14 @@ public class Main extends Application {
 
 	}
 
-	public void updateLength(){
+	public void updateLength() {
 
-		int x = snake.getSnakeLength().size()-1;
+		int x = snake.getSnakeLength().size() - 1;
 		lengthLabel.setText(Integer.toString(x));
 	}
 
 	private void setScore() {
+		System.out.println(score + " score");
 		scoreLabel = new Text("Score : " + score);
 		scoreLabel.setX(400);
 		scoreLabel.setY(50);
@@ -391,7 +361,6 @@ public class Main extends Application {
 		dropDownMenu.setStyle(style);
 		root.getChildren().addAll(dropDownMenu);
 		dropDownMenu.toFront();
-
 	}
 
 	public boolean isWall() {
@@ -566,7 +535,15 @@ public class Main extends Application {
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
 			if (!BLOCK_HIT) {
-				snakeIntersectBlock();
+				try {
+					snakeIntersectBlock();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				snakeIntersectBall();
 				snakeIntersectsDB();
 				snakeIntersectsShield();
@@ -579,7 +556,7 @@ public class Main extends Application {
 		}
 	}
 
-	public void PlayBurst(Bounds bounds, boolean destroyB) {
+	public void PlayBurst(Bounds bounds, boolean destroyB, Color color) {
 		if (!destroyB) {
 			playerBlock.stop();
 			playerBlock.play();
@@ -588,11 +565,11 @@ public class Main extends Application {
 		x /= 2;
 		double y = bounds.getMaxY() + bounds.getMinY();
 		y /= 2;
-		BurstAnimation(x, y);
+		BurstAnimation(x, y, color);
 	}
 
-	public void BurstAnimation(double x, double y) {
-		KeyFrame kf = new KeyFrame(Duration.millis(2), new BurstAnimationHandler(x, y));
+	public void BurstAnimation(double x, double y, Color color) {
+		KeyFrame kf = new KeyFrame(Duration.millis(2), new BurstAnimationHandler(x, y, color));
 		Timeline timeline = new Timeline(kf);
 		timeline.setCycleCount(1);
 		timeline.play();
@@ -602,6 +579,7 @@ public class Main extends Application {
 
 		final double x;
 		final double y;
+		final Color color;
 		final long duration = java.time.Duration.ofSeconds(10).toNanos();
 		final int side = 150;
 		final double radius = Math.sqrt(2) * side;
@@ -609,10 +587,11 @@ public class Main extends Application {
 		final ArrayList<Long> delays = new ArrayList<>();
 		final ArrayList<Double> angles = new ArrayList<Double>();
 
-		public BurstAnimationHandler(double x, double y) {
+		public BurstAnimationHandler(double x, double y, Color color) {
 			// TODO Auto-generated constructor stub
 			this.x = x;
 			this.y = y;
+			this.color = color;
 		}
 
 		@Override
@@ -621,7 +600,11 @@ public class Main extends Application {
 			// System.out.println("hello");
 			for (int i = 0; i < 50; i++) {
 				int rand = (int) (Math.random() * 360) + 1;
-				rectangles[i] = new Rectangle(10, 10, Color.hsb(rand, 1, 1));
+				if (color == null) {
+					rectangles[i] = new Rectangle(10, 10, Color.hsb(rand, 1, 1));
+				} else {
+					rectangles[i] = new Rectangle(10, 10, color);
+				}
 				angles.add(2 * Math.random() * Math.PI);
 				delays.add((long) (Math.random() * duration));
 			}
@@ -678,6 +661,7 @@ public class Main extends Application {
 							&& checky < 700) {
 						temp.setEaten(true);
 						bonusCoin++;
+						System.out.println(bonusCoin);
 						Path path = new Path();
 						path.getElements().add(new MoveTo(checkx, checky));
 						path.getElements().add(new LineTo(snakeHead.getCenterX(), 500));
@@ -826,7 +810,7 @@ public class Main extends Application {
 		if (MagnetOnScreen != null) {
 			StackPane magnet = MagnetOnScreen.getStack();
 			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getLayoutY() + magnet.getTranslateY());
+			int magnetPosY = (int) (magnet.getTranslateY());
 			if (x >= magnetPosX - 120 && x <= magnetPosX + 20 && y >= magnetPosY - 120 && y <= magnetPosY + 20) {
 				return false;
 			}
@@ -835,7 +819,7 @@ public class Main extends Application {
 		if (DestroyBlockOnScreen != null) {
 			StackPane DB = DestroyBlockOnScreen.getStack();
 			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getLayoutY() + DB.getTranslateY());
+			int DBPosY = (int) (DB.getTranslateY());
 			if (x >= DBPosX - 120 && x <= DBPosX + 20 && y >= DBPosY - 120 && y <= DBPosY + 20) {
 				return false;
 			}
@@ -844,7 +828,7 @@ public class Main extends Application {
 		if (ShieldOnScreen != null) {
 			StackPane shield = ShieldOnScreen.getStack();
 			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getLayoutY() + shield.getTranslateY());
+			int shieldPosY = (int) (shield.getTranslateY());
 			if (x >= shieldPosX - 120 && x <= shieldPosX + 20 && y >= shieldPosY - 120 && y <= shieldPosY + 20) {
 				return false;
 			}
@@ -923,7 +907,7 @@ public class Main extends Application {
 		if (MagnetOnScreen != null) {
 			StackPane magnet = MagnetOnScreen.getStack();
 			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getLayoutY() + magnet.getTranslateY());
+			int magnetPosY = (int) (magnet.getTranslateY());
 			if (x >= magnetPosX - 40 && x <= magnetPosX + 40 && y >= magnetPosY - 40 && y <= magnetPosY + 40) {
 				return false;
 			}
@@ -932,7 +916,7 @@ public class Main extends Application {
 		if (DestroyBlockOnScreen != null) {
 			StackPane DB = DestroyBlockOnScreen.getStack();
 			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getLayoutY() + DB.getTranslateY());
+			int DBPosY = (int) (DB.getTranslateY());
 			if (x >= DBPosX - 40 && x <= DBPosX + 40 && y >= DBPosY - 40 && y <= DBPosY + 40) {
 				return false;
 			}
@@ -941,7 +925,7 @@ public class Main extends Application {
 		if (ShieldOnScreen != null) {
 			StackPane shield = ShieldOnScreen.getStack();
 			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getLayoutY() + shield.getTranslateY());
+			int shieldPosY = (int) (shield.getTranslateY());
 			if (x >= shieldPosX - 40 && x <= shieldPosX + 40 && y >= shieldPosY - 40 && y <= shieldPosY + 40) {
 				return false;
 			}
@@ -995,9 +979,11 @@ public class Main extends Application {
 			int h = (int) (Math.random() * 750 + 150);
 			int y = -h;
 			if (bin.charAt(i) == '1') {
-				Wall wall = new Wall(xCoord[i], y, h);
-				W.add(wall);
-				root.getChildren().add(wall.getRect());
+				if (checkWallPosition(xCoord[i], y, h)) {
+					Wall wall = new Wall(xCoord[i], y, h);
+					W.add(wall);
+					root.getChildren().add(wall.getRect());
+				}
 			}
 		}
 		if (!W.isEmpty()) {
@@ -1005,8 +991,40 @@ public class Main extends Application {
 		}
 	}
 
+	private boolean checkWallPosition(int x, int y, int h) {
+		// TODO Auto-generated method stub
+		if (MagnetOnScreen != null) {
+			StackPane magnet = MagnetOnScreen.getStack();
+			int magnetPosX = (int) magnet.getLayoutX();
+			int magnetPosY = (int) (magnet.getTranslateY());
+			if (x >= magnetPosX - 30 && x <= magnetPosX + 30 && magnetPosY >= y - 20 && magnetPosY < y + h + 20) {
+				return false;
+			}
+		}
+
+		if (DestroyBlockOnScreen != null) {
+			StackPane DB = DestroyBlockOnScreen.getStack();
+			int DBPosX = (int) DB.getLayoutX();
+			int DBPosY = (int) (DB.getTranslateY());
+			if (x >= DBPosX - 30 && x <= DBPosX + 30 && DBPosY >= y - 20 && DBPosY < y + h + 20) {
+				return false;
+			}
+		}
+
+		if (ShieldOnScreen != null) {
+			StackPane shield = ShieldOnScreen.getStack();
+			int shieldPosX = (int) shield.getLayoutX();
+			int shieldPosY = (int) (shield.getTranslateY());
+			if (x >= shieldPosX - 30 && x <= shieldPosX + 30 && shieldPosY >= y - 20 && shieldPosY < y + h + 20) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void checkTokenScroll() {
 		// TODO Auto-generated method stub
+
 		if (MagnetOnScreen != null) {
 			StackPane magnet = MagnetOnScreen.getStack();
 			if (magnet.getTranslateY() >= 1400) {
@@ -1029,8 +1047,8 @@ public class Main extends Application {
 		}
 
 		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
-			// int c = (int) (Math.random() * 3);
-			int c = 0;
+			System.out.println("setting");
+			int c = (int) (Math.random() * 3);
 			if (c == 0) {
 				setMagnet(-1000);
 			}
@@ -1045,15 +1063,17 @@ public class Main extends Application {
 
 	public void setMagnet(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set magnet");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Magnet M = new Magnet(x, y);
-		root.getChildren().addAll(M.getStack());
+		root.getChildren().add(M.getStack());
 		MagnetOnScreen = M;
 	}
 
 	public void setShield(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set shield");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Shield S = new Shield(x, y);
@@ -1063,6 +1083,7 @@ public class Main extends Application {
 
 	public void setDB(int distance) {
 		// TODO Auto-generated method stub
+		System.out.println("set DB");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		DestroyBlock DB = new DestroyBlock(x, y);
@@ -1090,20 +1111,21 @@ public class Main extends Application {
 
 	private void setCoins(int dis) {
 		ArrayList<Coin> coinList = new ArrayList<>();
-		// Random rand = new Random();
 		int c = (int) (Math.random() * 1 + 1);
 		for (int i = 0; i < c; i++) {
 			int x = (int) (Math.random() * 200 + 15);
 			int y = (int) (dis);
-			while (!checkCoinPosition(x, y, coinList)) {
+			while (!checkCoinPosition(x, y, coinList) && y >= -100) {
 				x = (int) (Math.random() * 200 + 15);
 				y = y - 1;
 			}
 			// System.out.println(x + " " + y + " coin");
-			Coin s = new Coin(x, y);
-			coinList.add(s);
-			// System.out.println(s.getIMAGE_SRC());
-			root.getChildren().add(s.getStack());
+			if (y > -100) {
+				Coin s = new Coin(x, y);
+				coinList.add(s);
+				// System.out.println(s.getIMAGE_SRC());
+				root.getChildren().add(s.getStack());
+			}
 		}
 		CoinsOnScreen.add(coinList);
 	}
@@ -1180,7 +1202,7 @@ public class Main extends Application {
 		return true;
 	}
 
-	public void snakeIntersectBlock() {
+	public void snakeIntersectBlock() throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		if (!end) {
 			try {
@@ -1203,7 +1225,7 @@ public class Main extends Application {
 								}
 								if (block.isEaten()) {
 									Bounds blockBounds = block.getStack().getBoundsInParent();
-									PlayBurst(blockBounds, false);
+									PlayBurst(blockBounds, false, block.getColor());
 								}
 							}
 						}
@@ -1213,36 +1235,65 @@ public class Main extends Application {
 			} catch (Exception e) {
 				System.out.println(e);
 			}
-
 		}
+		// Circle snakeHead = Snake.getSnakeLength().get(0);
+		// for (int i = 0; i < BlockOnScreen.size(); i++) {
+		// for (Block block : BlockOnScreen.get(i)) {
+		// // System.out.println();
+		// if (snakeHead.intersects(block.getStack().getBoundsInParent()) &&
+		// block.isEaten() == false) {
+		// if (snakeHead.getCenterX() > block.getStack().getLayoutX() - 10
+		// && snakeHead.getCenterX() < block.getStack().getLayoutX() + 110) {
+		// if (!shield) {
+		// System.out.println(block.getValue());
+		// hitBlock = block;
+		// BLOCK_HIT = true;
+		// snake.eatBlock(block, this);
+		// } else {
+		// block.getStack().setVisible(false);
+		// block.setEaten(true);
+		// updateScore(block.getValue());
+		// }
+		// if (block.isEaten()) {
+		// Bounds blockBounds = block.getStack().getBoundsInParent();
+		// PlayBurst(blockBounds, false, block.getColor());
+		// }
+		// }
+		// }
+		// }
+		// }
+
 	}
+
 	public void snakeIntersectBall() {
 		// TODO Auto-generated method stub
-		if(!end){
-		Circle snakeHead = Snake.getSnakeLength().get(0);
-		for (int i = 0; i < BallsOnScreen.size(); i++) {
-			for (Ball ball : BallsOnScreen.get(i)) {
-				if (snakeHead.intersects(ball.getPane().getBoundsInParent()) && !ball.isEaten()) {
-					playerTokensBalls.stop();
-					playerTokensBalls.play();
-					ball.setEaten(true);
-					ball.getPane().setVisible(false);
-					int inc = ball.getValue();
-					int L = Snake.getSnakeLength().size();
-					snake.increaseLength(inc, this);
-					for (int j = 0; j < inc; j++) {
-						root.getChildren().add(Snake.getSnakeLength().get(L + j));
+		if (!end) {
+			Circle snakeHead = Snake.getSnakeLength().get(0);
+			for (int i = 0; i < BallsOnScreen.size(); i++) {
+				for (Ball ball : BallsOnScreen.get(i)) {
+					if (snakeHead.intersects(ball.getPane().getBoundsInParent()) && !ball.isEaten()) {
+						playerTokensBalls.stop();
+						playerTokensBalls.play();
+						ball.setEaten(true);
+						ball.getPane().setVisible(false);
+						PlayBurst(ball.getPane().getBoundsInParent(), true, Color.YELLOW);
+						int inc = ball.getValue();
+						int L = Snake.getSnakeLength().size();
+						snake.increaseLength(inc, this);
+						for (int j = 0; j < inc; j++) {
+							root.getChildren().add(Snake.getSnakeLength().get(L + j));
+						}
 					}
 				}
 			}
 		}
 	}
-	}
 
 	public void snakeIntersectsDB() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (DestroyBlockOnScreen != null && snakeHead.intersects(DestroyBlockOnScreen.getStack().getBoundsInParent())) {
+			if (DestroyBlockOnScreen != null
+					&& snakeHead.intersects(DestroyBlockOnScreen.getStack().getBoundsInParent())) {
 				for (int i = 0; i < BlockOnScreen.size(); i++) {
 					for (Block block : BlockOnScreen.get(i)) {
 						int y = (int) (block.getStack().getTranslateY() + block.getStack().getLayoutY());
@@ -1252,15 +1303,16 @@ public class Main extends Application {
 							block.getStack().setVisible(false);
 							block.setEaten(true);
 							updateScore(block.getValue());
-							PlayBurst(block.getStack().getBoundsInParent(), true);
+							PlayBurst(block.getStack().getBoundsInParent(), true, block.getColor());
 						}
 					}
 				}
 				DestroyBlockOnScreen.getStack().setVisible(false);
-				PlayBurst(DestroyBlockOnScreen.getStack().getBoundsInParent(), false);
+				PlayBurst(DestroyBlockOnScreen.getStack().getBoundsInParent(), false, null);
 			}
 		}
 	}
+
 	public void snakeIntersectsShield() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -1275,7 +1327,7 @@ public class Main extends Application {
 						playerTokensBalls.play();
 						shield = false;
 						snake.originalColors();
-						PlayBurst(ShieldOnScreen.getStack().getBoundsInParent(), false);
+						PlayBurst(ShieldOnScreen.getStack().getBoundsInParent(), true, null);
 					}
 
 				};
@@ -1283,39 +1335,45 @@ public class Main extends Application {
 			}
 		}
 	}
+
 	public void snakeIntersectsMagnet() {
-		if(!end){
-		Circle snakeHead = Snake.getSnakeLength().get(0);
-		if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())) {
-			playerTokensBalls.stop();
-			playerTokensBalls.play();
-			MagnetOnScreen.getStack().setVisible(false);
-			CoinAttractionAnimation();
+		if (!end) {
+			Circle snakeHead = Snake.getSnakeLength().get(0);
+			if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())) {
+				playerTokensBalls.stop();
+				playerTokensBalls.play();
+				MagnetOnScreen.getStack().setVisible(false);
+				PlayBurst(MagnetOnScreen.getStack().getBoundsInParent(), true, null);
+				CoinAttractionAnimation();
+			}
 		}
-	}
 	}
 
 	public void snakeIntersectCoin() {
-		if(!end){
-		Circle snakeHead = Snake.getSnakeLength().get(0);
-		for (int i = 0; i < CoinsOnScreen.size(); i++) {
-			for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
-				Coin coin = CoinsOnScreen.get(i).get(j);
-				if (snakeHead.intersects(coin.getStack().getBoundsInParent()) && !coin.isEaten()) {
-					System.out.println("eatcoin");
-					coin.getStack().setVisible(false);
-					coin.setEaten(true);
-					playerTokensBalls.stop();
-					playerTokensBalls.play();
-					updateScore(1);
-					bonusCoin++;
-					System.out.println(bonusCoin+" vohoooo");
+		if (!end) {
+			Circle snakeHead = Snake.getSnakeLength().get(0);
+			for (int i = 0; i < CoinsOnScreen.size(); i++) {
+				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
+					Coin coin = CoinsOnScreen.get(i).get(j);
+					if (snakeHead.intersects(coin.getStack().getBoundsInParent()) && !coin.isEaten()) {
+						System.out.println("eatcoin");
+						coin.getStack().setVisible(false);
+						coin.setEaten(true);
+						PlayBurst(coin.getStack().getBoundsInParent(), true, Color.YELLOW);
+						playerTokensBalls.stop();
+						playerTokensBalls.play();
+						updateScore(1);
+						bonusCoin++;
+					}
 				}
 			}
 		}
 
-	}}
+	}
 
+	public Group getRoot() {
+		return root;
+	}
 
 	public void setBlockHit(boolean b) {
 		BLOCK_HIT = b;
@@ -1330,7 +1388,21 @@ public class Main extends Application {
 	}
 
 	public void setVelocity(double inc) {
-		velocity += inc;
+		if (velocity < 8.5) {
+			velocity += inc;
+		}
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setEnd(boolean end) {
+		this.end = end;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	public static void main(String[] args) {

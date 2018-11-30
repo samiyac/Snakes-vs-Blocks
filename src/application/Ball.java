@@ -26,7 +26,7 @@ public class Ball extends Token {
 	}
 
 	public Ball(float lOCATION_X, float lOCATION_Y, double translateY, float radius, String color, boolean eaten,
-				int value) {
+			int value) {
 		// TODO Auto-generated constructor stub
 		super(lOCATION_X, lOCATION_Y);
 		this.radius=radius;

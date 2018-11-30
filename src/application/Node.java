@@ -6,30 +6,29 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
-public class Node implements Serializable{
+public class Node implements Serializable {
 
-    private int score;
-   String Date;
+	private int score;
+	String Date;
 
-    public Node(int score, String date) {
-        this.score = score;
-        this.Date = date;
-    }
+	public Node(int score, String date) {
+		this.score = score;
+		this.Date = date;
+	}
 
-    public int getScore() {
-        return score;
-    }
+	public int getScore() {
+		return score;
+	}
 
-    public String getDate() {
-        return Date;
-    }
+	public String getDate() {
+		return Date;
+	}
 
-    public void setScore(int score) {
-        this.score = score;
-    }
+	public void setScore(int score) {
+		this.score = score;
+	}
 
-
-    public void print(){
-        System.out.println(score+"\t\t"+Date);
-    }
+	public void print() {
+		System.out.println(score + "\t\t" + Date);
+	}
 }
