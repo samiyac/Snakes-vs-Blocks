@@ -3,10 +3,14 @@ package application;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -14,6 +18,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -65,15 +70,14 @@ public class Main extends Application {
 	private final MediaPlayer playerTokensBalls;
 	private final Media blockMusic;
 	private final MediaPlayer playerBlock;
-	// private final static Group root = new Group();
-	// private final Scene scene = new Scene(root, 500, 1000, Color.BLACK);
 	private boolean end;
 	private Group root;
 	private Scene scene;
 	static Stage stage;
 	private Text lengthLabel;
 	private int bonusCoin;
-	private static int c;
+	Label timerLabel = new Label();
+	private static final Integer start = 5;
 
 	public Main() {
 		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
@@ -93,10 +97,6 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	// public Main refer() {
-	// return this;
-	// }
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
@@ -115,8 +115,6 @@ public class Main extends Application {
 			setNewGame();
 
 		} catch (Exception e) {
-			System.out.println(e);
-			System.out.println("wow");
 		}
 
 		scene.setOnKeyPressed(e -> {
@@ -152,6 +150,7 @@ public class Main extends Application {
 		WallAnimation();
 		SnakeAnimation();
 		CoinAnimation();
+		setTimer();
 
 		s.setOnCloseRequest(event -> {
 			System.out.println("Stage is closing");
@@ -164,6 +163,8 @@ public class Main extends Application {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} finally {
+					System.exit(0);
 				}
 			}
 		});
@@ -221,6 +222,7 @@ public class Main extends Application {
 			setDropDownBox();
 			setScore();
 			setLengthLabel();
+			lengthLabel.setX(snake.getSnakeLength().get(0).getCenterX());
 		} catch (FileNotFoundException e1) {
 			System.err.println("No old game");
 			setNewGame();
@@ -290,28 +292,11 @@ public class Main extends Application {
 		setLengthLabel();
 	}
 
-	// public void setGame() {
-	//
-	// playgame(stage);
-	//
-	// for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
-	// root.getChildren().add(Snake.getSnakeLength().get(i));
-	// }
-	// setDropDownBox();
-	// setWalls();
-	// setBlocks(-100);
-	// setBalls(-100);
-	// setCoins(-100);
-	// setScore();
-	// }
-
 	public void endgame() {
-		System.out.println("call endgame");
 		EndGame e = new EndGame(stage, score);
 		try {
 			e.loadEndScreen();
 		} catch (Exception E) {
-			System.out.println(E);
 		}
 	}
 
@@ -328,13 +313,11 @@ public class Main extends Application {
 	}
 
 	public void updateLength() {
-
 		int x = snake.getSnakeLength().size() - 1;
 		lengthLabel.setText(Integer.toString(x));
 	}
 
 	private void setScore() {
-		System.out.println(score + " score");
 		scoreLabel = new Text("Score : " + score);
 		scoreLabel.setX(400);
 		scoreLabel.setY(50);
@@ -363,6 +346,14 @@ public class Main extends Application {
 		dropDownMenu.toFront();
 	}
 
+	private void setTimer() {
+		timerLabel.setTextFill(Color.WHITE);
+		timerLabel.setFont(Font.font(15));
+		timerLabel.setLayoutY(10);
+		timerLabel.setLayoutX(250);
+		root.getChildren().add(timerLabel);
+	}
+
 	public boolean isWall() {
 		if (!snake.getSnakeLength().isEmpty()) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -383,8 +374,6 @@ public class Main extends Application {
 			for (int i = 0; i < BlockOnScreen.size(); i++) {
 				for (Block block : BlockOnScreen.get(i)) {
 					if (snakeHead.intersects(block.getStack().getBoundsInParent()) && !block.isEaten()) {
-						// System.out.println(block.getStack().getLayoutY() +
-						// block.getStack().getTranslateY());
 						if (block.getStack().getLayoutY() + block.getStack().getTranslateY() > 456) {
 							return true;
 						}
@@ -413,12 +402,9 @@ public class Main extends Application {
 						}
 					}
 				}
-				// System.out.println("notblock");
 				scoreLabel.toFront();
 				checkBlockScroll();
 				dropDownMenu.toFront();
-			} else {
-				// System.out.println("block");
 			}
 
 		}
@@ -544,6 +530,8 @@ public class Main extends Application {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				timerLabel.toFront();
+				updateLength();
 				snakeIntersectBall();
 				snakeIntersectsDB();
 				snakeIntersectsShield();
@@ -597,7 +585,6 @@ public class Main extends Application {
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
-			// System.out.println("hello");
 			for (int i = 0; i < 50; i++) {
 				int rand = (int) (Math.random() * 360) + 1;
 				if (color == null) {
@@ -617,7 +604,6 @@ public class Main extends Application {
 				public void handle(long now) {
 					// TODO Auto-generated method stub
 					k++;
-					// System.out.println(k);
 					if (k < 800) {
 						for (int i = 0; i < 50; i++) {
 							Rectangle rect = rectangles[i];
@@ -661,7 +647,6 @@ public class Main extends Application {
 							&& checky < 700) {
 						temp.setEaten(true);
 						bonusCoin++;
-						System.out.println(bonusCoin);
 						Path path = new Path();
 						path.getElements().add(new MoveTo(checkx, checky));
 						path.getElements().add(new LineTo(snakeHead.getCenterX(), 500));
@@ -866,7 +851,6 @@ public class Main extends Application {
 				x = (int) (Math.random() * 400 + 15);
 				y = y - 1;
 			}
-			// System.out.println(x + " " + y + " coin");
 			Ball s = new Ball(x, y, 10, Color.YELLOW);
 			ballList.add(s);
 			root.getChildren().add(s.getPane());
@@ -1047,7 +1031,6 @@ public class Main extends Application {
 		}
 
 		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
-			System.out.println("setting");
 			int c = (int) (Math.random() * 3);
 			if (c == 0) {
 				setMagnet(-1000);
@@ -1063,7 +1046,6 @@ public class Main extends Application {
 
 	public void setMagnet(int distance) {
 		// TODO Auto-generated method stub
-		System.out.println("set magnet");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Magnet M = new Magnet(x, y);
@@ -1073,7 +1055,6 @@ public class Main extends Application {
 
 	public void setShield(int distance) {
 		// TODO Auto-generated method stub
-		System.out.println("set shield");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		Shield S = new Shield(x, y);
@@ -1083,7 +1064,6 @@ public class Main extends Application {
 
 	public void setDB(int distance) {
 		// TODO Auto-generated method stub
-		System.out.println("set DB");
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
 		DestroyBlock DB = new DestroyBlock(x, y);
@@ -1119,11 +1099,9 @@ public class Main extends Application {
 				x = (int) (Math.random() * 200 + 15);
 				y = y - 1;
 			}
-			// System.out.println(x + " " + y + " coin");
 			if (y > -100) {
 				Coin s = new Coin(x, y);
 				coinList.add(s);
-				// System.out.println(s.getIMAGE_SRC());
 				root.getChildren().add(s.getStack());
 			}
 		}
@@ -1209,7 +1187,6 @@ public class Main extends Application {
 				Circle snakeHead = Snake.getSnakeLength().get(0);
 				for (int i = 0; i < BlockOnScreen.size(); i++) {
 					for (Block block : BlockOnScreen.get(i)) {
-						// System.out.println();
 						if (snakeHead.intersects(block.getStack().getBoundsInParent()) && block.isEaten() == false) {
 							if (snakeHead.getCenterX() > block.getStack().getLayoutX() - 10
 									&& snakeHead.getCenterX() < block.getStack().getLayoutX() + 110) {
@@ -1233,36 +1210,8 @@ public class Main extends Application {
 				}
 
 			} catch (Exception e) {
-				System.out.println(e);
 			}
 		}
-		// Circle snakeHead = Snake.getSnakeLength().get(0);
-		// for (int i = 0; i < BlockOnScreen.size(); i++) {
-		// for (Block block : BlockOnScreen.get(i)) {
-		// // System.out.println();
-		// if (snakeHead.intersects(block.getStack().getBoundsInParent()) &&
-		// block.isEaten() == false) {
-		// if (snakeHead.getCenterX() > block.getStack().getLayoutX() - 10
-		// && snakeHead.getCenterX() < block.getStack().getLayoutX() + 110) {
-		// if (!shield) {
-		// System.out.println(block.getValue());
-		// hitBlock = block;
-		// BLOCK_HIT = true;
-		// snake.eatBlock(block, this);
-		// } else {
-		// block.getStack().setVisible(false);
-		// block.setEaten(true);
-		// updateScore(block.getValue());
-		// }
-		// if (block.isEaten()) {
-		// Bounds blockBounds = block.getStack().getBoundsInParent();
-		// PlayBurst(blockBounds, false, block.getColor());
-		// }
-		// }
-		// }
-		// }
-		// }
-
 	}
 
 	public void snakeIntersectBall() {
@@ -1316,22 +1265,43 @@ public class Main extends Application {
 	public void snakeIntersectsShield() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (ShieldOnScreen != null && snakeHead.intersects(ShieldOnScreen.getStack().getBoundsInParent())) {
+			if (ShieldOnScreen != null && snakeHead.intersects(ShieldOnScreen.getStack().getBoundsInParent())
+					&& ShieldOnScreen.getStack().isVisible()) {
 				shield = true;
 				ShieldOnScreen.getStack().setVisible(false);
+				timerLabel.setVisible(true);
+				IntegerProperty timeSeconds = new SimpleIntegerProperty(start);
+				timerLabel.textProperty().bind(timeSeconds.asString());
 				Timer timer = new Timer();
 				TimerTask task = new TimerTask() {
+
+					@Override
 					public void run() {
-						// The task you want to do
+						// TODO Auto-generated method stub
+						Timeline timeline = new Timeline();
+						timeline.getKeyFrames()
+								.add(new KeyFrame(Duration.seconds(start), new KeyValue(timeSeconds, -2)));
+						timeline.playFromStart();
+						if (end) {
+							timer.cancel();
+						}
+					}
+				};
+				timer.scheduleAtFixedRate(task, 0, 1000);
+				TimerTask taskEnd = new TimerTask() {
+					public void run() {
 						playerTokensBalls.stop();
 						playerTokensBalls.play();
 						shield = false;
 						snake.originalColors();
+						timerLabel.setVisible(false);
 						PlayBurst(ShieldOnScreen.getStack().getBoundsInParent(), true, null);
+						timer.cancel();
 					}
 
 				};
-				timer.schedule(task, 5000l);
+
+				timer.schedule(taskEnd, 5000l);
 			}
 		}
 	}
@@ -1339,12 +1309,36 @@ public class Main extends Application {
 	public void snakeIntersectsMagnet() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())) {
+			if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())
+					&& MagnetOnScreen.getStack().isVisible()) {
 				playerTokensBalls.stop();
 				playerTokensBalls.play();
 				MagnetOnScreen.getStack().setVisible(false);
 				PlayBurst(MagnetOnScreen.getStack().getBoundsInParent(), true, null);
 				CoinAttractionAnimation();
+				timerLabel.setVisible(true);
+				IntegerProperty timeSeconds = new SimpleIntegerProperty(start);
+				timerLabel.textProperty().bind(timeSeconds.asString());
+				Timer timer = new Timer();
+				TimerTask task = new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Timeline timeline = new Timeline();
+						timeline.getKeyFrames()
+								.add(new KeyFrame(Duration.seconds(start), new KeyValue(timeSeconds, -2)));
+						timeline.playFromStart();
+					}
+				};
+				timer.scheduleAtFixedRate(task, 0, 1000);
+				TimerTask taskEnd = new TimerTask() {
+					public void run() {
+						timerLabel.setVisible(false);
+						timer.cancel();
+					}
+				};
+				timer.schedule(taskEnd, 5000l);
 			}
 		}
 	}
@@ -1356,7 +1350,6 @@ public class Main extends Application {
 				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
 					Coin coin = CoinsOnScreen.get(i).get(j);
 					if (snakeHead.intersects(coin.getStack().getBoundsInParent()) && !coin.isEaten()) {
-						System.out.println("eatcoin");
 						coin.getStack().setVisible(false);
 						coin.setEaten(true);
 						PlayBurst(coin.getStack().getBoundsInParent(), true, Color.YELLOW);
