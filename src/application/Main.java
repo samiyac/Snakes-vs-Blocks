@@ -9,6 +9,8 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -71,6 +73,7 @@ public class Main extends Application {
 	private final Media blockMusic;
 	private final MediaPlayer playerBlock;
 	private boolean end;
+	private boolean restart;
 	private Group root;
 	private Scene scene;
 	static Stage stage;
@@ -85,8 +88,12 @@ public class Main extends Application {
 		blockMusic = new Media(new File("sound/block.wav").toURI().toString());
 		playerBlock = new MediaPlayer(blockMusic);
 		playerBlock.setVolume(0.3);
-		root = new Group();
+	}
 
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		stage = primaryStage;
+		startpage(primaryStage);
 	}
 
 	public void startpage(Stage primaryStage) throws Exception {
@@ -97,26 +104,12 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		stage = primaryStage;
-		startpage(primaryStage);
-
-	}
-
 	public void playgame(Stage s) {
-
+		root = new Group();
 		scene = new Scene(root, 500, 1000, Color.BLACK);
+		System.out.println("hello");
 		s.setScene(scene);
 		s.show();
-
-		try {
-
-			setNewGame();
-
-		} catch (Exception e) {
-		}
-
 		scene.setOnKeyPressed(e -> {
 			// System.out.println(snake.getSnakeLength().get(0).getCenterX());
 			switch (e.getCode()) {
@@ -143,13 +136,14 @@ public class Main extends Application {
 			}
 
 		});
-
-		BlockAnimation();
-		BallAnimation();
-		TokenAnimation();
-		WallAnimation();
-		SnakeAnimation();
-		CoinAnimation();
+		if (!restart) {
+			BlockAnimation();
+			BallAnimation();
+			TokenAnimation();
+			WallAnimation();
+			SnakeAnimation();
+			CoinAnimation();
+		}
 		setTimer();
 
 		s.setOnCloseRequest(event -> {
@@ -157,6 +151,7 @@ public class Main extends Application {
 			if (!end) {
 				try {
 					saveGameState();
+					end = true;
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -172,6 +167,8 @@ public class Main extends Application {
 	}
 
 	public void ResumeGame() throws Exception {
+		restart = false;
+		snake.getSnakeLength().clear();
 		playgame(stage);
 		loadOldGame();
 	}
@@ -223,6 +220,7 @@ public class Main extends Application {
 			setScore();
 			setLengthLabel();
 			lengthLabel.setX(snake.getSnakeLength().get(0).getCenterX());
+			System.out.println(snake.getLength() + " length of snake ");
 		} catch (FileNotFoundException e1) {
 			System.err.println("No old game");
 			setNewGame();
@@ -270,14 +268,15 @@ public class Main extends Application {
 	}
 
 	public void setNewGame() {
-		playgame(stage);
+		snake.getSnakeLength().clear();
+		velocity = 6;
 		BlockOnScreen = new ArrayList<>();
 		BallsOnScreen = new ArrayList<>();
 		WallsOnScreen = new ArrayList<>();
 		CoinsOnScreen = new ArrayList<>();
+		playgame(stage);
 		snake = new Snake(250, 500, 10, Color.YELLOW);
 		score = 0;
-		velocity = 6;
 		BLOCK_HIT = false;
 		shield = false;
 		for (int i = 0; i < snake.getSnakeLength().size(); i++) {
@@ -287,13 +286,15 @@ public class Main extends Application {
 		setWalls();
 		setBlocks(-100);
 		setBalls(-100);
-		setCoins(-150);
+		setCoins(-50);
 		setScore();
 		setLengthLabel();
 	}
 
 	public void endgame() {
 		EndGame e = new EndGame(stage, score);
+		end = true;
+		restart = false;
 		try {
 			e.loadEndScreen();
 		} catch (Exception E) {
@@ -304,7 +305,8 @@ public class Main extends Application {
 		lengthLabel = new Text();
 		lengthLabel.setX(snake.getLOCATION_X());
 		lengthLabel.setY(snake.getLOCATION_Y() - 20);
-		lengthLabel.setText(Integer.toString(snake.getSnakeLength().size() - 1));
+		System.out.println(snake.getLength() + " set label");
+		lengthLabel.setText(Integer.toString(snake.getLength()));
 		lengthLabel.setFont(Font.font(15));
 		lengthLabel.setFill(Color.WHITE);
 		lengthLabel.setTextAlignment(TextAlignment.LEFT);
@@ -338,12 +340,41 @@ public class Main extends Application {
 		dropDownMenu.getItems().addAll("Restart", "Exit Game");
 		dropDownMenu.setLayoutX(400);
 		dropDownMenu.setLayoutY(3);
-		dropDownMenu.setValue("Exit Game");
+		// dropDownMenu.setValue("Exit Game");
 		dropDownMenu.setBackground(Background.EMPTY);
 		String style = "-fx-background-color: rgba(255,255,0);";
 		dropDownMenu.setStyle(style);
 		root.getChildren().addAll(dropDownMenu);
 		dropDownMenu.toFront();
+		dropDownMenu.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+				if (newValue.equals(0)) {
+					restart = true;
+					setNewGame();
+
+				} else if (newValue.equals(1)) {
+					end = true;
+					try {
+						saveGameState();
+						System.out.println(snake.getLength() + " length of snake");
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					try {
+						startpage(stage);
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+
+				}
+			}
+		});
 	}
 
 	private void setTimer() {
@@ -393,7 +424,7 @@ public class Main extends Application {
 
 	private class BlockHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < BlockOnScreen.size(); i++) {
 					{
 						for (int j = 0; j < BlockOnScreen.get(i).size(); j++) {
@@ -405,6 +436,9 @@ public class Main extends Application {
 				scoreLabel.toFront();
 				checkBlockScroll();
 				dropDownMenu.toFront();
+			}
+			if (end) {
+
 			}
 
 		}
@@ -420,7 +454,7 @@ public class Main extends Application {
 	private class BallHandler implements EventHandler<ActionEvent> {
 
 		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < BallsOnScreen.size(); i++) {
 					for (int j = 0; j < BallsOnScreen.get(i).size(); j++) {
 						StackPane St = BallsOnScreen.get(i).get(j).getPane();
@@ -438,12 +472,11 @@ public class Main extends Application {
 		Timeline timeline = new Timeline(kf);
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
-
 	}
 
 	private class TokenHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				if (MagnetOnScreen != null) {
 					StackPane magnet = MagnetOnScreen.getStack();
 					magnet.setTranslateY(magnet.getTranslateY() + velocity);
@@ -473,7 +506,7 @@ public class Main extends Application {
 	private class CoinHandler implements EventHandler<ActionEvent> {
 
 		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < CoinsOnScreen.size(); i++) {
 					for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
 						StackPane St = CoinsOnScreen.get(i).get(j).getStack();
@@ -495,7 +528,7 @@ public class Main extends Application {
 
 	private class WallHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < WallsOnScreen.size(); i++) {
 					for (int j = 0; j < WallsOnScreen.get(i).size(); j++) {
 						Wall wall = WallsOnScreen.get(i).get(j);
@@ -520,7 +553,7 @@ public class Main extends Application {
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
-			if (!BLOCK_HIT) {
+			if (!BLOCK_HIT && !end) {
 				try {
 					snakeIntersectBlock();
 				} catch (FileNotFoundException e) {
@@ -630,6 +663,9 @@ public class Main extends Application {
 		Timeline timeline = new Timeline(kf);
 		timeline.setCycleCount(6);
 		timeline.play();
+		if (end) {
+			timeline.stop();
+		}
 	}
 
 	private class CoinAttractionHandler implements EventHandler<ActionEvent> {
@@ -1086,10 +1122,13 @@ public class Main extends Application {
 					CoinsOnScreen.remove(0);
 				}
 			}
+		} else {
+			setCoins(-50);
 		}
 	}
 
 	private void setCoins(int dis) {
+		System.out.println("set coins");
 		ArrayList<Coin> coinList = new ArrayList<>();
 		int c = (int) (Math.random() * 1 + 1);
 		for (int i = 0; i < c; i++) {
@@ -1099,7 +1138,8 @@ public class Main extends Application {
 				x = (int) (Math.random() * 200 + 15);
 				y = y - 1;
 			}
-			if (y > -100) {
+			if (y >= -100) {
+				System.out.println("setting");
 				Coin s = new Coin(x, y);
 				coinList.add(s);
 				root.getChildren().add(s.getStack());

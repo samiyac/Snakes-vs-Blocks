@@ -137,6 +137,7 @@ class Coin extends Token {
 
 	public Coin(float x, float y) {
 		super(x, y);
+		System.out.println("make coin");
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setTranslateX(x);

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" prefHeight="700.0" prefWidth="500.0" style="-fx-background-color: black;" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LeaderBoardDisplay">
+<GridPane alignment="center" hgap="10" prefHeight="1000.0" prefWidth="500.0" style="-fx-background-color: black;" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LeaderBoardDisplay">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -57,6 +57,11 @@
                   <Label fx:id="E" prefHeight="50.0" prefWidth="238.0" text="Label" />
                   <Label fx:id="G" prefHeight="50.0" prefWidth="238.0" text="Label" />
                   <Label fx:id="I" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="K" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="M" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="O" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="Q" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="S" prefHeight="50.0" prefWidth="238.0" text="Label" />
                </children>
             </VBox>
             <VBox prefHeight="408.0" prefWidth="432.0">
@@ -67,6 +72,11 @@
                   <Label fx:id="F" prefHeight="50.0" prefWidth="238.0" text="Label" />
                   <Label fx:id="H" prefHeight="50.0" prefWidth="238.0" text="Label" />
                   <Label fx:id="J" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="L" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="N" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="P" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="R" prefHeight="50.0" prefWidth="238.0" text="Label" />
+                  <Label fx:id="T" prefHeight="50.0" prefWidth="238.0" text="Label" />
                </children>
             </VBox>
          </children>

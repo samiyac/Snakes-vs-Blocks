@@ -28,12 +28,14 @@ public class EndGame implements Initializable {
 	Label scoreD = new Label();
 
 	public EndGame(Stage s, int n) {
+		System.out.println("endgame 1");
 		this.s = s;
 		this.score = n;
 		// scoreD.setText(Integer.toString(n));
 	}
 
 	public EndGame() {
+		System.out.println("default");
 		s = Main.stage;
 	}
 

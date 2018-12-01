@@ -165,7 +165,6 @@ public class Snake extends Circle {
 			l.board.add(n);
 			//System.out.println(n+" "+d+" "+t);
 			l.serialise();
-			l.printList();
 			// System.exit(0);
             File tmpDir = new File("SnakeVsBlock");
             boolean exists = tmpDir.exists();
@@ -199,9 +198,7 @@ public class Snake extends Circle {
 					String Date = java.time.LocalDate.now().toString();
 					Node n = new Node(x, Date);
 					l.board.add(n);
-					// System.out.println(x+" "+d+" "+t);
 					l.serialise();
-					l.printList();
 					File tmpDir = new File("SnakeVsBlock");
 		            boolean exists = tmpDir.exists();
 		            if(exists) {
@@ -256,7 +253,7 @@ public class Snake extends Circle {
 			}
 		}
 	}
-
+	
 	public void changeColors() {
 		// TODO Auto-generated method stub
 		ArrayList<Color> colors = new ArrayList<Color>();
