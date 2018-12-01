@@ -158,21 +158,12 @@ public class Snake extends Circle {
 
 			main.setBlockHit(false);
 		} else {
-		//	System.exit(0);
-			int x = main.getScore();
-			String Date = java.time.LocalDate.now().toString();
-			Node n = new Node(x,Date);
-			l.board.add(n);
-			//System.out.println(n+" "+d+" "+t);
-			l.serialise();
-			// System.exit(0);
-            File tmpDir = new File("SnakeVsBlock");
-            boolean exists = tmpDir.exists();
-            if(exists) {
-            	tmpDir.delete();
-            }
-			main.setEnd(true);
-			main.endgame();
+			try {
+				throw new EndGameException("end game");
+			} catch (EndGameException e) {
+				// TODO Auto-generated catch block
+				endGame(main);
+			}
 		}
 	}
 
@@ -194,18 +185,13 @@ public class Snake extends Circle {
 					block.getStack().setVisible(false);
 					main.PlayBurst(block.getStack().getBoundsInParent(), false, block.getColor());
 				} else if (length == 0) {
-					int x = main.getScore();
-					String Date = java.time.LocalDate.now().toString();
-					Node n = new Node(x, Date);
-					l.board.add(n);
-					l.serialise();
-					File tmpDir = new File("SnakeVsBlock");
-		            boolean exists = tmpDir.exists();
-		            if(exists) {
-		            	tmpDir.delete();
-		            }
-					main.setEnd(true);
-					main.endgame();
+					try {
+						throw new EndGameException("end game");
+					} catch (EndGameException e) {
+						// TODO Auto-generated catch block
+						endGame(main);
+					}
+
 				}
 				System.out.println("play");
 				if (main.getHitBlock() == block) {
@@ -213,6 +199,22 @@ public class Snake extends Circle {
 				}
 			}
 		});
+	}
+
+	protected void endGame(Main main) {
+		// TODO Auto-generated method stub
+		int x = main.getScore();
+		String Date = java.time.LocalDate.now().toString();
+		Node n = new Node(x, Date);
+		l.board.add(n);
+		l.serialise();
+		File tmpDir = new File("SnakeVsBlock");
+		boolean exists = tmpDir.exists();
+		if (exists) {
+			tmpDir.delete();
+		}
+		main.setEnd(true);
+		main.endgame();
 	}
 
 	private class SnakeEatsHandler implements EventHandler<ActionEvent> {
@@ -253,7 +255,7 @@ public class Snake extends Circle {
 			}
 		}
 	}
-	
+
 	public void changeColors() {
 		// TODO Auto-generated method stub
 		ArrayList<Color> colors = new ArrayList<Color>();
@@ -276,7 +278,7 @@ public class Snake extends Circle {
 	public void originalColors() {
 		snakeLength.get(0).setFill(Color.RED);
 		for (int i = 1; i < length; i++) {
-			snakeLength.get(i).setFill(Color.YELLOW);
+			snakeLength.get(i).setFill(color);
 		}
 	}
 }

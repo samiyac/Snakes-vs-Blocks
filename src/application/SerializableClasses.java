@@ -86,7 +86,7 @@ class SerializableBall extends Token implements Serializable {
 
 	public SerializableBall(Ball ball) {
 		// TODO Auto-generated constructor stub
-		super(ball.getLOCATION_X(), ball.getLOCATION_Y());
+		super(ball.getLOCATION_X(), ball.getLOCATION_Y(), ball.getMode());
 		this.radius = ball.getRadius();
 		this.color = ball.getColor().toString();
 		this.eaten = ball.isEaten();
@@ -95,7 +95,7 @@ class SerializableBall extends Token implements Serializable {
 	}
 
 	public Ball constructBall(Main main) {
-		Ball ball = new Ball(LOCATION_X, LOCATION_Y, Translate_Y, radius, color, eaten, value);
+		Ball ball = new Ball(LOCATION_X, LOCATION_Y, Translate_Y, radius, color, eaten, value, mode);
 		main.getRoot().getChildren().add(ball.getPane());
 		return ball;
 	}
@@ -104,15 +104,17 @@ class SerializableBall extends Token implements Serializable {
 class SerializableShield extends Token implements Serializable {
 
 	private double Translate_Y;
+	private String img;
 
-	public SerializableShield(float X, float Y, double translateY) {
+	public SerializableShield(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(X, Y);
-		Translate_Y=translateY;
+		super(X, Y, mode);
+		Translate_Y = translateY;
+		this.img = img;
 	}
 
 	public Shield constructShield(Main main) {
-		Shield shield = new Shield(LOCATION_X, LOCATION_Y, Translate_Y);
+		Shield shield = new Shield(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
 		main.getRoot().getChildren().add(shield.getStack());
 		return shield;
 	}
@@ -121,16 +123,18 @@ class SerializableShield extends Token implements Serializable {
 class SerializableMagnet extends Token implements Serializable {
 
 	private double Translate_Y;
+	private String img;
 
-	public SerializableMagnet(float X, float Y, double translateY) {
+	public SerializableMagnet(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(X, Y);
-		Translate_Y=translateY;
+		super(X, Y, mode);
+		Translate_Y = translateY;
+		this.img = img;
 	}
 
 	public Magnet constructMagnet(Main main) {
-		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y, Translate_Y);
-//		magnet.getStack().setTranslateY(Translate_Y);
+		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
+		// magnet.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(magnet.getStack());
 		return magnet;
 	}
@@ -139,16 +143,18 @@ class SerializableMagnet extends Token implements Serializable {
 class SerializableDB extends Token implements Serializable {
 
 	private double Translate_Y;
+	private String img;
 
-	public SerializableDB(float X, float Y, double translateY) {
+	public SerializableDB(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(X, Y);
-		Translate_Y=translateY;
+		super(X, Y, mode);
+		Translate_Y = translateY;
+		this.img = img;
 	}
 
 	public DestroyBlock constructDB(Main main) {
-		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y, Translate_Y);
-//		DB.getStack().setTranslateY(Translate_Y);
+		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
+		// DB.getStack().setTranslateY(Translate_Y);
 		main.getRoot().getChildren().add(DB.getStack());
 		return DB;
 	}
@@ -158,15 +164,17 @@ class SerializableCoin extends Token implements Serializable {
 
 	private boolean eaten;
 	private final double Translate_Y;
+	String img;
 
 	public SerializableCoin(Coin coin) {
-		super(coin.getLOCATION_X(), coin.getLOCATION_Y());
+		super(coin.getLOCATION_X(), coin.getLOCATION_Y(), coin.getMode());
 		Translate_Y = coin.getStack().getTranslateY();
 		this.eaten = coin.isEaten();
+		this.img = coin.getIMAGE_SRC();
 	}
 
 	public Coin constructCoin(Main main) {
-		Coin coin = new Coin(LOCATION_X, LOCATION_Y, Translate_Y, eaten);
+		Coin coin = new Coin(LOCATION_X, LOCATION_Y, Translate_Y, eaten, mode, img);
 		main.getRoot().getChildren().add(coin.getStack());
 		return coin;
 	}
@@ -182,7 +190,7 @@ public class SerializableClasses {
 			for (SerializableBlock sBlock : serializableBlocks.get(i)) {
 				Block temp = sBlock.constructBlock(main);
 				blocks.get(i).add(temp);
-				if(temp.isEaten()) {
+				if (temp.isEaten()) {
 					temp.getStack().setVisible(false);
 				}
 			}
@@ -198,7 +206,7 @@ public class SerializableClasses {
 			for (SerializableBall sBall : serializableBalls.get(i)) {
 				Ball temp = sBall.constructBall(main);
 				balls.get(i).add(temp);
-				if(temp.isEaten()) {
+				if (temp.isEaten()) {
 					temp.getPane().setVisible(false);
 				}
 			}
@@ -227,7 +235,7 @@ public class SerializableClasses {
 			for (SerializableCoin sCoin : serializableCoins.get(i)) {
 				Coin temp = sCoin.constructCoin(main);
 				coins.get(i).add(temp);
-				if(temp.isEaten()) {
+				if (temp.isEaten()) {
 					temp.getStack().setVisible(false);
 				}
 			}

@@ -8,10 +8,12 @@ import javafx.scene.layout.StackPane;
 abstract public class Token implements Serializable {
 	protected float LOCATION_X;
 	protected float LOCATION_Y;
+	protected final int mode;
 
-	public Token(float x, float y) {
+	public Token(float x, float y, int mode) {
 		LOCATION_X = x;
 		LOCATION_Y = y;
+		this.mode = mode;
 	}
 
 	public float getLOCATION_X() {
@@ -29,15 +31,30 @@ abstract public class Token implements Serializable {
 	public void setLocation_Y(float location_Y) {
 		LOCATION_Y = location_Y;
 	}
+
+	public int getMode() {
+		return mode;
+	}
+
 }
 
 class Shield extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
-			+ "/src/application/images/protection.png";
+	private final String IMAGE_SRC;
 	private final StackPane stack;
 
-	public Shield(float x, float y) {
-		super(x, y);
+	public Shield(float x, float y, int mode) {
+		super(x, y, mode);
+		String M = "";
+		if (mode == 1) {
+			M = "classic";
+		} else if (mode == 2) {
+			M = "christmas";
+		} else if (mode == 3) {
+			M = "halloween";
+		} else if (mode == 4) {
+			M = "summer";
+		}
+		IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/AP_Images/" + M + "/shield.png";
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setLayoutX(x);
@@ -46,9 +63,10 @@ class Shield extends Token {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Shield(float x, float y, double translate_Y) {
+	public Shield(float x, float y, double translate_Y, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(x, y);
+		super(x, y, mode);
+		this.IMAGE_SRC = img;
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setLayoutX(x);
@@ -66,12 +84,22 @@ class Shield extends Token {
 }
 
 class DestroyBlock extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir")
-			+ "/src/application/images/blockchain.png";
+	private final String IMAGE_SRC;
 	private final StackPane stack;
 
-	public DestroyBlock(float x, float y) {
-		super(x, y);
+	public DestroyBlock(float x, float y, int mode) {
+		super(x, y, mode);
+		String M = "";
+		if (mode == 1) {
+			M = "classic";
+		} else if (mode == 2) {
+			M = "christmas";
+		} else if (mode == 3) {
+			M = "halloween";
+		} else if (mode == 4) {
+			M = "summer";
+		}
+		IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/AP_Images/" + M + "/destroy.png";
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setLayoutX(x);
@@ -79,9 +107,10 @@ class DestroyBlock extends Token {
 		stack.getChildren().addAll(I);
 	}
 
-	public DestroyBlock(float x, float y, double translate_Y) {
+	public DestroyBlock(float x, float y, double translate_Y, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(x, y);
+		super(x, y, mode);
+		this.IMAGE_SRC = img;
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setLayoutX(x);
@@ -99,11 +128,22 @@ class DestroyBlock extends Token {
 }
 
 class Magnet extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/horseshoe.png";
+	private final String IMAGE_SRC;
 	private final StackPane stack;
 
-	public Magnet(float x, float y) {
-		super(x, y);
+	public Magnet(float x, float y, int mode) {
+		super(x, y, mode);
+		String M = "";
+		if (mode == 1) {
+			M = "classic";
+		} else if (mode == 2) {
+			M = "christmas";
+		} else if (mode == 3) {
+			M = "halloween";
+		} else if (mode == 4) {
+			M = "summer";
+		}
+		IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/AP_Images/" + M + "/magnet.png";
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setTranslateX(x);
@@ -111,9 +151,10 @@ class Magnet extends Token {
 		stack.getChildren().addAll(I);
 	}
 
-	public Magnet(float x, float y, double translate_Y) {
+	public Magnet(float x, float y, double translate_Y, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(x, y);
+		super(x, y, mode);
+		this.IMAGE_SRC = img;
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setTranslateX(x);
@@ -131,13 +172,24 @@ class Magnet extends Token {
 }
 
 class Coin extends Token {
-	private final String IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/images/dollar.png";
+	private final String IMAGE_SRC;
 	private final StackPane stack;
 	private boolean eaten = false;
 
-	public Coin(float x, float y) {
-		super(x, y);
+	public Coin(float x, float y, int mode) {
+		super(x, y, mode);
 		System.out.println("make coin");
+		String M = "";
+		if (mode == 1) {
+			M = "classic";
+		} else if (mode == 2) {
+			M = "christmas";
+		} else if (mode == 3) {
+			M = "halloween";
+		} else if (mode == 4) {
+			M = "summer";
+		}
+		IMAGE_SRC = "file:" + System.getProperty("user.dir") + "/src/application/AP_Images/" + M + "/coin.png";
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setTranslateX(x);
@@ -145,9 +197,10 @@ class Coin extends Token {
 		stack.getChildren().addAll(I);
 	}
 
-	public Coin(float lOCATION_X, float lOCATION_Y, double translate_Y, boolean eaten2) {
+	public Coin(float lOCATION_X, float lOCATION_Y, double translate_Y, boolean eaten2, int mode, String img) {
 		// TODO Auto-generated constructor stub
-		super(lOCATION_X, lOCATION_Y);
+		super(lOCATION_X, lOCATION_Y, mode);
+		this.IMAGE_SRC = img;
 		ImageView I = new ImageView(IMAGE_SRC);
 		stack = new StackPane();
 		stack.setTranslateX(lOCATION_X);

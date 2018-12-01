@@ -13,8 +13,8 @@ public class Ball extends Token {
 	private boolean eaten = false;
 	private final StackPane Pane = new StackPane();
 
-	public Ball(float xpos, float ypos, float radius, Color color) {
-		super(xpos, ypos);
+	public Ball(float xpos, float ypos, float radius, Color color, int mode) {
+		super(xpos, ypos, mode);
 		this.radius = radius;
 		this.color = color;
 		circle = new Circle(xpos, ypos, radius, color);
@@ -26,9 +26,9 @@ public class Ball extends Token {
 	}
 
 	public Ball(float lOCATION_X, float lOCATION_Y, double translateY, float radius, String color, boolean eaten,
-			int value) {
+			int value, int mode) {
 		// TODO Auto-generated constructor stub
-		super(lOCATION_X, lOCATION_Y);
+		super(lOCATION_X, lOCATION_Y, mode);
 		this.radius=radius;
 		this.eaten = eaten;
 		this.value = value;

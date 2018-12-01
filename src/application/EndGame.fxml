@@ -22,6 +22,9 @@
       <Button layoutX="-357.0" layoutY="234.0" mnemonicParsing="false" text="Button" />
       <Button fx:id="btn" layoutX="169.0" layoutY="529.0" mnemonicParsing="false" onAction="#showLeaderboard" prefHeight="39.0" prefWidth="162.0" text="LeaderBoard" />
       <Button fx:id="bt1" layoutX="172.0" layoutY="461.0" mnemonicParsing="false" onAction="#SystemClose" prefHeight="39.0" prefWidth="157.0" text="Exit" />
-      <Label fx:id="scoreD" layoutX="161.0" layoutY="303.0" prefHeight="87.0" prefWidth="162.0" text="Label" />
+      <Label fx:id="scoreD" layoutX="209.0" layoutY="304.0" prefHeight="87.0" prefWidth="162.0" text="Label" textFill="#15cdca">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="59.0" />
+         </font></Label>
    </children>
 </Pane>

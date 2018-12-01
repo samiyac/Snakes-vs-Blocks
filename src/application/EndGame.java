@@ -37,6 +37,8 @@ public class EndGame implements Initializable {
 	public EndGame() {
 		System.out.println("default");
 		s = Main.stage;
+		score = Main.tempscore;
+		Main.tempscore = 0;
 	}
 
 	public void loadEndScreen() throws Exception {

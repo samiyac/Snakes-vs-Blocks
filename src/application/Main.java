@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
@@ -21,6 +20,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -47,7 +47,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -80,7 +79,11 @@ public class Main extends Application {
 	private Text lengthLabel;
 	private int bonusCoin;
 	Label timerLabel = new Label();
-	private static final Integer start = 5;
+	public static int tempscore;
+	public static int mode;
+	public static Color colorBall;
+	public static int ShieldTimer = 5;
+	public static int MagnetTimer = 5;
 
 	public Main() {
 		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
@@ -105,37 +108,58 @@ public class Main extends Application {
 	}
 
 	public void playgame(Stage s) {
+		if(colorBall==null) {
+			colorBall=Color.YELLOW;
+		}
 		root = new Group();
 		scene = new Scene(root, 500, 1000, Color.BLACK);
 		System.out.println("hello");
 		s.setScene(scene);
 		s.show();
 		scene.setOnKeyPressed(e -> {
-			// System.out.println(snake.getSnakeLength().get(0).getCenterX());
-			switch (e.getCode()) {
-			case LEFT: {
+			KeyCode x = e.getCode();
+
+			if (x == KeyCode.LEFT) {
 				snake.moveL();
 				lengthLabel.setX(lengthLabel.getX() - 10);
-				if (isWall() || isBlock()
-						|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() < 20)) {
+
+				boolean move = false;
+				try {
+					isWall();
+					isBlock();
+				} catch (InvalidMoveException EX) {
+					// System.out.println(EX);
+					move = true;
+				}
+
+				if (move || (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() < 20)) {
 					snake.moveR();
 					lengthLabel.setX(lengthLabel.getX() + 10);
 				}
 			}
-				break;
-			case RIGHT: {
+
+			if (x == KeyCode.RIGHT) {
+
 				snake.moveR();
 				lengthLabel.setX(lengthLabel.getX() + 10);
-				if (isWall() || isBlock()
-						|| (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() > 480)) {
+
+				boolean move = false;
+				try {
+					isWall();
+					isBlock();
+				} catch (InvalidMoveException EX) {
+					// System.out.println(EX);
+					move = true;
+				}
+
+				if (move || (!snake.getSnakeLength().isEmpty() && snake.getSnakeLength().get(0).getCenterX() > 480)) {
 					snake.moveL();
 					lengthLabel.setX(lengthLabel.getX() - 10);
 				}
 			}
-				break;
-			}
 
 		});
+
 		if (!restart) {
 			BlockAnimation();
 			BallAnimation();
@@ -148,19 +172,23 @@ public class Main extends Application {
 
 		s.setOnCloseRequest(event -> {
 			System.out.println("Stage is closing");
-			if (!end) {
+			try {
+				throw new EndGameException("exit");
+			} catch (EndGameException e1) {
+				// TODO Auto-generated catch block
 				try {
 					saveGameState();
 					end = true;
-				} catch (FileNotFoundException e1) {
+				} catch (FileNotFoundException e2) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (IOException e1) {
+				} catch (IOException e2) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} finally {
 					System.exit(0);
 				}
+
 			}
 		});
 
@@ -238,25 +266,28 @@ public class Main extends Application {
 			float X = ShieldOnScreen.getLOCATION_X();
 			float Y = ShieldOnScreen.getLOCATION_Y();
 			double translateY = ShieldOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableShield(X, Y, translateY));
+			String img = ShieldOnScreen.getIMAGE_SRC();
+			os.writeObject(new SerializableShield(X, Y, translateY, mode, img));
 		} else {
-			os.writeObject(new SerializableShield(-2000, -2000, -2000));
+			os.writeObject(new SerializableShield(-2000, -2000, -2000, 0, ""));
 		}
 		if (MagnetOnScreen != null) {
 			float X = MagnetOnScreen.getLOCATION_X();
 			float Y = MagnetOnScreen.getLOCATION_Y();
 			double translateY = MagnetOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableMagnet(X, Y, translateY));
+			String img = MagnetOnScreen.getIMAGE_SRC();
+			os.writeObject(new SerializableMagnet(X, Y, translateY, mode, img));
 		} else {
-			os.writeObject(new SerializableMagnet(-2000, -2000, -2000));
+			os.writeObject(new SerializableMagnet(-2000, -2000, -2000, 0, ""));
 		}
 		if (DestroyBlockOnScreen != null) {
 			float X = DestroyBlockOnScreen.getLOCATION_X();
 			float Y = DestroyBlockOnScreen.getLOCATION_Y();
 			double translateY = DestroyBlockOnScreen.getStack().getTranslateY();
-			os.writeObject(new SerializableDB(X, Y, translateY));
+			String img = DestroyBlockOnScreen.getIMAGE_SRC();
+			os.writeObject(new SerializableDB(X, Y, translateY, mode, img));
 		} else {
-			os.writeObject(new SerializableDB(-2000, -2000, -2000));
+			os.writeObject(new SerializableDB(-2000, -2000, -2000, 0, ""));
 		}
 
 		os.writeObject(new SerializableSnake(snake));
@@ -275,7 +306,7 @@ public class Main extends Application {
 		WallsOnScreen = new ArrayList<>();
 		CoinsOnScreen = new ArrayList<>();
 		playgame(stage);
-		snake = new Snake(250, 500, 10, Color.YELLOW);
+		snake = new Snake(250, 500, 10, colorBall);
 		score = 0;
 		BLOCK_HIT = false;
 		shield = false;
@@ -293,6 +324,7 @@ public class Main extends Application {
 
 	public void endgame() {
 		EndGame e = new EndGame(stage, score);
+		tempscore = score;
 		end = true;
 		restart = false;
 		try {
@@ -385,34 +417,32 @@ public class Main extends Application {
 		root.getChildren().add(timerLabel);
 	}
 
-	public boolean isWall() {
+	public void isWall() throws InvalidMoveException {
 		if (!snake.getSnakeLength().isEmpty()) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
 			for (int i = 0; i < WallsOnScreen.size(); i++) {
 				for (Wall wall : WallsOnScreen.get(i)) {
 					if (snakeHead.intersects(wall.getRect().getBoundsInParent())) {
-						return true;
+						throw new InvalidMoveException("wall is present");
 					}
 				}
 			}
 		}
-		return false;
 	}
 
-	public boolean isBlock() {
+	public void isBlock() throws InvalidMoveException {
 		if (!snake.getSnakeLength().isEmpty()) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
 			for (int i = 0; i < BlockOnScreen.size(); i++) {
 				for (Block block : BlockOnScreen.get(i)) {
 					if (snakeHead.intersects(block.getStack().getBoundsInParent()) && !block.isEaten()) {
 						if (block.getStack().getLayoutY() + block.getStack().getTranslateY() > 456) {
-							return true;
+							throw new InvalidMoveException("block is present");
 						}
 					}
 				}
 			}
 		}
-		return false;
 	}
 
 	public void BlockAnimation() {
@@ -887,7 +917,7 @@ public class Main extends Application {
 				x = (int) (Math.random() * 400 + 15);
 				y = y - 1;
 			}
-			Ball s = new Ball(x, y, 10, Color.YELLOW);
+			Ball s = new Ball(x, y, 10, colorBall, mode);
 			ballList.add(s);
 			root.getChildren().add(s.getPane());
 		}
@@ -1084,7 +1114,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
-		Magnet M = new Magnet(x, y);
+		Magnet M = new Magnet(x, y, mode);
 		root.getChildren().add(M.getStack());
 		MagnetOnScreen = M;
 	}
@@ -1093,7 +1123,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
-		Shield S = new Shield(x, y);
+		Shield S = new Shield(x, y, mode);
 		root.getChildren().addAll(S.getStack());
 		ShieldOnScreen = S;
 	}
@@ -1102,7 +1132,7 @@ public class Main extends Application {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
 		int y = (int) (distance);
-		DestroyBlock DB = new DestroyBlock(x, y);
+		DestroyBlock DB = new DestroyBlock(x, y, mode);
 		root.getChildren().addAll(DB.getStack());
 		DestroyBlockOnScreen = DB;
 	}
@@ -1112,8 +1142,10 @@ public class Main extends Application {
 			if (!CoinsOnScreen.get(CoinsOnScreen.size() - 1).isEmpty()) {
 				Coin coin1 = CoinsOnScreen.get(CoinsOnScreen.size() - 1).get(0);
 				if ((int) coin1.getStack().getTranslateY() > 280 - (int) coin1.getStack().getLayoutY()) {
-					setCoins(-50);
+					setCoins(-70);
 				}
+			} else {
+				setCoins(-70);
 			}
 
 			if (!CoinsOnScreen.get(0).isEmpty()) {
@@ -1123,12 +1155,11 @@ public class Main extends Application {
 				}
 			}
 		} else {
-			setCoins(-50);
+			setCoins(-70);
 		}
 	}
 
 	private void setCoins(int dis) {
-		System.out.println("set coins");
 		ArrayList<Coin> coinList = new ArrayList<>();
 		int c = (int) (Math.random() * 1 + 1);
 		for (int i = 0; i < c; i++) {
@@ -1140,7 +1171,7 @@ public class Main extends Application {
 			}
 			if (y >= -100) {
 				System.out.println("setting");
-				Coin s = new Coin(x, y);
+				Coin s = new Coin(x, y, mode);
 				coinList.add(s);
 				root.getChildren().add(s.getStack());
 			}
@@ -1310,7 +1341,7 @@ public class Main extends Application {
 				shield = true;
 				ShieldOnScreen.getStack().setVisible(false);
 				timerLabel.setVisible(true);
-				IntegerProperty timeSeconds = new SimpleIntegerProperty(start);
+				IntegerProperty timeSeconds = new SimpleIntegerProperty(ShieldTimer);
 				timerLabel.textProperty().bind(timeSeconds.asString());
 				Timer timer = new Timer();
 				TimerTask task = new TimerTask() {
@@ -1320,7 +1351,7 @@ public class Main extends Application {
 						// TODO Auto-generated method stub
 						Timeline timeline = new Timeline();
 						timeline.getKeyFrames()
-								.add(new KeyFrame(Duration.seconds(start), new KeyValue(timeSeconds, -2)));
+								.add(new KeyFrame(Duration.seconds(ShieldTimer), new KeyValue(timeSeconds, -2)));
 						timeline.playFromStart();
 						if (end) {
 							timer.cancel();
@@ -1341,7 +1372,7 @@ public class Main extends Application {
 
 				};
 
-				timer.schedule(taskEnd, 5000l);
+				timer.schedule(taskEnd, (long)(ShieldTimer*1000));
 			}
 		}
 	}
@@ -1357,7 +1388,7 @@ public class Main extends Application {
 				PlayBurst(MagnetOnScreen.getStack().getBoundsInParent(), true, null);
 				CoinAttractionAnimation();
 				timerLabel.setVisible(true);
-				IntegerProperty timeSeconds = new SimpleIntegerProperty(start);
+				IntegerProperty timeSeconds = new SimpleIntegerProperty(MagnetTimer);
 				timerLabel.textProperty().bind(timeSeconds.asString());
 				Timer timer = new Timer();
 				TimerTask task = new TimerTask() {
@@ -1367,7 +1398,7 @@ public class Main extends Application {
 						// TODO Auto-generated method stub
 						Timeline timeline = new Timeline();
 						timeline.getKeyFrames()
-								.add(new KeyFrame(Duration.seconds(start), new KeyValue(timeSeconds, -2)));
+								.add(new KeyFrame(Duration.seconds(MagnetTimer), new KeyValue(timeSeconds, -2)));
 						timeline.playFromStart();
 					}
 				};
@@ -1378,7 +1409,7 @@ public class Main extends Application {
 						timer.cancel();
 					}
 				};
-				timer.schedule(taskEnd, 5000l);
+				timer.schedule(taskEnd, (long)(MagnetTimer*1000));
 			}
 		}
 	}

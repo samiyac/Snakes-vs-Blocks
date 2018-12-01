@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="1000.0" prefWidth="500.0" style="-fx-background-color: BLACK;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Template">
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="83.0" layoutY="72.0" prefHeight="27.0" prefWidth="305.0" text="THEMES" textFill="#138dc6">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="28.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="Classic" fitHeight="106.0" fitWidth="103.0" layoutX="60.0" layoutY="159.0" onMouseClicked="#StartClassic" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@512x512bb.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Christmas" fitHeight="130.0" fitWidth="174.0" layoutX="314.0" layoutY="145.0" onMouseClicked="#StartChristmas" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@snow-globe.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Halloween" fitHeight="121.0" fitWidth="165.0" layoutX="51.0" layoutY="335.0" onMouseClicked="#StartHalloween" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@ghost.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Summer" fitHeight="130.0" fitWidth="185.0" layoutX="314.0" layoutY="330.0" onMouseClicked="#StartSummer" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@beach.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="352.0" layoutY="21.0" prefHeight="40.0" prefWidth="103.0" text="COINS" textFill="#d73030" />
+      <Label layoutX="73.0" layoutY="567.0" prefHeight="27.0" prefWidth="145.0" text="Power Up" textFill="#21c0e4">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="Shield" layoutX="69.0" layoutY="650.0" mnemonicParsing="false" onAction="#IncreaseShield" text="For Shield" />
+      <Label layoutX="73.0" layoutY="766.0" prefHeight="51.0" prefWidth="273.0" text="Choose your Snake" textFill="#2ebcc6">
+         <font>
+            <Font name="Berlin Sans FB Bold" size="22.0" />
+         </font>
+      </Label>
+      <Circle fx:id="Blue" fill="#1f85e4" layoutX="97.0" layoutY="871.0" onMouseClicked="#SetBlue" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="Red" fill="#ee1f79" layoutX="200.0" layoutY="871.0" onMouseClicked="#SetRed" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="Green" fill="#84ff1fe2" layoutX="404.0" layoutY="871.0" onMouseClicked="#SetGreen" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fx:id="Yellow" fill="#f5eb24" layoutX="298.0" layoutY="871.0" onMouseClicked="#SetYellow" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Button fx:id="Magnet" layoutX="314.0" layoutY="650.0" mnemonicParsing="false" onAction="#IncreaseMagnet" text="For Magnet" />
+   </children>
+</AnchorPane>
