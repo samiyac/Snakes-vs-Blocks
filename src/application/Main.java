@@ -50,55 +50,138 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Main.
+ */
 public class Main extends Application {
 
+	/** The Block on screen. */
 	private ArrayList<ArrayList<Block>> BlockOnScreen;
+	
+	/** The Balls on screen. */
 	private ArrayList<ArrayList<Ball>> BallsOnScreen;
+	
+	/** The Walls on screen. */
 	private ArrayList<ArrayList<Wall>> WallsOnScreen;
+	
+	/** The Coins on screen. */
 	private ArrayList<ArrayList<Coin>> CoinsOnScreen;
+	
+	/** The Shield on screen. */
 	private Shield ShieldOnScreen;
+	
+	/** The Magnet on screen. */
 	private Magnet MagnetOnScreen;
+	
+	/** The Destroy block on screen. */
 	private DestroyBlock DestroyBlockOnScreen;
+	
+	/** The snake. */
 	private Snake snake;
+	
+	/** The score. */
 	private int score;
+	
+	/** The velocity. */
 	private double velocity;
+	
+	/** The score label. */
 	private Text scoreLabel;
+	
+	/** The drop down menu. */
 	ChoiceBox<String> dropDownMenu;
+	
+	/** The block hit. */
 	private boolean BLOCK_HIT;
+	
+	/** The hit block. */
 	private Block hitBlock;
+	
+	/** The shield. */
 	private boolean shield;
+	
+	/** The music. */
 	private final Media music;
+	
+	/** The player tokens balls. */
 	private final MediaPlayer playerTokensBalls;
+	
+	/** The block music. */
 	private final Media blockMusic;
+	
+	/** The player block. */
 	private final MediaPlayer playerBlock;
+	
+	/** The end. */
 	private boolean end;
+	
+	/** The restart. */
 	private boolean restart;
+	
+	/** The root. */
 	private Group root;
+	
+	/** The scene. */
 	private Scene scene;
+	
+	/** The stage. */
 	static Stage stage;
+	
+	/** The length label. */
 	private Text lengthLabel;
-	private int bonusCoin;
+	
+	/** The coin label. */
+	private Text coinLabel;
+	
+	/** The bonus coin. */
+	public static int bonusCoin;
+	
+	/** The timer label. */
 	Label timerLabel = new Label();
+	
+	/** The tempscore. */
 	public static int tempscore;
+	
+	/** The mode. */
 	public static int mode;
+	
+	/** The color ball. */
 	public static Color colorBall;
+	
+	/** The Shield timer. */
 	public static int ShieldTimer = 5;
+	
+	/** The Magnet timer. */
 	public static int MagnetTimer = 5;
 
+	/**
+	 * Instantiates a new main.
+	 */
 	public Main() {
 		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
 		playerTokensBalls = new MediaPlayer(music);
 		blockMusic = new Media(new File("sound/block.wav").toURI().toString());
 		playerBlock = new MediaPlayer(blockMusic);
 		playerBlock.setVolume(0.3);
+		bonusCoin=deserialise();
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
 		startpage(primaryStage);
 	}
 
+	/**
+	 * Startpage.
+	 *
+	 * @param primaryStage the primary stage
+	 * @throws Exception the exception
+	 */
 	public void startpage(Stage primaryStage) throws Exception {
 		primaryStage.setTitle("Snake vs Block");
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartPage.fxml"));
@@ -107,9 +190,14 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
+	/**
+	 * Playgame.
+	 *
+	 * @param s the s
+	 */
 	public void playgame(Stage s) {
-		if(colorBall==null) {
-			colorBall=Color.YELLOW;
+		if (colorBall == null) {
+			colorBall = Color.YELLOW;
 		}
 		root = new Group();
 		scene = new Scene(root, 500, 1000, Color.BLACK);
@@ -178,13 +266,14 @@ public class Main extends Application {
 				// TODO Auto-generated catch block
 				try {
 					saveGameState();
+					serialise();
 					end = true;
 				} catch (FileNotFoundException e2) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					// e1.printStackTrace();
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					// e1.printStackTrace();
 				} finally {
 					System.exit(0);
 				}
@@ -194,6 +283,11 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Resume game.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void ResumeGame() throws Exception {
 		restart = false;
 		snake.getSnakeLength().clear();
@@ -201,6 +295,47 @@ public class Main extends Application {
 		loadOldGame();
 	}
 
+	/**
+	 * Serialise.
+	 */
+	public void serialise() {
+
+		try {
+			FileOutputStream f = new FileOutputStream("BonusCoin");
+			ObjectOutputStream out = new ObjectOutputStream(f);
+			out.writeObject(bonusCoin);
+			out.close();
+			f.close();
+		} catch (Exception e) {
+		}
+
+	}
+
+	/**
+	 * Deserialise.
+	 *
+	 * @return the int
+	 */
+	public int deserialise() {
+
+		int x = 0;
+		try {
+			FileInputStream f = new FileInputStream("BonusCoin");
+			ObjectInputStream in = new ObjectInputStream(f);
+			x = (int) in.readObject();
+		} catch (Exception e) {
+		}
+
+		return x;
+
+	}
+
+	/**
+	 * Load old game.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ClassNotFoundException the class not found exception
+	 */
 	public void loadOldGame() throws IOException, ClassNotFoundException {
 		try {
 			ObjectInputStream is = new ObjectInputStream(new FileInputStream("SnakeVsBlock"));
@@ -220,6 +355,8 @@ public class Main extends Application {
 			velocity = (Double) is.readObject();
 			BLOCK_HIT = (Boolean) is.readObject();
 			shield = (Boolean) is.readObject();
+			mode = (Integer) is.readObject();
+			colorBall = Color.web((String) is.readObject());
 			is.close();
 
 			SerializableClasses SC = new SerializableClasses();
@@ -247,6 +384,7 @@ public class Main extends Application {
 			setDropDownBox();
 			setScore();
 			setLengthLabel();
+			setCoinLabel();
 			lengthLabel.setX(snake.getSnakeLength().get(0).getCenterX());
 			System.out.println(snake.getLength() + " length of snake ");
 		} catch (FileNotFoundException e1) {
@@ -255,6 +393,12 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Save game state.
+	 *
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void saveGameState() throws FileNotFoundException, IOException {
 		SerializableClasses SC = new SerializableClasses();
 		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("SnakeVsBlock"));
@@ -295,10 +439,16 @@ public class Main extends Application {
 		os.writeObject(velocity);
 		os.writeObject(BLOCK_HIT);
 		os.writeObject(shield);
+		os.writeObject(mode);
+		os.writeObject(colorBall.toString());
 		os.close();
 	}
 
+	/**
+	 * Sets the new game.
+	 */
 	public void setNewGame() {
+		end = false;
 		snake.getSnakeLength().clear();
 		velocity = 6;
 		BlockOnScreen = new ArrayList<>();
@@ -320,9 +470,14 @@ public class Main extends Application {
 		setCoins(-50);
 		setScore();
 		setLengthLabel();
+		setCoinLabel();
 	}
 
+	/**
+	 * Endgame.
+	 */
 	public void endgame() {
+		serialise();
 		EndGame e = new EndGame(stage, score);
 		tempscore = score;
 		end = true;
@@ -333,6 +488,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the length label.
+	 */
 	private void setLengthLabel() {
 		lengthLabel = new Text();
 		lengthLabel.setX(snake.getLOCATION_X());
@@ -346,11 +504,41 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Update length.
+	 */
 	public void updateLength() {
 		int x = snake.getSnakeLength().size() - 1;
 		lengthLabel.setText(Integer.toString(x));
 	}
 
+	/**
+	 * Sets the coin label.
+	 */
+	private void setCoinLabel() {
+		coinLabel = new Text("Coins : " + bonusCoin);
+		coinLabel.setX(400);
+		coinLabel.setY(100);
+		coinLabel.setFont(Font.font(15));
+		coinLabel.setFill(Color.WHITE);
+		root.getChildren().addAll(coinLabel);
+		coinLabel.toFront();
+	}
+
+	/**
+	 * Update coin.
+	 *
+	 * @param inc the inc
+	 */
+	public void updateCoin(int inc) {
+		this.bonusCoin += inc;
+		coinLabel.setText("Coin : " + bonusCoin);
+		coinLabel.toFront();
+	}
+
+	/**
+	 * Sets the score.
+	 */
 	private void setScore() {
 		scoreLabel = new Text("Score : " + score);
 		scoreLabel.setX(400);
@@ -361,12 +549,20 @@ public class Main extends Application {
 		scoreLabel.toFront();
 	}
 
+	/**
+	 * Update score.
+	 *
+	 * @param inc the inc
+	 */
 	public void updateScore(int inc) {
 		this.score += inc;
 		scoreLabel.setText("Score : " + score);
 		scoreLabel.toFront();
 	}
 
+	/**
+	 * Sets the drop down box.
+	 */
 	private void setDropDownBox() {
 		dropDownMenu = new ChoiceBox<>();
 		dropDownMenu.getItems().addAll("Restart", "Exit Game");
@@ -383,6 +579,7 @@ public class Main extends Application {
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
 				if (newValue.equals(0)) {
+					end = true;
 					restart = true;
 					setNewGame();
 
@@ -409,6 +606,9 @@ public class Main extends Application {
 		});
 	}
 
+	/**
+	 * Sets the timer.
+	 */
 	private void setTimer() {
 		timerLabel.setTextFill(Color.WHITE);
 		timerLabel.setFont(Font.font(15));
@@ -417,6 +617,11 @@ public class Main extends Application {
 		root.getChildren().add(timerLabel);
 	}
 
+	/**
+	 * Checks if is wall.
+	 *
+	 * @throws InvalidMoveException the invalid move exception
+	 */
 	public void isWall() throws InvalidMoveException {
 		if (!snake.getSnakeLength().isEmpty()) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -430,6 +635,11 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Checks if is block.
+	 *
+	 * @throws InvalidMoveException the invalid move exception
+	 */
 	public void isBlock() throws InvalidMoveException {
 		if (!snake.getSnakeLength().isEmpty()) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -445,6 +655,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Block animation.
+	 */
 	public void BlockAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new BlockHandler());
 		Timeline timeline = new Timeline(kf);
@@ -452,7 +665,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class BlockHandler.
+	 */
 	private class BlockHandler implements EventHandler<ActionEvent> {
+		
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < BlockOnScreen.size(); i++) {
@@ -463,6 +683,7 @@ public class Main extends Application {
 						}
 					}
 				}
+				coinLabel.toFront();
 				scoreLabel.toFront();
 				checkBlockScroll();
 				dropDownMenu.toFront();
@@ -474,6 +695,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Ball animation.
+	 */
 	public void BallAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new BallHandler());
 		Timeline timeline = new Timeline(kf);
@@ -481,8 +705,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class BallHandler.
+	 */
 	private class BallHandler implements EventHandler<ActionEvent> {
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < BallsOnScreen.size(); i++) {
@@ -497,6 +727,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Token animation.
+	 */
 	public void TokenAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new TokenHandler());
 		Timeline timeline = new Timeline(kf);
@@ -504,7 +737,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class TokenHandler.
+	 */
 	private class TokenHandler implements EventHandler<ActionEvent> {
+		
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			if (!BLOCK_HIT && !end) {
 				if (MagnetOnScreen != null) {
@@ -526,6 +766,9 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Coin animation.
+	 */
 	public void CoinAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new CoinHandler());
 		Timeline timeline = new Timeline(kf);
@@ -533,8 +776,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class CoinHandler.
+	 */
 	private class CoinHandler implements EventHandler<ActionEvent> {
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < CoinsOnScreen.size(); i++) {
@@ -549,6 +798,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Wall animation.
+	 */
 	public void WallAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new WallHandler());
 		Timeline timeline = new Timeline(kf);
@@ -556,7 +808,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class WallHandler.
+	 */
 	private class WallHandler implements EventHandler<ActionEvent> {
+		
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			if (!BLOCK_HIT && !end) {
 				for (int i = 0; i < WallsOnScreen.size(); i++) {
@@ -571,6 +830,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Snake animation.
+	 */
 	public void SnakeAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.millis(50), new SnakeHandler());
 		Timeline timeline = new Timeline(kf);
@@ -578,8 +840,14 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class SnakeHandler.
+	 */
 	private class SnakeHandler implements EventHandler<ActionEvent> {
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
@@ -607,6 +875,13 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Play burst.
+	 *
+	 * @param bounds the bounds
+	 * @param destroyB the destroy B
+	 * @param color the color
+	 */
 	public void PlayBurst(Bounds bounds, boolean destroyB, Color color) {
 		if (!destroyB) {
 			playerBlock.stop();
@@ -619,6 +894,13 @@ public class Main extends Application {
 		BurstAnimation(x, y, color);
 	}
 
+	/**
+	 * Burst animation.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param color the color
+	 */
 	public void BurstAnimation(double x, double y, Color color) {
 		KeyFrame kf = new KeyFrame(Duration.millis(2), new BurstAnimationHandler(x, y, color));
 		Timeline timeline = new Timeline(kf);
@@ -626,18 +908,45 @@ public class Main extends Application {
 		timeline.play();
 	}
 
+	/**
+	 * The Class BurstAnimationHandler.
+	 */
 	private class BurstAnimationHandler implements EventHandler<ActionEvent> {
 
+		/** The x. */
 		final double x;
+		
+		/** The y. */
 		final double y;
+		
+		/** The color. */
 		final Color color;
+		
+		/** The duration. */
 		final long duration = java.time.Duration.ofSeconds(10).toNanos();
+		
+		/** The side. */
 		final int side = 150;
+		
+		/** The radius. */
 		final double radius = Math.sqrt(2) * side;
+		
+		/** The rectangles. */
 		final Rectangle[] rectangles = new Rectangle[50];
+		
+		/** The delays. */
 		final ArrayList<Long> delays = new ArrayList<>();
+		
+		/** The angles. */
 		final ArrayList<Double> angles = new ArrayList<Double>();
 
+		/**
+		 * Instantiates a new burst animation handler.
+		 *
+		 * @param x the x
+		 * @param y the y
+		 * @param color the color
+		 */
 		public BurstAnimationHandler(double x, double y, Color color) {
 			// TODO Auto-generated constructor stub
 			this.x = x;
@@ -645,6 +954,9 @@ public class Main extends Application {
 			this.color = color;
 		}
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
@@ -688,6 +1000,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Coin attraction animation.
+	 */
 	public void CoinAttractionAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.5), new CoinAttractionHandler());
 		Timeline timeline = new Timeline(kf);
@@ -698,8 +1013,14 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * The Class CoinAttractionHandler.
+	 */
 	private class CoinAttractionHandler implements EventHandler<ActionEvent> {
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		public void handle(ActionEvent event) {
 			int inc = 0;
 			for (int i = 0; i < CoinsOnScreen.size(); i++) {
@@ -745,6 +1066,9 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Check block scroll.
+	 */
 	private void checkBlockScroll() {
 		int[] distance = { -100, -200 };
 		int c = (int) (Math.random() * 2);
@@ -763,6 +1087,11 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the blocks.
+	 *
+	 * @param distance the new blocks
+	 */
 	private void setBlocks(int distance) {
 		int[] xCoord = { 0, 100, 200, 300, 400 };
 		ArrayList<Color> colors = new ArrayList<>();
@@ -857,6 +1186,13 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Check block position.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @return true, if successful
+	 */
 	private boolean checkBlockPosition(int x, int y) {
 		if (MagnetOnScreen != null) {
 			StackPane magnet = MagnetOnScreen.getStack();
@@ -888,6 +1224,9 @@ public class Main extends Application {
 		return true;
 	}
 
+	/**
+	 * Check ball scroll.
+	 */
 	private void checkBallScroll() {
 		if (BallsOnScreen.size() > 0) {
 			if (!BallsOnScreen.get(BallsOnScreen.size() - 1).isEmpty()) {
@@ -906,6 +1245,11 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the balls.
+	 *
+	 * @param dis the new balls
+	 */
 	private void setBalls(int dis) {
 		ArrayList<Ball> ballList = new ArrayList<>();
 		Random rand = new Random();
@@ -924,6 +1268,14 @@ public class Main extends Application {
 		BallsOnScreen.add(ballList);
 	}
 
+	/**
+	 * Check ball position.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param ballList the ball list
+	 * @return true, if successful
+	 */
 	private boolean checkBallPosition(int x, int y, ArrayList<Ball> ballList) {
 		for (int j = 0; j < BlockOnScreen.size(); j++) {
 			for (int k = 0; k < BlockOnScreen.get(j).size(); k++) {
@@ -984,6 +1336,9 @@ public class Main extends Application {
 		return true;
 	}
 
+	/**
+	 * Check wall scroll.
+	 */
 	private void checkWallScroll() {
 		if (!WallsOnScreen.isEmpty()) {
 			ArrayList<Wall> W1 = WallsOnScreen.get(WallsOnScreen.size() - 1);
@@ -1017,6 +1372,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the walls.
+	 */
 	private void setWalls() {
 		int[] xCoord = { 100, 200, 300, 400 };
 		ArrayList<Wall> W = new ArrayList<>();
@@ -1041,6 +1399,14 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Check wall position.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param h the h
+	 * @return true, if successful
+	 */
 	private boolean checkWallPosition(int x, int y, int h) {
 		// TODO Auto-generated method stub
 		if (MagnetOnScreen != null) {
@@ -1072,6 +1438,9 @@ public class Main extends Application {
 		return true;
 	}
 
+	/**
+	 * Check token scroll.
+	 */
 	public void checkTokenScroll() {
 		// TODO Auto-generated method stub
 
@@ -1110,6 +1479,11 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the magnet.
+	 *
+	 * @param distance the new magnet
+	 */
 	public void setMagnet(int distance) {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
@@ -1119,6 +1493,11 @@ public class Main extends Application {
 		MagnetOnScreen = M;
 	}
 
+	/**
+	 * Sets the shield.
+	 *
+	 * @param distance the new shield
+	 */
 	public void setShield(int distance) {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
@@ -1128,6 +1507,11 @@ public class Main extends Application {
 		ShieldOnScreen = S;
 	}
 
+	/**
+	 * Sets the db.
+	 *
+	 * @param distance the new db
+	 */
 	public void setDB(int distance) {
 		// TODO Auto-generated method stub
 		int x = (int) (Math.random() * 400 + 7);
@@ -1137,6 +1521,9 @@ public class Main extends Application {
 		DestroyBlockOnScreen = DB;
 	}
 
+	/**
+	 * Check coin scroll.
+	 */
 	private void checkCoinScroll() {
 		if (CoinsOnScreen.size() > 0) {
 			if (!CoinsOnScreen.get(CoinsOnScreen.size() - 1).isEmpty()) {
@@ -1159,6 +1546,11 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Sets the coins.
+	 *
+	 * @param dis the new coins
+	 */
 	private void setCoins(int dis) {
 		ArrayList<Coin> coinList = new ArrayList<>();
 		int c = (int) (Math.random() * 1 + 1);
@@ -1179,6 +1571,14 @@ public class Main extends Application {
 		CoinsOnScreen.add(coinList);
 	}
 
+	/**
+	 * Check coin position.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param coinList the coin list
+	 * @return true, if successful
+	 */
 	private boolean checkCoinPosition(int x, int y, ArrayList<Coin> coinList) {
 
 		for (int j = 0; j < BallsOnScreen.size(); j++) {
@@ -1251,6 +1651,12 @@ public class Main extends Application {
 		return true;
 	}
 
+	/**
+	 * Snake intersect block.
+	 *
+	 * @throws FileNotFoundException the file not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void snakeIntersectBlock() throws FileNotFoundException, IOException {
 		// TODO Auto-generated method stub
 		if (!end) {
@@ -1285,6 +1691,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Snake intersect ball.
+	 */
 	public void snakeIntersectBall() {
 		// TODO Auto-generated method stub
 		if (!end) {
@@ -1309,6 +1718,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Snake intersects DB.
+	 */
 	public void snakeIntersectsDB() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -1333,6 +1745,9 @@ public class Main extends Application {
 		}
 	}
 
+	/**
+	 * Snake intersects shield.
+	 */
 	public void snakeIntersectsShield() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -1372,11 +1787,14 @@ public class Main extends Application {
 
 				};
 
-				timer.schedule(taskEnd, (long)(ShieldTimer*1000));
+				timer.schedule(taskEnd, (long) (ShieldTimer * 1000));
 			}
 		}
 	}
 
+	/**
+	 * Snake intersects magnet.
+	 */
 	public void snakeIntersectsMagnet() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -1409,11 +1827,14 @@ public class Main extends Application {
 						timer.cancel();
 					}
 				};
-				timer.schedule(taskEnd, (long)(MagnetTimer*1000));
+				timer.schedule(taskEnd, (long) (MagnetTimer * 1000));
 			}
 		}
 	}
 
+	/**
+	 * Snake intersect coin.
+	 */
 	public void snakeIntersectCoin() {
 		if (!end) {
 			Circle snakeHead = Snake.getSnakeLength().get(0);
@@ -1426,7 +1847,7 @@ public class Main extends Application {
 						PlayBurst(coin.getStack().getBoundsInParent(), true, Color.YELLOW);
 						playerTokensBalls.stop();
 						playerTokensBalls.play();
-						updateScore(1);
+						updateCoin(1);
 						bonusCoin++;
 					}
 				}
@@ -1435,40 +1856,85 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
 	public Group getRoot() {
 		return root;
 	}
 
+	/**
+	 * Sets the block hit.
+	 *
+	 * @param b the new block hit
+	 */
 	public void setBlockHit(boolean b) {
 		BLOCK_HIT = b;
 	}
 
+	/**
+	 * Gets the hit block.
+	 *
+	 * @return the hit block
+	 */
 	public Block getHitBlock() {
 		return hitBlock;
 	}
 
+	/**
+	 * Sets the hit block.
+	 *
+	 * @param b the new hit block
+	 */
 	public void setHitBlock(Block b) {
 		hitBlock = b;
 	}
 
+	/**
+	 * Sets the velocity.
+	 *
+	 * @param inc the new velocity
+	 */
 	public void setVelocity(double inc) {
 		if (velocity < 8.5) {
 			velocity += inc;
 		}
 	}
 
+	/**
+	 * Gets the score.
+	 *
+	 * @return the score
+	 */
 	public int getScore() {
 		return score;
 	}
 
+	/**
+	 * Sets the end.
+	 *
+	 * @param end the new end
+	 */
 	public void setEnd(boolean end) {
 		this.end = end;
 	}
 
+	/**
+	 * Sets the score.
+	 *
+	 * @param score the new score
+	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

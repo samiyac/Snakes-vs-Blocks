@@ -12,15 +12,41 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Snake.
+ */
 public class Snake extends Circle {
+	
+	/** The Constant snakeLength. */
 	private final static ArrayList<Circle> snakeLength = new ArrayList<Circle>();
+	
+	/** The length. */
 	private int length = 4;
+	
+	/** The location x. */
 	private int LOCATION_X;
+	
+	/** The location y. */
 	private int LOCATION_Y;
+	
+	/** The radius. */
 	private final double radius;
+	
+	/** The color. */
 	private Color color;
+	
+	/** The l. */
 	private LeaderBoardList l = new LeaderBoardList();
 
+	/**
+	 * Instantiates a new snake.
+	 *
+	 * @param x the x
+	 * @param y the y
+	 * @param r the r
+	 * @param col the col
+	 */
 	public Snake(int x, int y, double r, Color col)
 
 	{
@@ -41,6 +67,17 @@ public class Snake extends Circle {
 
 	}
 
+	/**
+	 * Instantiates a new snake.
+	 *
+	 * @param length the length
+	 * @param lOCATION_X the l OCATIO N X
+	 * @param lOCATION_Y the l OCATIO N Y
+	 * @param snakeHeadPosX the snake head pos X
+	 * @param radius the radius
+	 * @param color the color
+	 * @param main the main
+	 */
 	public Snake(int length, int lOCATION_X, int lOCATION_Y, double snakeHeadPosX, double radius, String color,
 			Main main) {
 		this.length = length;
@@ -63,38 +100,81 @@ public class Snake extends Circle {
 		}
 	}
 
+	/**
+	 * Gets the snake length.
+	 *
+	 * @return the snake length
+	 */
 	public static ArrayList<Circle> getSnakeLength() {
 		return snakeLength;
 	}
 
+	/**
+	 * Gets the length.
+	 *
+	 * @return the length
+	 */
 	public int getLength() {
 		return length;
 	}
 
+	/**
+	 * Sets the length.
+	 *
+	 * @param L the new length
+	 */
 	public void setLength(int L) {
 		this.length = L;
 	}
 
+	/**
+	 * Gets the location x.
+	 *
+	 * @return the location x
+	 */
 	public int getLOCATION_X() {
 		return LOCATION_X;
 	}
 
+	/**
+	 * Sets the location x.
+	 *
+	 * @param xpos the new location x
+	 */
 	public void setLOCATION_X(int xpos) {
 		LOCATION_X = xpos;
 	}
 
+	/**
+	 * Gets the location y.
+	 *
+	 * @return the location y
+	 */
 	public int getLOCATION_Y() {
 		return LOCATION_Y;
 	}
 
+	/**
+	 * Sets the location y.
+	 *
+	 * @param ypos the new location y
+	 */
 	public void setLOCATION_Y(int ypos) {
 		LOCATION_Y = ypos;
 	}
 
+	/**
+	 * Gets the color.
+	 *
+	 * @return the color
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * Move R.
+	 */
 	public void moveR() {
 		for (int i = 0; i < snakeLength.size(); i++) {
 			snakeLength.get(i).setCenterX(snakeLength.get(i).getCenterX() + 10);
@@ -102,18 +182,30 @@ public class Snake extends Circle {
 
 	}
 
+	/**
+	 * Move L.
+	 */
 	public void moveL() {
 		for (int i = 0; i < snakeLength.size(); i++) {
 			snakeLength.get(i).setCenterX(snakeLength.get(i).getCenterX() - 10);
 		}
 	}
 
+	/**
+	 * Translate.
+	 */
 	public void translate() {
 		for (int i = 0; i < snakeLength.size(); i++) {
 			snakeLength.get(i).setCenterY(snakeLength.get(i).getCenterY() - 0.5);
 		}
 	}
 
+	/**
+	 * Increase length.
+	 *
+	 * @param inc the inc
+	 * @param main the main
+	 */
 	public void increaseLength(int inc, Main main) {
 		// TODO Auto-generated method stub
 		for (int i = 0; i < inc; i++) {
@@ -127,6 +219,13 @@ public class Snake extends Circle {
 
 	}
 
+	/**
+	 * Eat block.
+	 *
+	 * @param block the block
+	 * @param main the main
+	 * @return the int
+	 */
 	public int eatBlock(Block block, Main main) {
 		System.out.println("inside eatblock");
 		int value = block.getValue();
@@ -144,6 +243,13 @@ public class Snake extends Circle {
 		return value - v;
 	}
 
+	/**
+	 * Block less than 5.
+	 *
+	 * @param count the count
+	 * @param block the block
+	 * @param main the main
+	 */
 	public void blockLessThan5(int count, Block block, Main main) {
 		for (int i = 0; i < count; i++) {
 			snakeLength.get(length - 1).setVisible(false);
@@ -167,6 +273,13 @@ public class Snake extends Circle {
 		}
 	}
 
+	/**
+	 * Snake eats animation.
+	 *
+	 * @param block the block
+	 * @param value the value
+	 * @param main the main
+	 */
 	public void SnakeEatsAnimation(Block block, int value, Main main) {
 		System.out.println("inside eatanim");
 		KeyFrame kf = new KeyFrame(Duration.millis(10 * length), new SnakeEatsHandler(block, value, main));
@@ -201,6 +314,11 @@ public class Snake extends Circle {
 		});
 	}
 
+	/**
+	 * End game.
+	 *
+	 * @param main the main
+	 */
 	protected void endGame(Main main) {
 		// TODO Auto-generated method stub
 		int x = main.getScore();
@@ -217,13 +335,30 @@ public class Snake extends Circle {
 		main.endgame();
 	}
 
+	/**
+	 * The Class SnakeEatsHandler.
+	 */
 	private class SnakeEatsHandler implements EventHandler<ActionEvent> {
 
+		/** The block. */
 		private final Block block;
+		
+		/** The value. */
 		private int value;
+		
+		/** The main. */
 		private final Main main;
+		
+		/** The intersecting. */
 		private boolean intersecting = true;
 
+		/**
+		 * Instantiates a new snake eats handler.
+		 *
+		 * @param block the block
+		 * @param value the value
+		 * @param main the main
+		 */
 		public SnakeEatsHandler(Block block, int value, Main main) {
 			// TODO Auto-generated constructor stub
 			this.block = block;
@@ -231,6 +366,9 @@ public class Snake extends Circle {
 			this.main = main;
 		}
 
+		/* (non-Javadoc)
+		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
+		 */
 		@Override
 		public void handle(ActionEvent event) {
 			// TODO Auto-generated method stub
@@ -256,6 +394,9 @@ public class Snake extends Circle {
 		}
 	}
 
+	/**
+	 * Change colors.
+	 */
 	public void changeColors() {
 		// TODO Auto-generated method stub
 		ArrayList<Color> colors = new ArrayList<Color>();
@@ -275,6 +416,9 @@ public class Snake extends Circle {
 		}
 	}
 
+	/**
+	 * Original colors.
+	 */
 	public void originalColors() {
 		snakeLength.get(0).setFill(Color.RED);
 		for (int i = 1; i < length; i++) {

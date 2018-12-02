@@ -35,7 +35,6 @@
             <Image url="@beach.png" />
          </image>
       </ImageView>
-      <Label layoutX="352.0" layoutY="21.0" prefHeight="40.0" prefWidth="103.0" text="COINS" textFill="#d73030" />
       <Label layoutX="73.0" layoutY="567.0" prefHeight="27.0" prefWidth="145.0" text="Power Up" textFill="#21c0e4">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="24.0" />
@@ -52,5 +51,6 @@
       <Circle fx:id="Green" fill="#84ff1fe2" layoutX="404.0" layoutY="871.0" onMouseClicked="#SetGreen" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fx:id="Yellow" fill="#f5eb24" layoutX="298.0" layoutY="871.0" onMouseClicked="#SetYellow" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
       <Button fx:id="Magnet" layoutX="314.0" layoutY="650.0" mnemonicParsing="false" onAction="#IncreaseMagnet" text="For Magnet" />
+      <Label fx:id="coin" alignment="CENTER_RIGHT" layoutX="388.0" layoutY="27.0" prefHeight="39.0" prefWidth="90.0" text="Label" textFill="#e4e4e4" />
    </children>
 </AnchorPane>

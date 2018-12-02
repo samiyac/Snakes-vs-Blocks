@@ -19,14 +19,28 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Stack;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EndGame.
+ */
 public class EndGame implements Initializable {
 
+	/** The s. */
 	Stage s;
+	
+	/** The score. */
 	int score;
 
+	/** The score D. */
 	@FXML
 	Label scoreD = new Label();
 
+	/**
+	 * Instantiates a new end game.
+	 *
+	 * @param s the s
+	 * @param n the n
+	 */
 	public EndGame(Stage s, int n) {
 		System.out.println("endgame 1");
 		this.s = s;
@@ -34,13 +48,21 @@ public class EndGame implements Initializable {
 		// scoreD.setText(Integer.toString(n));
 	}
 
+	/**
+	 * Instantiates a new end game.
+	 */
 	public EndGame() {
 		System.out.println("default");
 		s = Main.stage;
 		score = Main.tempscore;
-		Main.tempscore = 0;
+		Main.tempscore=0;
 	}
 
+	/**
+	 * Load end screen.
+	 *
+	 * @throws Exception the exception
+	 */
 	public void loadEndScreen() throws Exception {
 		System.out.println("call");
 		Parent root = FXMLLoader.load(getClass().getResource("EndGame.fxml"));
@@ -52,6 +74,12 @@ public class EndGame implements Initializable {
 
 	}
 
+	/**
+	 * Show leaderboard.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void showLeaderboard(ActionEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LeaderBoard.fxml"));
@@ -62,6 +90,12 @@ public class EndGame implements Initializable {
 		s.show();
 	}
 
+	/**
+	 * Play again.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void PlayAgain(ActionEvent event) throws IOException {
 		s.setTitle("Snake vs Block");
@@ -72,12 +106,21 @@ public class EndGame implements Initializable {
 
 	}
 
+	/**
+	 * System close.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void SystemClose(ActionEvent event) throws IOException {
 		System.exit(0);
 
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		scoreD.setText(Integer.toString(score));

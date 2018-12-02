@@ -10,14 +10,28 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StartPage.
+ */
 public class StartPage {
 
+	/** The s. */
 	Stage s;
 
+	/**
+	 * Instantiates a new start page.
+	 */
 	public StartPage() {
 		s = Main.stage;
 	}
 
+	/**
+	 * Show leader.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void showLeader(ActionEvent event) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LeaderBoard.fxml"));
@@ -26,6 +40,12 @@ public class StartPage {
 		s.show();
 	}
 
+	/**
+	 * New game.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void NewGame(ActionEvent event) throws IOException {
 
@@ -35,6 +55,12 @@ public class StartPage {
 		s.show();
 	}
 
+	/**
+	 * Serial game.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void SerialGame(ActionEvent event) throws IOException {
 

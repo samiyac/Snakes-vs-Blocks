@@ -1,81 +1,142 @@
 package application;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class Template {
+import com.sun.javafx.geometry.BoundsUtils;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Template.
+ */
+public class Template implements Initializable {
+
+	/** The coin. */
+	@FXML
+	Label coin = new Label();
+
+	/**
+	 * Start classic.
+	 */
 	@FXML
 	public void StartClassic() {
 		Main m = new Main();
 		try {
-			m.setNewGame();
 			Main.mode = 1;
+			m.setNewGame();
+
 		} catch (Exception p) {
 			System.out.println(p);
 		}
 	}
 
+	/**
+	 * Start christmas.
+	 */
 	@FXML
 	public void StartChristmas() {
 		Main m = new Main();
 		try {
-			m.setNewGame();
 			Main.mode = 2;
+			m.setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
 	}
 
+	/**
+	 * Start halloween.
+	 */
 	@FXML
 	public void StartHalloween() {
 		Main m = new Main();
 		try {
-			m.setNewGame();
 			Main.mode = 3;
+			m.setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
 	}
 
+	/**
+	 * Start summer.
+	 */
 	@FXML
 	public void StartSummer() {
 		Main m = new Main();
 		try {
-			m.setNewGame();
 			Main.mode = 4;
+			m.setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
 	}
 
+	/**
+	 * Increase shield.
+	 */
 	@FXML
 	public void IncreaseShield() {
-		Main.ShieldTimer += 2;
+		if (Main.bonusCoin > 10) {
+			Main.ShieldTimer = (Main.ShieldTimer + 2);
+			Main.bonusCoin = (Main.bonusCoin - 10);
+			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
+		}
 	}
 
+	/**
+	 * Increase magnet.
+	 */
 	@FXML
 	public void IncreaseMagnet() {
-		Main.MagnetTimer += 2;
+		if (Main.bonusCoin > 10) {
+			Main.MagnetTimer = (Main.MagnetTimer + 2);
+			Main.bonusCoin = (Main.bonusCoin - 10);
+			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
+		}
 	}
 
+	/**
+	 * Sets the green.
+	 */
 	@FXML
 	public void SetGreen() {
 		Main.colorBall = Color.web("#84ff1fe2");
 	}
 
+	/**
+	 * Sets the blue.
+	 */
 	@FXML
 	public void SetBlue() {
 		Main.colorBall = Color.web("#1f85e4");
 	}
 
+	/**
+	 * Sets the red.
+	 */
 	@FXML
 	public void SetRed() {
 		Main.colorBall = Color.web("#ee1f79");
 	}
 
+	/**
+	 * Sets the yellow.
+	 */
 	@FXML
 	public void SetYellow() {
-		Main.colorBall = Color.web("#f5eb24");
+		Main.colorBall = Color.web("#f5ee24");
+	}
+
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
 	}
 }

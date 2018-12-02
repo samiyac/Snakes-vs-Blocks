@@ -1,18 +1,46 @@
+/*
+ * 
+ */
 package application;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SerializableBlock.
+ */
 class SerializableBlock implements Serializable {
+	
+	/** The location x. */
 	private int LOCATION_X;
+	
+	/** The location y. */
 	private int LOCATION_Y;
+	
+	/** The Translate Y. */
 	private final double Translate_Y;
+	
+	/** The width. */
 	private final int width;
+	
+	/** The height. */
 	private final int height;
+	
+	/** The value. */
 	private int value;
+	
+	/** The color. */
 	private final String color;
+	
+	/** The eaten. */
 	private boolean eaten;
 
+	/**
+	 * Instantiates a new serializable block.
+	 *
+	 * @param block the block
+	 */
 	public SerializableBlock(Block block) {
 		// TODO Auto-generated constructor stub
 		LOCATION_X = block.getLocationX();
@@ -25,6 +53,12 @@ class SerializableBlock implements Serializable {
 		this.Translate_Y = block.getStack().getTranslateY();
 	}
 
+	/**
+	 * Construct block.
+	 *
+	 * @param main the main
+	 * @return the block
+	 */
 	public Block constructBlock(Main main) {
 		Block block = new Block(width, height, color, value, eaten, LOCATION_X, LOCATION_Y, Translate_Y);
 		main.getRoot().getChildren().add(block.getStack());
@@ -33,12 +67,28 @@ class SerializableBlock implements Serializable {
 
 }
 
+/**
+ * The Class SerializableWall.
+ */
 class SerializableWall implements Serializable {
+	
+	/** The location x. */
 	private float LOCATION_X;
+	
+	/** The location y. */
 	private float LOCATION_Y;
+	
+	/** The Translate Y. */
 	private final double Translate_Y;
+	
+	/** The height. */
 	private final float height;
 
+	/**
+	 * Instantiates a new serializable wall.
+	 *
+	 * @param wall the wall
+	 */
 	public SerializableWall(Wall wall) {
 		// TODO Auto-generated constructor stub
 		LOCATION_X = wall.getLocationX();
@@ -47,6 +97,12 @@ class SerializableWall implements Serializable {
 		height = wall.getHeight();
 	}
 
+	/**
+	 * Construct wall.
+	 *
+	 * @param main the main
+	 * @return the wall
+	 */
 	public Wall constructWall(Main main) {
 		Wall wall = new Wall(LOCATION_X, LOCATION_Y, Translate_Y, height);
 		main.getRoot().getChildren().add(wall.getRect());
@@ -54,14 +110,34 @@ class SerializableWall implements Serializable {
 	}
 }
 
+/**
+ * The Class SerializableSnake.
+ */
 class SerializableSnake implements Serializable {
+	
+	/** The length. */
 	private int length;
+	
+	/** The location x. */
 	private int LOCATION_X;
+	
+	/** The location y. */
 	private int LOCATION_Y;
+	
+	/** The snake head pos X. */
 	private double snakeHeadPosX;
+	
+	/** The radius. */
 	private final double radius;
+	
+	/** The color. */
 	private String color;
 
+	/**
+	 * Instantiates a new serializable snake.
+	 *
+	 * @param snake the snake
+	 */
 	public SerializableSnake(Snake snake) {
 		length = snake.getLength();
 		LOCATION_X = snake.getLOCATION_X();
@@ -71,19 +147,43 @@ class SerializableSnake implements Serializable {
 		color = snake.getColor().toString();
 	}
 
+	/**
+	 * Construct snake.
+	 *
+	 * @param main the main
+	 * @return the snake
+	 */
 	public Snake constructSnake(Main main) {
 		Snake snake = new Snake(length, LOCATION_X, LOCATION_Y, snakeHeadPosX, radius, color, main);
 		return snake;
 	}
 }
 
+/**
+ * The Class SerializableBall.
+ */
 class SerializableBall extends Token implements Serializable {
+	
+	/** The radius. */
 	private final float radius;
+	
+	/** The color. */
 	private final String color;
+	
+	/** The value. */
 	private final int value;
+	
+	/** The Translate Y. */
 	private final double Translate_Y;
+	
+	/** The eaten. */
 	private boolean eaten = false;
 
+	/**
+	 * Instantiates a new serializable ball.
+	 *
+	 * @param ball the ball
+	 */
 	public SerializableBall(Ball ball) {
 		// TODO Auto-generated constructor stub
 		super(ball.getLOCATION_X(), ball.getLOCATION_Y(), ball.getMode());
@@ -94,6 +194,12 @@ class SerializableBall extends Token implements Serializable {
 		this.Translate_Y = ball.getPane().getTranslateY();
 	}
 
+	/**
+	 * Construct ball.
+	 *
+	 * @param main the main
+	 * @return the ball
+	 */
 	public Ball constructBall(Main main) {
 		Ball ball = new Ball(LOCATION_X, LOCATION_Y, Translate_Y, radius, color, eaten, value, mode);
 		main.getRoot().getChildren().add(ball.getPane());
@@ -101,11 +207,26 @@ class SerializableBall extends Token implements Serializable {
 	}
 }
 
+/**
+ * The Class SerializableShield.
+ */
 class SerializableShield extends Token implements Serializable {
 
+	/** The Translate Y. */
 	private double Translate_Y;
+	
+	/** The img. */
 	private String img;
 
+	/**
+	 * Instantiates a new serializable shield.
+	 *
+	 * @param X the x
+	 * @param Y the y
+	 * @param translateY the translate Y
+	 * @param mode the mode
+	 * @param img the img
+	 */
 	public SerializableShield(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
 		super(X, Y, mode);
@@ -113,6 +234,12 @@ class SerializableShield extends Token implements Serializable {
 		this.img = img;
 	}
 
+	/**
+	 * Construct shield.
+	 *
+	 * @param main the main
+	 * @return the shield
+	 */
 	public Shield constructShield(Main main) {
 		Shield shield = new Shield(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
 		main.getRoot().getChildren().add(shield.getStack());
@@ -120,11 +247,26 @@ class SerializableShield extends Token implements Serializable {
 	}
 }
 
+/**
+ * The Class SerializableMagnet.
+ */
 class SerializableMagnet extends Token implements Serializable {
 
+	/** The Translate Y. */
 	private double Translate_Y;
+	
+	/** The img. */
 	private String img;
 
+	/**
+	 * Instantiates a new serializable magnet.
+	 *
+	 * @param X the x
+	 * @param Y the y
+	 * @param translateY the translate Y
+	 * @param mode the mode
+	 * @param img the img
+	 */
 	public SerializableMagnet(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
 		super(X, Y, mode);
@@ -132,6 +274,12 @@ class SerializableMagnet extends Token implements Serializable {
 		this.img = img;
 	}
 
+	/**
+	 * Construct magnet.
+	 *
+	 * @param main the main
+	 * @return the magnet
+	 */
 	public Magnet constructMagnet(Main main) {
 		Magnet magnet = new Magnet(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
 		// magnet.getStack().setTranslateY(Translate_Y);
@@ -140,11 +288,26 @@ class SerializableMagnet extends Token implements Serializable {
 	}
 }
 
+/**
+ * The Class SerializableDB.
+ */
 class SerializableDB extends Token implements Serializable {
 
+	/** The Translate Y. */
 	private double Translate_Y;
+	
+	/** The img. */
 	private String img;
 
+	/**
+	 * Instantiates a new serializable DB.
+	 *
+	 * @param X the x
+	 * @param Y the y
+	 * @param translateY the translate Y
+	 * @param mode the mode
+	 * @param img the img
+	 */
 	public SerializableDB(float X, float Y, double translateY, int mode, String img) {
 		// TODO Auto-generated constructor stub
 		super(X, Y, mode);
@@ -152,6 +315,12 @@ class SerializableDB extends Token implements Serializable {
 		this.img = img;
 	}
 
+	/**
+	 * Construct DB.
+	 *
+	 * @param main the main
+	 * @return the destroy block
+	 */
 	public DestroyBlock constructDB(Main main) {
 		DestroyBlock DB = new DestroyBlock(LOCATION_X, LOCATION_Y, Translate_Y, mode, img);
 		// DB.getStack().setTranslateY(Translate_Y);
@@ -160,12 +329,25 @@ class SerializableDB extends Token implements Serializable {
 	}
 }
 
+/**
+ * The Class SerializableCoin.
+ */
 class SerializableCoin extends Token implements Serializable {
 
+	/** The eaten. */
 	private boolean eaten;
+	
+	/** The Translate Y. */
 	private final double Translate_Y;
+	
+	/** The img. */
 	String img;
 
+	/**
+	 * Instantiates a new serializable coin.
+	 *
+	 * @param coin the coin
+	 */
 	public SerializableCoin(Coin coin) {
 		super(coin.getLOCATION_X(), coin.getLOCATION_Y(), coin.getMode());
 		Translate_Y = coin.getStack().getTranslateY();
@@ -173,6 +355,12 @@ class SerializableCoin extends Token implements Serializable {
 		this.img = coin.getIMAGE_SRC();
 	}
 
+	/**
+	 * Construct coin.
+	 *
+	 * @param main the main
+	 * @return the coin
+	 */
 	public Coin constructCoin(Main main) {
 		Coin coin = new Coin(LOCATION_X, LOCATION_Y, Translate_Y, eaten, mode, img);
 		main.getRoot().getChildren().add(coin.getStack());
@@ -181,7 +369,18 @@ class SerializableCoin extends Token implements Serializable {
 
 }
 
+/**
+ * The Class SerializableClasses.
+ */
 public class SerializableClasses {
+	
+	/**
+	 * Construct block list.
+	 *
+	 * @param serializableBlocks the serializable blocks
+	 * @param main the main
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<Block>> constructBlockList(ArrayList<ArrayList<SerializableBlock>> serializableBlocks,
 			Main main) {
 		ArrayList<ArrayList<Block>> blocks = new ArrayList<>();
@@ -198,6 +397,13 @@ public class SerializableClasses {
 		return blocks;
 	}
 
+	/**
+	 * Construct ball list.
+	 *
+	 * @param serializableBalls the serializable balls
+	 * @param main the main
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<Ball>> constructBallList(ArrayList<ArrayList<SerializableBall>> serializableBalls,
 			Main main) {
 		ArrayList<ArrayList<Ball>> balls = new ArrayList<>();
@@ -214,6 +420,13 @@ public class SerializableClasses {
 		return balls;
 	}
 
+	/**
+	 * Construct wall list.
+	 *
+	 * @param serializableWalls the serializable walls
+	 * @param main the main
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<Wall>> constructWallList(ArrayList<ArrayList<SerializableWall>> serializableWalls,
 			Main main) {
 		ArrayList<ArrayList<Wall>> walls = new ArrayList<>();
@@ -227,6 +440,13 @@ public class SerializableClasses {
 		return walls;
 	}
 
+	/**
+	 * Construct coin list.
+	 *
+	 * @param serializableCoins the serializable coins
+	 * @param main the main
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<Coin>> constructCoinList(ArrayList<ArrayList<SerializableCoin>> serializableCoins,
 			Main main) {
 		ArrayList<ArrayList<Coin>> coins = new ArrayList<>();
@@ -243,6 +463,12 @@ public class SerializableClasses {
 		return coins;
 	}
 
+	/**
+	 * Construct serializable block list.
+	 *
+	 * @param blockOnScreen the block on screen
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<SerializableBlock>> constructSerializableBlockList(
 			ArrayList<ArrayList<Block>> blockOnScreen) {
 		ArrayList<ArrayList<SerializableBlock>> Sblocks = new ArrayList<>();
@@ -255,6 +481,12 @@ public class SerializableClasses {
 		return Sblocks;
 	}
 
+	/**
+	 * Construct serializable ball list.
+	 *
+	 * @param ballsOnScreen the balls on screen
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<SerializableBall>> constructSerializableBallList(
 			ArrayList<ArrayList<Ball>> ballsOnScreen) {
 		ArrayList<ArrayList<SerializableBall>> Sballs = new ArrayList<>();
@@ -267,6 +499,12 @@ public class SerializableClasses {
 		return Sballs;
 	}
 
+	/**
+	 * Construct serializable wall list.
+	 *
+	 * @param wallsOnScreen the walls on screen
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<SerializableWall>> constructSerializableWallList(
 			ArrayList<ArrayList<Wall>> wallsOnScreen) {
 		ArrayList<ArrayList<SerializableWall>> Swalls = new ArrayList<>();
@@ -279,6 +517,12 @@ public class SerializableClasses {
 		return Swalls;
 	}
 
+	/**
+	 * Construct serializable coin list.
+	 *
+	 * @param coinsOnScreen the coins on screen
+	 * @return the array list
+	 */
 	public ArrayList<ArrayList<SerializableCoin>> constructSerializableCoinList(
 			ArrayList<ArrayList<Coin>> coinsOnScreen) {
 		ArrayList<ArrayList<SerializableCoin>> Scoins = new ArrayList<>();

@@ -5,14 +5,39 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Ball.
+ */
 public class Ball extends Token {
+	
+	/** The radius. */
 	private final float radius;
+	
+	/** The color. */
 	private final Color color;
+	
+	/** The circle. */
 	private final Circle circle;
+	
+	/** The value. */
 	private final int value;
+	
+	/** The eaten. */
 	private boolean eaten = false;
+	
+	/** The Pane. */
 	private final StackPane Pane = new StackPane();
 
+	/**
+	 * Instantiates a new ball.
+	 *
+	 * @param xpos the xpos
+	 * @param ypos the ypos
+	 * @param radius the radius
+	 * @param color the color
+	 * @param mode the mode
+	 */
 	public Ball(float xpos, float ypos, float radius, Color color, int mode) {
 		super(xpos, ypos, mode);
 		this.radius = radius;
@@ -25,6 +50,18 @@ public class Ball extends Token {
 		Pane.setLayoutY(ypos);
 	}
 
+	/**
+	 * Instantiates a new ball.
+	 *
+	 * @param lOCATION_X the l OCATIO N X
+	 * @param lOCATION_Y the l OCATIO N Y
+	 * @param translateY the translate Y
+	 * @param radius the radius
+	 * @param color the color
+	 * @param eaten the eaten
+	 * @param value the value
+	 * @param mode the mode
+	 */
 	public Ball(float lOCATION_X, float lOCATION_Y, double translateY, float radius, String color, boolean eaten,
 			int value, int mode) {
 		// TODO Auto-generated constructor stub
@@ -40,34 +77,68 @@ public class Ball extends Token {
 		Pane.getChildren().addAll(circle, t);
 		Pane.setLayoutX(LOCATION_X);
 		Pane.setLayoutY(LOCATION_Y);
-//		circle.setTranslateY(translateY+LOCATION_Y);
 		Pane.setTranslateY(translateY);
 	}
 
+	/**
+	 * Checks if is eaten.
+	 *
+	 * @return true, if is eaten
+	 */
 	public boolean isEaten() {
 		return eaten;
 	}
 
+	/**
+	 * Sets the eaten.
+	 *
+	 * @param eaten the new eaten
+	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;
 	}
 
+	/**
+	 * Gets the radius.
+	 *
+	 * @return the radius
+	 */
 	public float getRadius() {
 		return radius;
 	}
 
+	/**
+	 * Gets the color.
+	 *
+	 * @return the color
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * Gets the circle.
+	 *
+	 * @return the circle
+	 */
 	public Circle getCircle() {
 		return circle;
 	}
 
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Gets the pane.
+	 *
+	 * @return the pane
+	 */
 	public StackPane getPane() {
 		return Pane;
 	}

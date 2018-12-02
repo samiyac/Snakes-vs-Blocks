@@ -7,16 +7,47 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Block.
+ */
 public class Block {
+	
+	/** The location x. */
 	private int LOCATION_X;
+	
+	/** The location y. */
 	private int LOCATION_Y;
+	
+	/** The width. */
 	private final int width;
+	
+	/** The height. */
 	private final int height;
+	
+	/** The value. */
 	private int value;
+	
+	/** The stack. */
 	private final StackPane stack;
+	
+	/** The color. */
 	private final Color color;
+	
+	/** The eaten. */
 	private boolean eaten;
 
+	/**
+	 * Instantiates a new block.
+	 *
+	 * @param LOCATION_X the location x
+	 * @param LOCATION_Y the location y
+	 * @param w the w
+	 * @param h the h
+	 * @param color the color
+	 * @param val the val
+	 * @param text the text
+	 */
 	public Block(int LOCATION_X, int LOCATION_Y, int w, int h, Color color, int val, Text text) {
 		this.LOCATION_X = LOCATION_X;
 		this.LOCATION_Y = LOCATION_Y;
@@ -36,6 +67,18 @@ public class Block {
 		stack.setLayoutY(LOCATION_Y);
 	}
 
+	/**
+	 * Instantiates a new block.
+	 *
+	 * @param width the width
+	 * @param height the height
+	 * @param color the color
+	 * @param val the val
+	 * @param eaten the eaten
+	 * @param lOCATION_X the l OCATIO N X
+	 * @param lOCATION_Y the l OCATIO N Y
+	 * @param translate_Y the translate Y
+	 */
 	public Block(int width, int height, String color, int val, boolean eaten, int lOCATION_X, int lOCATION_Y,
 			double translate_Y) {
 		// TODO Auto-generated constructor stub
@@ -61,42 +104,92 @@ public class Block {
 		
 	}
 
+	/**
+	 * Gets the location X.
+	 *
+	 * @return the location X
+	 */
 	public int getLocationX() {
 		return LOCATION_X;
 	}
 
+	/**
+	 * Sets the location X.
+	 *
+	 * @param LOCATION_X the new location X
+	 */
 	public void setLocationX(int LOCATION_X) {
 		this.LOCATION_X = LOCATION_X;
 	}
 
+	/**
+	 * Gets the location Y.
+	 *
+	 * @return the location Y
+	 */
 	public int getLocationY() {
 		return LOCATION_Y;
 	}
 
+	/**
+	 * Sets the location Y.
+	 *
+	 * @param LOCATION_Y the new location Y
+	 */
 	public void setLocationY(int LOCATION_Y) {
 		this.LOCATION_Y = LOCATION_Y;
 	}
 
+	/**
+	 * Checks if is eaten.
+	 *
+	 * @return true, if is eaten
+	 */
 	public boolean isEaten() {
 		return eaten;
 	}
 
+	/**
+	 * Sets the eaten.
+	 *
+	 * @param eaten the new eaten
+	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;
 	}
 
+	/**
+	 * Gets the width.
+	 *
+	 * @return the width
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * Gets the height.
+	 *
+	 * @return the height
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public int getValue() {
 		return value;
 	}
 
+	/**
+	 * Update value.
+	 *
+	 * @param v the v
+	 */
 	public void updateValue(int v) {
 		this.value = v;
 		Text text = new Text(Integer.toString(v));
@@ -104,12 +197,21 @@ public class Block {
 		stack.getChildren().add(text);
 	}
 
+	/**
+	 * Gets the stack.
+	 *
+	 * @return the stack
+	 */
 	public StackPane getStack() {
 		return stack;
 	}
 
+	/**
+	 * Gets the color.
+	 *
+	 * @return the color
+	 */
 	public Color getColor() {
 		return color;
 	}
-
 }

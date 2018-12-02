@@ -23,55 +23,106 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LeaderBoardDisplay.
+ */
 public class LeaderBoardDisplay implements Initializable {
 
-	Stage s = Main.stage;
-
+	/** The s. */
+	Stage s= Main.stage;
+	
+	/** The a. */
 	@FXML
 	private Label A = new Label(" ");
+	
+	/** The b. */
 	@FXML
 	private Label B = new Label(" ");
+	
+	/** The c. */
 	@FXML
 	private Label C = new Label(" ");
+	
+	/** The d. */
 	@FXML
 	private Label D = new Label(" ");
+	
+	/** The e. */
 	@FXML
 	private Label E = new Label(" ");
+	
+	/** The f. */
 	@FXML
 	private Label F = new Label(" ");
+	
+	/** The g. */
 	@FXML
 	private Label G = new Label(" ");
+	
+	/** The h. */
 	@FXML
 	private Label H = new Label(" ");
+	
+	/** The i. */
 	@FXML
 	private Label I = new Label(" ");
+	
+	/** The j. */
 	@FXML
 	private Label J = new Label(" ");
+	
+	/** The k. */
 	@FXML
 	private Label K = new Label(" ");
+	
+	/** The l. */
 	@FXML
 	private Label L = new Label(" ");
+	
+	/** The m. */
 	@FXML
 	private Label M = new Label(" ");
+	
+	/** The n. */
 	@FXML
 	private Label N = new Label(" ");
+	
+	/** The o. */
 	@FXML
 	private Label O = new Label(" ");
+	
+	/** The p. */
 	@FXML
 	private Label P = new Label(" ");
+	
+	/** The q. */
 	@FXML
 	private Label Q = new Label(" ");
+	
+	/** The r. */
 	@FXML
 	private Label R = new Label(" ");
+	
+	/** The s. */
 	@FXML
 	private Label S = new Label(" ");
+	
+	/** The t. */
 	@FXML
 	private Label T = new Label(" ");
+	
+	/** The List. */
 	// private Label B = new Label();
 	ArrayList<Label> List = new ArrayList<>();
+	
+	/** The l. */
 	// ArrayList<Node> Data =
 	LeaderBoardList l;
 
+	/**
+	 * Instantiates a new leader board display.
+	 */
 	public LeaderBoardDisplay() {
 
 		l = new LeaderBoardList();
@@ -79,6 +130,12 @@ public class LeaderBoardDisplay implements Initializable {
 
 	}
 
+	/**
+	 * Returnto main.
+	 *
+	 * @param event the event
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	@FXML
 	protected void returntoMain(ActionEvent event) throws IOException {
 		s.setTitle("Snake vs Block");
@@ -89,6 +146,9 @@ public class LeaderBoardDisplay implements Initializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
