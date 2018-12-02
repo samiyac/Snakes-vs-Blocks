@@ -32,6 +32,10 @@ public class LeaderBoardDisplay implements Initializable {
 	/** The s. */
 	Stage s= Main.getStage();
 	
+	/**
+	*All labels
+	*/
+	
 	/** The a. */
 	@FXML
 	private Label A = new Label(" ");
@@ -116,8 +120,8 @@ public class LeaderBoardDisplay implements Initializable {
 	// private Label B = new Label();
 	ArrayList<Label> List = new ArrayList<>();
 	
-	/** The l. */
-	// ArrayList<Node> Data =
+	/** The leaderBoard list with scores and day. */
+	
 	LeaderBoardList l;
 
 	/**
@@ -131,7 +135,7 @@ public class LeaderBoardDisplay implements Initializable {
 	}
 
 	/**
-	 * Returnto main.
+	 * Return to start game page.
 	 *
 	 * @param event the event
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -148,6 +152,7 @@ public class LeaderBoardDisplay implements Initializable {
 
 	/* (non-Javadoc)
 	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 * To initialise all the labels with scores and date from leaderBoard List
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
