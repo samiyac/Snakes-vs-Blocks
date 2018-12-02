@@ -55,9 +55,13 @@ public class EndGame implements Initializable {
 
 	/**
 	 * Instantiates a new end game.
+	 * @throws IOException 
 	 */
-	public EndGame() {
+	public EndGame() throws IOException {
 		System.out.println("default");
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("bonusCoin"));
+		os.writeObject(Main.getBonusCoin());
+		os.close();
 		s = Main.getStage();
 		score = Main.tempscore;
 		Main.tempscore=0;
