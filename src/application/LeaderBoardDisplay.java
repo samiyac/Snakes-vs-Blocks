@@ -36,9 +36,7 @@ public class LeaderBoardDisplay implements Initializable {
 	/** The s. */
 	private final Stage s = Main.getStage();
 
-	/**
-	 * All labels
-	 */
+	/** All labels. */
 
 	/** The a. */
 	@FXML

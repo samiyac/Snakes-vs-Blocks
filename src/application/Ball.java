@@ -95,7 +95,7 @@ public class Ball extends Token {
 	/**
 	 * Sets the eaten.
 	 *
-	 * @param sets the ball as eaten
+	 * @param eaten the new eaten
 	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;
