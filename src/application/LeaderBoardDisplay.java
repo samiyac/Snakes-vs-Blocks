@@ -207,7 +207,7 @@ public class LeaderBoardDisplay implements Initializable {
 		
 		if (l.getBoard().size() > 5) {
 			K.setText(Integer.toString(l.getBoard().get(5).getScore()));
-			L.setText(l.getBoard().get(1).getDate());
+			L.setText(l.getBoard().get(5).getDate());
 		} else {
 			K.setText(" ");
 			L.setText(" ");
@@ -215,7 +215,7 @@ public class LeaderBoardDisplay implements Initializable {
 		
 		if (l.getBoard().size() > 6) {
 			M.setText(Integer.toString(l.getBoard().get(6).getScore()));
-			N.setText(l.getBoard().get(2).getDate());
+			N.setText(l.getBoard().get(6).getDate());
 
 		} else {
 			M.setText(" ");
@@ -224,7 +224,7 @@ public class LeaderBoardDisplay implements Initializable {
 		
 		if (l.getBoard().size() > 7) {
 			O.setText(Integer.toString(l.getBoard().get(7).getScore()));
-			P.setText(l.getBoard().get(3).getDate());
+			P.setText(l.getBoard().get(7).getDate());
 
 		} else {
 			O.setText(" ");
@@ -233,7 +233,7 @@ public class LeaderBoardDisplay implements Initializable {
 		
 		if (l.getBoard().size() > 8) {
 			Q.setText(Integer.toString(l.getBoard().get(8).getScore()));
-			R.setText(l.getBoard().get(4).getDate());
+			R.setText(l.getBoard().get(8).getDate());
 		} else {
 			Q.setText(" ");
 			R.setText(" ");
@@ -241,7 +241,7 @@ public class LeaderBoardDisplay implements Initializable {
 		
 		if (l.getBoard().size() > 9) {
 			S.setText(Integer.toString(l.getBoard().get(9).getScore()));
-			T.setText(l.getBoard().get(4).getDate());
+			T.setText(l.getBoard().get(9).getDate());
 		} else {
 			S.setText(" ");
 			T.setText(" ");
