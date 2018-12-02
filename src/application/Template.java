@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Label;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,28 +23,35 @@ public class Template implements Initializable {
 
 	/**
 	 * Start classic.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void StartClassic() {
+	public void StartClassic() throws ClassNotFoundException, IOException {
 		Main m = new Main();
 		try {
 			Main.mode = 1;
-			m.setNewGame();
-
+			m.setGameState(new GameState(m));
+			m.getGameState().setNewGame();
 		} catch (Exception p) {
-			System.out.println(p);
+			p.printStackTrace();
 		}
 	}
 
 	/**
 	 * Start christmas.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void StartChristmas() {
+	public void StartChristmas() throws ClassNotFoundException, IOException {
 		Main m = new Main();
 		try {
 			Main.mode = 2;
-			m.setNewGame();
+			m.setGameState(new GameState(m));
+			m.getGameState().setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
@@ -50,13 +59,17 @@ public class Template implements Initializable {
 
 	/**
 	 * Start halloween.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void StartHalloween() {
+	public void StartHalloween() throws ClassNotFoundException, IOException {
 		Main m = new Main();
 		try {
 			Main.mode = 3;
-			m.setNewGame();
+			m.setGameState(new GameState(m));
+			m.getGameState().setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
@@ -64,13 +77,17 @@ public class Template implements Initializable {
 
 	/**
 	 * Start summer.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void StartSummer() {
+	public void StartSummer() throws ClassNotFoundException, IOException {
 		Main m = new Main();
 		try {
 			Main.mode = 4;
-			m.setNewGame();
+			m.setGameState(new GameState(m));
+			m.getGameState().setNewGame();
 		} catch (Exception p) {
 			System.out.println(p);
 		}
@@ -81,7 +98,7 @@ public class Template implements Initializable {
 	 */
 	@FXML
 	public void IncreaseShield() {
-		if (Main.bonusCoin > 10) {
+		if (Main.bonusCoin >= 10) {
 			Main.ShieldTimer = (Main.ShieldTimer + 2);
 			Main.bonusCoin = (Main.bonusCoin - 10);
 			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
@@ -93,7 +110,7 @@ public class Template implements Initializable {
 	 */
 	@FXML
 	public void IncreaseMagnet() {
-		if (Main.bonusCoin > 10) {
+		if (Main.bonusCoin >= 10) {
 			Main.MagnetTimer = (Main.MagnetTimer + 2);
 			Main.bonusCoin = (Main.bonusCoin - 10);
 			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
@@ -132,11 +149,14 @@ public class Template implements Initializable {
 		Main.colorBall = Color.web("#f5ee24");
 	}
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL,
+	 * java.util.ResourceBundle)
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
+		coin.setText("Coins : " + Integer.toString(Main.getBonusCoin()));
 	}
 }

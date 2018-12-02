@@ -214,7 +214,7 @@ public class Snake extends Circle {
 			Circle c = new Circle(x, (y + 2 * radius), radius, color);
 			snakeLength.add(c);
 			length++;
-			main.setVelocity(0.2);
+			main.updateVelocity(0.2);
 		}
 
 	}
@@ -255,14 +255,14 @@ public class Snake extends Circle {
 			snakeLength.get(length - 1).setVisible(false);
 			snakeLength.remove(length - 1);
 			length--;
-			main.setVelocity(-0.2);
-			main.updateScore(1);
+			main.updateVelocity(-0.2);
+			main.getLabels().updateScore(1);
 		}
 		if (length > 0) {
 			block.setEaten(true);
 			block.getStack().setVisible(false);
 
-			main.setBlockHit(false);
+			main.setBLOCK_HIT(false);
 		} else {
 			try {
 				throw new EndGameException("end game");
@@ -296,7 +296,7 @@ public class Snake extends Circle {
 				if (block.getValue() == 0 && length > 0) {
 					block.setEaten(true);
 					block.getStack().setVisible(false);
-					main.PlayBurst(block.getStack().getBoundsInParent(), false, block.getColor());
+					main.getBurstAnimation().PlayBurst(block.getStack().getBoundsInParent(), false, block.getColor());
 				} else if (length == 0) {
 					try {
 						throw new EndGameException("end game");
@@ -308,7 +308,7 @@ public class Snake extends Circle {
 				}
 				System.out.println("play");
 				if (main.getHitBlock() == block) {
-					main.setBlockHit(false);
+					main.setBLOCK_HIT(false);
 				}
 			}
 		});
@@ -332,7 +332,7 @@ public class Snake extends Circle {
 			tmpDir.delete();
 		}
 		main.setEnd(true);
-		main.endgame();
+		main.getGameState().endgame();
 	}
 
 	/**
@@ -378,15 +378,15 @@ public class Snake extends Circle {
 					snakeLength.get(length - 1).setVisible(false);
 					snakeLength.remove(length - 1);
 					length--;
-					main.setVelocity(-0.2);
+					main.updateVelocity(-0.2);
 					value--;
 					block.updateValue(value);
-					main.updateScore(1);
+					main.getLabels().updateScore(1);
 				} else if (intersecting) {
 					intersecting = false;
 					if (main.getHitBlock() == block) {
 						main.setHitBlock(null);
-						main.setBlockHit(false);
+						main.setBLOCK_HIT(false);
 						System.out.println("blockhandle");
 					}
 				}

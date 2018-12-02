@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
 public class LeaderBoardDisplay implements Initializable {
 
 	/** The s. */
-	Stage s= Main.stage;
+	Stage s= Main.getStage();
 	
 	/** The a. */
 	@FXML

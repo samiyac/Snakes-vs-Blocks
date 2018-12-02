@@ -23,7 +23,7 @@ public class StartPage {
 	 * Instantiates a new start page.
 	 */
 	public StartPage() {
-		s = Main.stage;
+		s = Main.getStage();
 	}
 
 	/**
@@ -66,14 +66,15 @@ public class StartPage {
 
 		try {
 			Main m = new Main();
+			m.setGameState(new GameState(m));
 			File tmpDir = new File("SnakeVsBlock");
 			boolean exists = tmpDir.exists();
 			if (exists) {
-				m.ResumeGame();
+				m.getGameState().ResumeGame(m);
 			}
 
 		} catch (Exception E) {
-			System.out.println(E);
+			E.printStackTrace();
 		}
 	}
 }

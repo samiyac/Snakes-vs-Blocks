@@ -14,7 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Stack;
@@ -53,7 +55,7 @@ public class EndGame implements Initializable {
 	 */
 	public EndGame() {
 		System.out.println("default");
-		s = Main.stage;
+		s = Main.getStage();
 		score = Main.tempscore;
 		Main.tempscore=0;
 	}
@@ -114,6 +116,9 @@ public class EndGame implements Initializable {
 	 */
 	@FXML
 	protected void SystemClose(ActionEvent event) throws IOException {
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("bonusCoin"));
+		os.writeObject(Main.getBonusCoin());
+		os.close();
 		System.exit(0);
 
 	}

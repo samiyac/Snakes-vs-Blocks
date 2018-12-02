@@ -1,54 +1,21 @@
 package application;
 
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.StackPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -57,17 +24,17 @@ import java.util.TimerTask;
 public class Main extends Application {
 
 	/** The Block on screen. */
-	private ArrayList<ArrayList<Block>> BlockOnScreen;
+	private ArrayList<ArrayList<Block>> BlockOnScreen = new ArrayList<>();
 	
 	/** The Balls on screen. */
-	private ArrayList<ArrayList<Ball>> BallsOnScreen;
+	private ArrayList<ArrayList<Ball>> BallsOnScreen = new ArrayList<>();
 	
 	/** The Walls on screen. */
-	private ArrayList<ArrayList<Wall>> WallsOnScreen;
+	private ArrayList<ArrayList<Wall>> WallsOnScreen = new ArrayList<>();
 	
 	/** The Coins on screen. */
-	private ArrayList<ArrayList<Coin>> CoinsOnScreen;
-	
+	private ArrayList<ArrayList<Coin>> CoinsOnScreen = new ArrayList<>();
+
 	/** The Shield on screen. */
 	private Shield ShieldOnScreen;
 	
@@ -76,49 +43,85 @@ public class Main extends Application {
 	
 	/** The Destroy block on screen. */
 	private DestroyBlock DestroyBlockOnScreen;
-	
+
 	/** The snake. */
 	private Snake snake;
 	
+	/** The ball factory. */
+	private BallFactory ballFactory = new BallFactory(this);
+	
+	/** The wall factory. */
+	private WallFactory wallFactory = new WallFactory(this);
+	
+	/** The block factory. */
+	private BlockFactory blockFactory = new BlockFactory(this);
+	
+	/** The coin factory. */
+	private CoinFactory coinFactory = new CoinFactory(this);
+	
+	/** The token factory. */
+	private TokenFactory tokenFactory = new TokenFactory(this);
+	
+	/** The labels. */
+	private Labels labels = new Labels(this);
+	
+	/** The game state. */
+	private GameState gameState;
+	
+	/** The deserializer. */
+	private Deserializer deserializer = new Deserializer(this);
+	
+	/** The serializer. */
+	private Serializer serializer = new Serializer(this);
+	
+	/** The drop down. */
+	private DropDown dropDown = new DropDown(this);
+	
+	/** The snake motion. */
+	private SnakeMotion snakeMotion = new SnakeMotion(this);
+	
+	/** The Burst animation. */
+	private burstAnimation BurstAnimation = new burstAnimation(this);
+	
+	/** The magnet handler. */
+	private MagnetHandler magnetHandler = new MagnetHandler(this);
+
 	/** The score. */
 	private int score;
 	
 	/** The velocity. */
 	private double velocity;
-	
+
 	/** The score label. */
-	private Text scoreLabel;
+	private Text scoreLabel = new Text();
+	
+	/** The coin label. */
+	private Text coinLabel = new Text();
+	
+	/** The length label. */
+	private Text lengthLabel = new Text();
+	
+	/** The timer label. */
+	private Label timerLabel = new Label();
 	
 	/** The drop down menu. */
-	ChoiceBox<String> dropDownMenu;
-	
-	/** The block hit. */
-	private boolean BLOCK_HIT;
-	
+	private ChoiceBox<String> dropDownMenu = new ChoiceBox<>();
+
 	/** The hit block. */
 	private Block hitBlock;
-	
+
 	/** The shield. */
 	private boolean shield;
-	
-	/** The music. */
-	private final Media music;
-	
-	/** The player tokens balls. */
-	private final MediaPlayer playerTokensBalls;
-	
-	/** The block music. */
-	private final Media blockMusic;
-	
-	/** The player block. */
-	private final MediaPlayer playerBlock;
 	
 	/** The end. */
 	private boolean end;
 	
+	/** The block hit. */
+	private boolean BLOCK_HIT;
+	
 	/** The restart. */
 	private boolean restart;
-	
+
 	/** The root. */
 	private Group root;
 	
@@ -126,19 +129,10 @@ public class Main extends Application {
 	private Scene scene;
 	
 	/** The stage. */
-	static Stage stage;
-	
-	/** The length label. */
-	private Text lengthLabel;
-	
-	/** The coin label. */
-	private Text coinLabel;
-	
+	private static Stage stage;
+
 	/** The bonus coin. */
 	public static int bonusCoin;
-	
-	/** The timer label. */
-	Label timerLabel = new Label();
 	
 	/** The tempscore. */
 	public static int tempscore;
@@ -157,17 +151,17 @@ public class Main extends Application {
 
 	/**
 	 * Instantiates a new main.
+	 *
+	 * @throws ClassNotFoundException the class not found exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	public Main() {
-		music = new Media(new File("sound/mariotrim.wav").toURI().toString());
-		playerTokensBalls = new MediaPlayer(music);
-		blockMusic = new Media(new File("sound/block.wav").toURI().toString());
-		playerBlock = new MediaPlayer(blockMusic);
-		playerBlock.setVolume(0.3);
-		bonusCoin=deserialise();
+	public Main() throws ClassNotFoundException, IOException {
+		deserializer.deserialize();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
 	 */
 	@Override
@@ -193,9 +187,10 @@ public class Main extends Application {
 	/**
 	 * Playgame.
 	 *
-	 * @param s the s
+	 * @param s
+	 *            the s
 	 */
-	public void playgame(Stage s) {
+	public final void playgame(Stage s) {
 		if (colorBall == null) {
 			colorBall = Color.YELLOW;
 		}
@@ -204,6 +199,24 @@ public class Main extends Application {
 		System.out.println("hello");
 		s.setScene(scene);
 		s.show();
+		keyInputs();
+		if (!restart) {
+			blockFactory.BlockAnimation();
+			ballFactory.BallAnimation();
+			tokenFactory.TokenAnimation();
+			wallFactory.WallAnimation();
+			snakeMotion.SnakeAnimation();
+			coinFactory.CoinAnimation();
+		}
+		System.out.println(velocity + " velocity");
+		labels.setTimer();
+		closeRequest(s);
+	}
+
+	/**
+	 * Key inputs.
+	 */
+	public void keyInputs() {
 		scene.setOnKeyPressed(e -> {
 			KeyCode x = e.getCode();
 
@@ -247,17 +260,14 @@ public class Main extends Application {
 			}
 
 		});
+	}
 
-		if (!restart) {
-			BlockAnimation();
-			BallAnimation();
-			TokenAnimation();
-			WallAnimation();
-			SnakeAnimation();
-			CoinAnimation();
-		}
-		setTimer();
-
+	/**
+	 * Close request.
+	 *
+	 * @param s the s
+	 */
+	public void closeRequest(Stage s) {
 		s.setOnCloseRequest(event -> {
 			System.out.println("Stage is closing");
 			try {
@@ -265,8 +275,8 @@ public class Main extends Application {
 			} catch (EndGameException e1) {
 				// TODO Auto-generated catch block
 				try {
-					saveGameState();
-					serialise();
+					serializer.saveGameState();
+					serializer.serialize();
 					end = true;
 				} catch (FileNotFoundException e2) {
 					// TODO Auto-generated catch block
@@ -280,341 +290,6 @@ public class Main extends Application {
 
 			}
 		});
-
-	}
-
-	/**
-	 * Resume game.
-	 *
-	 * @throws Exception the exception
-	 */
-	public void ResumeGame() throws Exception {
-		restart = false;
-		snake.getSnakeLength().clear();
-		playgame(stage);
-		loadOldGame();
-	}
-
-	/**
-	 * Serialise.
-	 */
-	public void serialise() {
-
-		try {
-			FileOutputStream f = new FileOutputStream("BonusCoin");
-			ObjectOutputStream out = new ObjectOutputStream(f);
-			out.writeObject(bonusCoin);
-			out.close();
-			f.close();
-		} catch (Exception e) {
-		}
-
-	}
-
-	/**
-	 * Deserialise.
-	 *
-	 * @return the int
-	 */
-	public int deserialise() {
-
-		int x = 0;
-		try {
-			FileInputStream f = new FileInputStream("BonusCoin");
-			ObjectInputStream in = new ObjectInputStream(f);
-			x = (int) in.readObject();
-		} catch (Exception e) {
-		}
-
-		return x;
-
-	}
-
-	/**
-	 * Load old game.
-	 *
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 * @throws ClassNotFoundException the class not found exception
-	 */
-	public void loadOldGame() throws IOException, ClassNotFoundException {
-		try {
-			ObjectInputStream is = new ObjectInputStream(new FileInputStream("SnakeVsBlock"));
-			ArrayList<ArrayList<SerializableBlock>> serializableBlocks = (ArrayList<ArrayList<SerializableBlock>>) is
-					.readObject();
-			ArrayList<ArrayList<SerializableBall>> serializableBalls = (ArrayList<ArrayList<SerializableBall>>) is
-					.readObject();
-			ArrayList<ArrayList<SerializableWall>> serializableWalls = (ArrayList<ArrayList<SerializableWall>>) is
-					.readObject();
-			ArrayList<ArrayList<SerializableCoin>> serializableCoins = (ArrayList<ArrayList<SerializableCoin>>) is
-					.readObject();
-			SerializableShield serializableShield = (SerializableShield) is.readObject();
-			SerializableMagnet serializableMagnet = (SerializableMagnet) is.readObject();
-			SerializableDB serializableDB = (SerializableDB) is.readObject();
-			SerializableSnake serializableSnake = (SerializableSnake) is.readObject();
-			score = (Integer) is.readObject();
-			velocity = (Double) is.readObject();
-			BLOCK_HIT = (Boolean) is.readObject();
-			shield = (Boolean) is.readObject();
-			mode = (Integer) is.readObject();
-			colorBall = Color.web((String) is.readObject());
-			is.close();
-
-			SerializableClasses SC = new SerializableClasses();
-
-			BlockOnScreen = SC.constructBlockList(serializableBlocks, this);
-			BallsOnScreen = SC.constructBallList(serializableBalls, this);
-			WallsOnScreen = SC.constructWallList(serializableWalls, this);
-			CoinsOnScreen = SC.constructCoinList(serializableCoins, this);
-
-			if (serializableShield.getLOCATION_X() != -2000 && serializableShield.getLOCATION_Y() != -2000) {
-				ShieldOnScreen = serializableShield.constructShield(this);
-			}
-			if (serializableMagnet.getLOCATION_X() != -2000 && serializableMagnet.getLOCATION_Y() != -2000) {
-				MagnetOnScreen = serializableMagnet.constructMagnet(this);
-			}
-
-			if (serializableDB.getLOCATION_X() != -2000 && serializableDB.getLOCATION_Y() != -2000) {
-				DestroyBlockOnScreen = serializableDB.constructDB(this);
-			}
-
-			snake = serializableSnake.constructSnake(this);
-			for (int i = 0; i < Snake.getSnakeLength().size(); i++) {
-				root.getChildren().add(Snake.getSnakeLength().get(i));
-			}
-			setDropDownBox();
-			setScore();
-			setLengthLabel();
-			setCoinLabel();
-			lengthLabel.setX(snake.getSnakeLength().get(0).getCenterX());
-			System.out.println(snake.getLength() + " length of snake ");
-		} catch (FileNotFoundException e1) {
-			System.err.println("No old game");
-			setNewGame();
-		}
-	}
-
-	/**
-	 * Save game state.
-	 *
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void saveGameState() throws FileNotFoundException, IOException {
-		SerializableClasses SC = new SerializableClasses();
-		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("SnakeVsBlock"));
-		os.writeObject(SC.constructSerializableBlockList(BlockOnScreen));
-		os.writeObject(SC.constructSerializableBallList(BallsOnScreen));
-		os.writeObject(SC.constructSerializableWallList(WallsOnScreen));
-		os.writeObject(SC.constructSerializableCoinList(CoinsOnScreen));
-		if (ShieldOnScreen != null) {
-			float X = ShieldOnScreen.getLOCATION_X();
-			float Y = ShieldOnScreen.getLOCATION_Y();
-			double translateY = ShieldOnScreen.getStack().getTranslateY();
-			String img = ShieldOnScreen.getIMAGE_SRC();
-			os.writeObject(new SerializableShield(X, Y, translateY, mode, img));
-		} else {
-			os.writeObject(new SerializableShield(-2000, -2000, -2000, 0, ""));
-		}
-		if (MagnetOnScreen != null) {
-			float X = MagnetOnScreen.getLOCATION_X();
-			float Y = MagnetOnScreen.getLOCATION_Y();
-			double translateY = MagnetOnScreen.getStack().getTranslateY();
-			String img = MagnetOnScreen.getIMAGE_SRC();
-			os.writeObject(new SerializableMagnet(X, Y, translateY, mode, img));
-		} else {
-			os.writeObject(new SerializableMagnet(-2000, -2000, -2000, 0, ""));
-		}
-		if (DestroyBlockOnScreen != null) {
-			float X = DestroyBlockOnScreen.getLOCATION_X();
-			float Y = DestroyBlockOnScreen.getLOCATION_Y();
-			double translateY = DestroyBlockOnScreen.getStack().getTranslateY();
-			String img = DestroyBlockOnScreen.getIMAGE_SRC();
-			os.writeObject(new SerializableDB(X, Y, translateY, mode, img));
-		} else {
-			os.writeObject(new SerializableDB(-2000, -2000, -2000, 0, ""));
-		}
-
-		os.writeObject(new SerializableSnake(snake));
-		os.writeObject(score);
-		os.writeObject(velocity);
-		os.writeObject(BLOCK_HIT);
-		os.writeObject(shield);
-		os.writeObject(mode);
-		os.writeObject(colorBall.toString());
-		os.close();
-	}
-
-	/**
-	 * Sets the new game.
-	 */
-	public void setNewGame() {
-		end = false;
-		snake.getSnakeLength().clear();
-		velocity = 6;
-		BlockOnScreen = new ArrayList<>();
-		BallsOnScreen = new ArrayList<>();
-		WallsOnScreen = new ArrayList<>();
-		CoinsOnScreen = new ArrayList<>();
-		playgame(stage);
-		snake = new Snake(250, 500, 10, colorBall);
-		score = 0;
-		BLOCK_HIT = false;
-		shield = false;
-		for (int i = 0; i < snake.getSnakeLength().size(); i++) {
-			root.getChildren().add(snake.getSnakeLength().get(i));
-		}
-		setDropDownBox();
-		setWalls();
-		setBlocks(-100);
-		setBalls(-100);
-		setCoins(-50);
-		setScore();
-		setLengthLabel();
-		setCoinLabel();
-	}
-
-	/**
-	 * Endgame.
-	 */
-	public void endgame() {
-		serialise();
-		EndGame e = new EndGame(stage, score);
-		tempscore = score;
-		end = true;
-		restart = false;
-		try {
-			e.loadEndScreen();
-		} catch (Exception E) {
-		}
-	}
-
-	/**
-	 * Sets the length label.
-	 */
-	private void setLengthLabel() {
-		lengthLabel = new Text();
-		lengthLabel.setX(snake.getLOCATION_X());
-		lengthLabel.setY(snake.getLOCATION_Y() - 20);
-		System.out.println(snake.getLength() + " set label");
-		lengthLabel.setText(Integer.toString(snake.getLength()));
-		lengthLabel.setFont(Font.font(15));
-		lengthLabel.setFill(Color.WHITE);
-		lengthLabel.setTextAlignment(TextAlignment.LEFT);
-		root.getChildren().add(lengthLabel);
-
-	}
-
-	/**
-	 * Update length.
-	 */
-	public void updateLength() {
-		int x = snake.getSnakeLength().size() - 1;
-		lengthLabel.setText(Integer.toString(x));
-	}
-
-	/**
-	 * Sets the coin label.
-	 */
-	private void setCoinLabel() {
-		coinLabel = new Text("Coins : " + bonusCoin);
-		coinLabel.setX(400);
-		coinLabel.setY(100);
-		coinLabel.setFont(Font.font(15));
-		coinLabel.setFill(Color.WHITE);
-		root.getChildren().addAll(coinLabel);
-		coinLabel.toFront();
-	}
-
-	/**
-	 * Update coin.
-	 *
-	 * @param inc the inc
-	 */
-	public void updateCoin(int inc) {
-		this.bonusCoin += inc;
-		coinLabel.setText("Coin : " + bonusCoin);
-		coinLabel.toFront();
-	}
-
-	/**
-	 * Sets the score.
-	 */
-	private void setScore() {
-		scoreLabel = new Text("Score : " + score);
-		scoreLabel.setX(400);
-		scoreLabel.setY(50);
-		scoreLabel.setFont(Font.font(15));
-		scoreLabel.setFill(Color.WHITE);
-		root.getChildren().addAll(scoreLabel);
-		scoreLabel.toFront();
-	}
-
-	/**
-	 * Update score.
-	 *
-	 * @param inc the inc
-	 */
-	public void updateScore(int inc) {
-		this.score += inc;
-		scoreLabel.setText("Score : " + score);
-		scoreLabel.toFront();
-	}
-
-	/**
-	 * Sets the drop down box.
-	 */
-	private void setDropDownBox() {
-		dropDownMenu = new ChoiceBox<>();
-		dropDownMenu.getItems().addAll("Restart", "Exit Game");
-		dropDownMenu.setLayoutX(400);
-		dropDownMenu.setLayoutY(3);
-		// dropDownMenu.setValue("Exit Game");
-		dropDownMenu.setBackground(Background.EMPTY);
-		String style = "-fx-background-color: rgba(255,255,0);";
-		dropDownMenu.setStyle(style);
-		root.getChildren().addAll(dropDownMenu);
-		dropDownMenu.toFront();
-		dropDownMenu.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-				if (newValue.equals(0)) {
-					end = true;
-					restart = true;
-					setNewGame();
-
-				} else if (newValue.equals(1)) {
-					end = true;
-					try {
-						saveGameState();
-						System.out.println(snake.getLength() + " length of snake");
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					try {
-						startpage(stage);
-					} catch (Exception e) {
-						System.out.println(e);
-					}
-
-				}
-			}
-		});
-	}
-
-	/**
-	 * Sets the timer.
-	 */
-	private void setTimer() {
-		timerLabel.setTextFill(Color.WHITE);
-		timerLabel.setFont(Font.font(15));
-		timerLabel.setLayoutY(10);
-		timerLabel.setLayoutX(250);
-		root.getChildren().add(timerLabel);
 	}
 
 	/**
@@ -656,1222 +331,282 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Block animation.
-	 */
-	public void BlockAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new BlockHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class BlockHandler.
-	 */
-	private class BlockHandler implements EventHandler<ActionEvent> {
-		
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT && !end) {
-				for (int i = 0; i < BlockOnScreen.size(); i++) {
-					{
-						for (int j = 0; j < BlockOnScreen.get(i).size(); j++) {
-							StackPane St = BlockOnScreen.get(i).get(j).getStack();
-							St.setTranslateY(St.getTranslateY() + velocity);
-						}
-					}
-				}
-				coinLabel.toFront();
-				scoreLabel.toFront();
-				checkBlockScroll();
-				dropDownMenu.toFront();
-			}
-			if (end) {
-
-			}
-
-		}
-	}
-
-	/**
-	 * Ball animation.
-	 */
-	public void BallAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new BallHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class BallHandler.
-	 */
-	private class BallHandler implements EventHandler<ActionEvent> {
-
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT && !end) {
-				for (int i = 0; i < BallsOnScreen.size(); i++) {
-					for (int j = 0; j < BallsOnScreen.get(i).size(); j++) {
-						StackPane St = BallsOnScreen.get(i).get(j).getPane();
-						St.setTranslateY(St.getTranslateY() + velocity);
-					}
-				}
-				checkBallScroll();
-			}
-
-		}
-	}
-
-	/**
-	 * Token animation.
-	 */
-	public void TokenAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new TokenHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class TokenHandler.
-	 */
-	private class TokenHandler implements EventHandler<ActionEvent> {
-		
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT && !end) {
-				if (MagnetOnScreen != null) {
-					StackPane magnet = MagnetOnScreen.getStack();
-					magnet.setTranslateY(magnet.getTranslateY() + velocity);
-				}
-				if (ShieldOnScreen != null) {
-					StackPane shield = ShieldOnScreen.getStack();
-					shield.setTranslateY(shield.getTranslateY() + velocity);
-				}
-				if (DestroyBlockOnScreen != null) {
-					StackPane DB = DestroyBlockOnScreen.getStack();
-					DB.setTranslateY(DB.getTranslateY() + velocity);
-				}
-				checkTokenScroll();
-			}
-
-		}
-
-	}
-
-	/**
-	 * Coin animation.
-	 */
-	public void CoinAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new CoinHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class CoinHandler.
-	 */
-	private class CoinHandler implements EventHandler<ActionEvent> {
-
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT && !end) {
-				for (int i = 0; i < CoinsOnScreen.size(); i++) {
-					for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
-						StackPane St = CoinsOnScreen.get(i).get(j).getStack();
-						St.setTranslateY(St.getTranslateY() + velocity);
-					}
-				}
-				checkCoinScroll();
-			}
-
-		}
-	}
-
-	/**
-	 * Wall animation.
-	 */
-	public void WallAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new WallHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class WallHandler.
-	 */
-	private class WallHandler implements EventHandler<ActionEvent> {
-		
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			if (!BLOCK_HIT && !end) {
-				for (int i = 0; i < WallsOnScreen.size(); i++) {
-					for (int j = 0; j < WallsOnScreen.get(i).size(); j++) {
-						Wall wall = WallsOnScreen.get(i).get(j);
-						wall.getRect().setTranslateY(wall.getRect().getTranslateY() + velocity);
-					}
-				}
-				checkWallScroll();
-			}
-
-		}
-	}
-
-	/**
-	 * Snake animation.
-	 */
-	public void SnakeAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.millis(50), new SnakeHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
-
-	/**
-	 * The Class SnakeHandler.
-	 */
-	private class SnakeHandler implements EventHandler<ActionEvent> {
-
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		@Override
-		public void handle(ActionEvent event) {
-			// TODO Auto-generated method stub
-			if (!BLOCK_HIT && !end) {
-				try {
-					snakeIntersectBlock();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				timerLabel.toFront();
-				updateLength();
-				snakeIntersectBall();
-				snakeIntersectsDB();
-				snakeIntersectsShield();
-				snakeIntersectsMagnet();
-				snakeIntersectCoin();
-			}
-			if (shield) {
-				snake.changeColors();
-			}
-		}
-	}
-
-	/**
-	 * Play burst.
+	 * Gets the block on screen.
 	 *
-	 * @param bounds the bounds
-	 * @param destroyB the destroy B
-	 * @param color the color
+	 * @return the block on screen
 	 */
-	public void PlayBurst(Bounds bounds, boolean destroyB, Color color) {
-		if (!destroyB) {
-			playerBlock.stop();
-			playerBlock.play();
-		}
-		double x = bounds.getMaxX() + bounds.getMinX();
-		x /= 2;
-		double y = bounds.getMaxY() + bounds.getMinY();
-		y /= 2;
-		BurstAnimation(x, y, color);
+	public ArrayList<ArrayList<Block>> getBlockOnScreen() {
+		return BlockOnScreen;
 	}
 
 	/**
-	 * Burst animation.
+	 * Sets the block on screen.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param color the color
+	 * @param blockOnScreen the new block on screen
 	 */
-	public void BurstAnimation(double x, double y, Color color) {
-		KeyFrame kf = new KeyFrame(Duration.millis(2), new BurstAnimationHandler(x, y, color));
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(1);
-		timeline.play();
+	public void setBlockOnScreen(ArrayList<ArrayList<Block>> blockOnScreen) {
+		BlockOnScreen = blockOnScreen;
 	}
 
 	/**
-	 * The Class BurstAnimationHandler.
-	 */
-	private class BurstAnimationHandler implements EventHandler<ActionEvent> {
-
-		/** The x. */
-		final double x;
-		
-		/** The y. */
-		final double y;
-		
-		/** The color. */
-		final Color color;
-		
-		/** The duration. */
-		final long duration = java.time.Duration.ofSeconds(10).toNanos();
-		
-		/** The side. */
-		final int side = 150;
-		
-		/** The radius. */
-		final double radius = Math.sqrt(2) * side;
-		
-		/** The rectangles. */
-		final Rectangle[] rectangles = new Rectangle[50];
-		
-		/** The delays. */
-		final ArrayList<Long> delays = new ArrayList<>();
-		
-		/** The angles. */
-		final ArrayList<Double> angles = new ArrayList<Double>();
-
-		/**
-		 * Instantiates a new burst animation handler.
-		 *
-		 * @param x the x
-		 * @param y the y
-		 * @param color the color
-		 */
-		public BurstAnimationHandler(double x, double y, Color color) {
-			// TODO Auto-generated constructor stub
-			this.x = x;
-			this.y = y;
-			this.color = color;
-		}
-
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		@Override
-		public void handle(ActionEvent event) {
-			// TODO Auto-generated method stub
-			for (int i = 0; i < 50; i++) {
-				int rand = (int) (Math.random() * 360) + 1;
-				if (color == null) {
-					rectangles[i] = new Rectangle(10, 10, Color.hsb(rand, 1, 1));
-				} else {
-					rectangles[i] = new Rectangle(10, 10, color);
-				}
-				angles.add(2 * Math.random() * Math.PI);
-				delays.add((long) (Math.random() * duration));
-			}
-			root.getChildren().addAll(rectangles);
-
-			AnimationTimer Burst = new AnimationTimer() {
-				int k = 0;
-
-				@Override
-				public void handle(long now) {
-					// TODO Auto-generated method stub
-					k++;
-					if (k < 800) {
-						for (int i = 0; i < 50; i++) {
-							Rectangle rect = rectangles[i];
-							long time = (now - delays.get(i)) % duration;
-							double d = time * radius / duration;
-							rect.setTranslateX(Math.cos(angles.get(i)) * d + x);
-							rect.setTranslateY(Math.sin(angles.get(i)) * d + y);
-							rect.setOpacity((duration - time) / (double) duration);
-
-						}
-					} else {
-						this.stop();
-						root.getChildren().removeAll(rectangles);
-					}
-
-				}
-			};
-			Burst.start();
-		}
-	}
-
-	/**
-	 * Coin attraction animation.
-	 */
-	public void CoinAttractionAnimation() {
-		KeyFrame kf = new KeyFrame(Duration.seconds(0.5), new CoinAttractionHandler());
-		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(6);
-		timeline.play();
-		if (end) {
-			timeline.stop();
-		}
-	}
-
-	/**
-	 * The Class CoinAttractionHandler.
-	 */
-	private class CoinAttractionHandler implements EventHandler<ActionEvent> {
-
-		/* (non-Javadoc)
-		 * @see javafx.event.EventHandler#handle(javafx.event.Event)
-		 */
-		public void handle(ActionEvent event) {
-			int inc = 0;
-			for (int i = 0; i < CoinsOnScreen.size(); i++) {
-				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
-					Coin temp = CoinsOnScreen.get(i).get(j);
-					double checkx = temp.getLOCATION_X();
-					double checky = temp.getStack().getTranslateY();
-					Circle snakeHead = snake.getSnakeLength().get(0);
-
-					if (!temp.isEaten() && Math.abs(checkx - snakeHead.getCenterX()) < 150 && checky > 300
-							&& checky < 700) {
-						temp.setEaten(true);
-						bonusCoin++;
-						Path path = new Path();
-						path.getElements().add(new MoveTo(checkx, checky));
-						path.getElements().add(new LineTo(snakeHead.getCenterX(), 500));
-						path.setOpacity(0);
-						PathTransition move = new PathTransition();
-						move.setDuration(Duration.seconds(0.3));
-						move.setPath(path);
-						move.setNode(temp.getStack());
-						move.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-						move.setCycleCount(1);
-						move.setAutoReverse(true);
-						root.getChildren().add(path);
-						move.play();
-						move.setOnFinished(new EventHandler<ActionEvent>() {
-
-							@Override
-							public void handle(ActionEvent arg0) {
-								// TODO Auto-generated method stub
-								root.getChildren().remove(path);
-								root.getChildren().remove(temp.getStack());
-							}
-						});
-						CoinsOnScreen.get(i).remove(j);
-						inc += 1;
-					}
-				}
-			}
-			updateScore(inc);
-		}
-
-	}
-
-	/**
-	 * Check block scroll.
-	 */
-	private void checkBlockScroll() {
-		int[] distance = { -100, -200 };
-		int c = (int) (Math.random() * 2);
-		if (BlockOnScreen.size() > 0) {
-			StackPane block = BlockOnScreen.get(BlockOnScreen.size() - 1).get(0).getStack();
-			if (block.getTranslateY() + block.getLayoutY() > 100) {
-				setBlocks(distance[c]);
-			}
-			block = BlockOnScreen.get(0).get(0).getStack();
-			if (block.getTranslateY() >= 1100 - block.getLayoutY()) {
-				BlockOnScreen.remove(0);
-			}
-		}
-		if (BlockOnScreen.size() == 0) {
-			setBlocks(distance[c]);
-		}
-	}
-
-	/**
-	 * Sets the blocks.
+	 * Gets the balls on screen.
 	 *
-	 * @param distance the new blocks
+	 * @return the balls on screen
 	 */
-	private void setBlocks(int distance) {
-		int[] xCoord = { 0, 100, 200, 300, 400 };
-		ArrayList<Color> colors = new ArrayList<>();
-		colors.add(Color.DODGERBLUE);
-		colors.add(Color.PLUM);
-		colors.add(Color.TOMATO);
-		colors.add(Color.SALMON);
-		colors.add(Color.AQUAMARINE);
-		Collections.shuffle(colors);
-		int lengthSnake = Snake.getSnakeLength().size();
-		ArrayList<Block> blockList = new ArrayList<>();
-		String bin = "00000";
-		while (bin.equals("00000")) {
-			int x = (int) (Math.random() * 31) + 1;
-			bin = Integer.toBinaryString(x);
-			while (bin.length() < 5) {
-				bin = "0".concat(bin);
-			}
-
-			int counter = 0;
-			String in = bin;
-			while (counter < bin.length()) {
-				if (!checkBlockPosition(xCoord[counter], distance)) {
-
-					if (counter > 0 && counter < bin.length() - 1) {
-						bin = bin.substring(0, counter) + "0" + bin.substring(counter + 1);
-					}
-					if (counter == 0) {
-						bin = "0" + bin.substring(counter + 1);
-					}
-					if (counter == bin.length() - 1) {
-						bin = bin.substring(0, counter) + "0";
-					}
-
-				}
-				counter++;
-			}
-		}
-
-		boolean[] chain = new boolean[5];
-		for (int i = 0; i < bin.length() - 1; i++) {
-			if (bin.charAt(i) == bin.charAt(i + 1) && bin.charAt(i) == '1') {
-				chain[i] = true;
-				chain[i + 1] = true;
-			}
-		}
-
-		int counter = 0;
-		ArrayList<Integer> reqBlocks = new ArrayList<>();
-		while (counter < 5) {
-			if (chain[counter]) {
-				int c = counter;
-				int endOfChain = 0;
-				for (int j = counter; j < chain.length; j++) {
-					if (!chain[j]) {
-						endOfChain = j - 1;
-						counter = j;
-						break;
-					} else if (j == chain.length - 1) {
-						endOfChain = j;
-						counter = j + 1;
-					}
-				}
-				int lengthChain = endOfChain - c + 1;
-				int b = (int) (Math.random() * lengthChain) + c;
-				reqBlocks.add(b);
-			} else {
-				counter++;
-			}
-
-		}
-
-		for (int i = 0; i < bin.length(); i++) {
-			if (bin.charAt(i) == '1') {
-				Color c = colors.get(i);
-				int val = 0;
-				Text t = null;
-				if (reqBlocks.contains(i)) {
-					val = (int) (Math.random() * (lengthSnake - 1)) + 1;
-					t = new Text(Integer.toString(val));
-				} else {
-					val = (int) (Math.random() * 49) + 1;
-					t = new Text(Integer.toString(val));
-				}
-				Block block = new Block(xCoord[i], distance, 100, 100, c, val, t);
-				blockList.add(block);
-				root.getChildren().add(block.getStack());
-			}
-		}
-		if (!blockList.isEmpty()) {
-			BlockOnScreen.add(blockList);
-		}
+	public ArrayList<ArrayList<Ball>> getBallsOnScreen() {
+		return BallsOnScreen;
 	}
 
 	/**
-	 * Check block position.
+	 * Sets the balls on screen.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @return true, if successful
+	 * @param ballsOnScreen the new balls on screen
 	 */
-	private boolean checkBlockPosition(int x, int y) {
-		if (MagnetOnScreen != null) {
-			StackPane magnet = MagnetOnScreen.getStack();
-			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getTranslateY());
-			if (x >= magnetPosX - 120 && x <= magnetPosX + 20 && y >= magnetPosY - 120 && y <= magnetPosY + 20) {
-				return false;
-			}
-		}
-
-		if (DestroyBlockOnScreen != null) {
-			StackPane DB = DestroyBlockOnScreen.getStack();
-			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getTranslateY());
-			if (x >= DBPosX - 120 && x <= DBPosX + 20 && y >= DBPosY - 120 && y <= DBPosY + 20) {
-				return false;
-			}
-		}
-
-		if (ShieldOnScreen != null) {
-			StackPane shield = ShieldOnScreen.getStack();
-			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getTranslateY());
-			if (x >= shieldPosX - 120 && x <= shieldPosX + 20 && y >= shieldPosY - 120 && y <= shieldPosY + 20) {
-				return false;
-			}
-		}
-
-		return true;
+	public void setBallsOnScreen(ArrayList<ArrayList<Ball>> ballsOnScreen) {
+		BallsOnScreen = ballsOnScreen;
 	}
 
 	/**
-	 * Check ball scroll.
-	 */
-	private void checkBallScroll() {
-		if (BallsOnScreen.size() > 0) {
-			if (!BallsOnScreen.get(BallsOnScreen.size() - 1).isEmpty()) {
-				Ball ball1 = BallsOnScreen.get(BallsOnScreen.size() - 1).get(0);
-				if ((int) ball1.getPane().getTranslateY() > 280 - (int) ball1.getPane().getLayoutY()) {
-					setBalls(-50);
-				}
-			}
-
-			if (!BallsOnScreen.get(0).isEmpty()) {
-				Ball ball2 = BallsOnScreen.get(0).get(0);
-				if (ball2.getPane().getTranslateY() >= 1300) {
-					BallsOnScreen.remove(0);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Sets the balls.
+	 * Gets the walls on screen.
 	 *
-	 * @param dis the new balls
+	 * @return the walls on screen
 	 */
-	private void setBalls(int dis) {
-		ArrayList<Ball> ballList = new ArrayList<>();
-		Random rand = new Random();
-		int c = ((int) (Math.random() * 2) + 1);
-		for (int i = 0; i < c; i++) {
-			int x = (int) (Math.random() * 400 + 15);
-			int y = (int) (dis);
-			while (!checkBallPosition(x, y, ballList)) {
-				x = (int) (Math.random() * 400 + 15);
-				y = y - 1;
-			}
-			Ball s = new Ball(x, y, 10, colorBall, mode);
-			ballList.add(s);
-			root.getChildren().add(s.getPane());
-		}
-		BallsOnScreen.add(ballList);
+	public ArrayList<ArrayList<Wall>> getWallsOnScreen() {
+		return WallsOnScreen;
 	}
 
 	/**
-	 * Check ball position.
+	 * Sets the walls on screen.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param ballList the ball list
-	 * @return true, if successful
+	 * @param wallsOnScreen the new walls on screen
 	 */
-	private boolean checkBallPosition(int x, int y, ArrayList<Ball> ballList) {
-		for (int j = 0; j < BlockOnScreen.size(); j++) {
-			for (int k = 0; k < BlockOnScreen.get(j).size(); k++) {
-				StackPane block = BlockOnScreen.get(j).get(k).getStack();
-				int blockPosX = (int) block.getLayoutX();
-				int blockPosY = (int) (block.getLayoutY() + block.getTranslateY());
-				if (x >= blockPosX - 20 && x <= blockPosX + 120 && y >= blockPosY - 20 && y <= blockPosY + 120) {
-					return false;
-				}
-			}
-		}
-		for (int j = 0; j < ballList.size(); j++) {
-			float ballPosX = ballList.get(j).getLOCATION_X();
-			float ballPosY = ballList.get(j).getLOCATION_Y();
-			if (x >= ballPosX - 30 && x <= ballPosX + 30 && y >= ballPosY - 30 && y <= ballPosY + 30) {
-				return false;
-			}
-		}
-		for (int j = 0; j < WallsOnScreen.size(); j++) {
-			for (int k = 0; k < WallsOnScreen.get(j).size(); k++) {
-				int wallPosX = (int) WallsOnScreen.get(j).get(k).getLocationX();
-				int wallPosY = (int) (WallsOnScreen.get(j).get(k).getLoactionY()
-						+ WallsOnScreen.get(j).get(k).getRect().getTranslateY());
-				int heightWall = (int) WallsOnScreen.get(j).get(k).getHeight();
-				if (x >= wallPosX - 40 && x <= wallPosX + 40 && y >= wallPosY - 40 && y <= wallPosY + heightWall + 40) {
-					return false;
-				}
-			}
-		}
-
-		if (MagnetOnScreen != null) {
-			StackPane magnet = MagnetOnScreen.getStack();
-			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getTranslateY());
-			if (x >= magnetPosX - 40 && x <= magnetPosX + 40 && y >= magnetPosY - 40 && y <= magnetPosY + 40) {
-				return false;
-			}
-		}
-
-		if (DestroyBlockOnScreen != null) {
-			StackPane DB = DestroyBlockOnScreen.getStack();
-			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getTranslateY());
-			if (x >= DBPosX - 40 && x <= DBPosX + 40 && y >= DBPosY - 40 && y <= DBPosY + 40) {
-				return false;
-			}
-		}
-
-		if (ShieldOnScreen != null) {
-			StackPane shield = ShieldOnScreen.getStack();
-			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getTranslateY());
-			if (x >= shieldPosX - 40 && x <= shieldPosX + 40 && y >= shieldPosY - 40 && y <= shieldPosY + 40) {
-				return false;
-			}
-		}
-
-		return true;
+	public void setWallsOnScreen(ArrayList<ArrayList<Wall>> wallsOnScreen) {
+		WallsOnScreen = wallsOnScreen;
 	}
 
 	/**
-	 * Check wall scroll.
-	 */
-	private void checkWallScroll() {
-		if (!WallsOnScreen.isEmpty()) {
-			ArrayList<Wall> W1 = WallsOnScreen.get(WallsOnScreen.size() - 1);
-			float maxHeight = 0;
-			Wall reqWall = null;
-			for (Wall wall : W1) {
-				if (wall.getHeight() > maxHeight) {
-					maxHeight = wall.getHeight();
-					reqWall = wall;
-				}
-			}
-			if (reqWall != null) {
-				if ((int) (reqWall.getRect().getTranslateY() + reqWall.getRect().getY()) >= 150) {
-					setWalls();
-				}
-			}
-			W1 = WallsOnScreen.get(0);
-			maxHeight = 0;
-			reqWall = null;
-			for (Wall wall : W1) {
-				if (wall.getHeight() > maxHeight) {
-					maxHeight = wall.getHeight();
-					reqWall = wall;
-				}
-			}
-			if (reqWall != null) {
-				if ((int) reqWall.getRect().getTranslateY() >= 1000 + maxHeight - reqWall.getRect().getY()) {
-					WallsOnScreen.remove(0);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Sets the walls.
-	 */
-	private void setWalls() {
-		int[] xCoord = { 100, 200, 300, 400 };
-		ArrayList<Wall> W = new ArrayList<>();
-		int c = (int) (Math.random() * 15) + 1;
-		String bin = Integer.toBinaryString(c);
-		while (bin.length() < 4) {
-			bin = "0".concat(bin);
-		}
-		for (int i = 0; i < bin.length(); i++) {
-			int h = (int) (Math.random() * 750 + 150);
-			int y = -h;
-			if (bin.charAt(i) == '1') {
-				if (checkWallPosition(xCoord[i], y, h)) {
-					Wall wall = new Wall(xCoord[i], y, h);
-					W.add(wall);
-					root.getChildren().add(wall.getRect());
-				}
-			}
-		}
-		if (!W.isEmpty()) {
-			WallsOnScreen.add(W);
-		}
-	}
-
-	/**
-	 * Check wall position.
+	 * Gets the coins on screen.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param h the h
-	 * @return true, if successful
+	 * @return the coins on screen
 	 */
-	private boolean checkWallPosition(int x, int y, int h) {
-		// TODO Auto-generated method stub
-		if (MagnetOnScreen != null) {
-			StackPane magnet = MagnetOnScreen.getStack();
-			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getTranslateY());
-			if (x >= magnetPosX - 30 && x <= magnetPosX + 30 && magnetPosY >= y - 20 && magnetPosY < y + h + 20) {
-				return false;
-			}
-		}
-
-		if (DestroyBlockOnScreen != null) {
-			StackPane DB = DestroyBlockOnScreen.getStack();
-			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getTranslateY());
-			if (x >= DBPosX - 30 && x <= DBPosX + 30 && DBPosY >= y - 20 && DBPosY < y + h + 20) {
-				return false;
-			}
-		}
-
-		if (ShieldOnScreen != null) {
-			StackPane shield = ShieldOnScreen.getStack();
-			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getTranslateY());
-			if (x >= shieldPosX - 30 && x <= shieldPosX + 30 && shieldPosY >= y - 20 && shieldPosY < y + h + 20) {
-				return false;
-			}
-		}
-		return true;
+	public ArrayList<ArrayList<Coin>> getCoinsOnScreen() {
+		return CoinsOnScreen;
 	}
 
 	/**
-	 * Check token scroll.
-	 */
-	public void checkTokenScroll() {
-		// TODO Auto-generated method stub
-
-		if (MagnetOnScreen != null) {
-			StackPane magnet = MagnetOnScreen.getStack();
-			if (magnet.getTranslateY() >= 1400) {
-				MagnetOnScreen = null;
-			}
-		}
-
-		if (ShieldOnScreen != null) {
-			StackPane shield = ShieldOnScreen.getStack();
-			if (shield.getTranslateY() >= 1400) {
-				ShieldOnScreen = null;
-			}
-		}
-
-		if (DestroyBlockOnScreen != null) {
-			StackPane destroyBlock = DestroyBlockOnScreen.getStack();
-			if (destroyBlock.getTranslateY() >= 1400) {
-				DestroyBlockOnScreen = null;
-			}
-		}
-
-		if (MagnetOnScreen == null && ShieldOnScreen == null && DestroyBlockOnScreen == null) {
-			int c = (int) (Math.random() * 3);
-			if (c == 0) {
-				setMagnet(-1000);
-			}
-			if (c == 1) {
-				setDB(-1000);
-			}
-			if (c == 2) {
-				setShield(-1000);
-			}
-		}
-	}
-
-	/**
-	 * Sets the magnet.
+	 * Sets the coins on screen.
 	 *
-	 * @param distance the new magnet
+	 * @param coinsOnScreen the new coins on screen
 	 */
-	public void setMagnet(int distance) {
-		// TODO Auto-generated method stub
-		int x = (int) (Math.random() * 400 + 7);
-		int y = (int) (distance);
-		Magnet M = new Magnet(x, y, mode);
-		root.getChildren().add(M.getStack());
-		MagnetOnScreen = M;
+	public void setCoinsOnScreen(ArrayList<ArrayList<Coin>> coinsOnScreen) {
+		CoinsOnScreen = coinsOnScreen;
 	}
 
 	/**
-	 * Sets the shield.
+	 * Gets the shield on screen.
 	 *
-	 * @param distance the new shield
+	 * @return the shield on screen
 	 */
-	public void setShield(int distance) {
-		// TODO Auto-generated method stub
-		int x = (int) (Math.random() * 400 + 7);
-		int y = (int) (distance);
-		Shield S = new Shield(x, y, mode);
-		root.getChildren().addAll(S.getStack());
-		ShieldOnScreen = S;
+	public Shield getShieldOnScreen() {
+		return ShieldOnScreen;
 	}
 
 	/**
-	 * Sets the db.
+	 * Sets the shield on screen.
 	 *
-	 * @param distance the new db
+	 * @param shieldOnScreen the new shield on screen
 	 */
-	public void setDB(int distance) {
-		// TODO Auto-generated method stub
-		int x = (int) (Math.random() * 400 + 7);
-		int y = (int) (distance);
-		DestroyBlock DB = new DestroyBlock(x, y, mode);
-		root.getChildren().addAll(DB.getStack());
-		DestroyBlockOnScreen = DB;
+	public void setShieldOnScreen(Shield shieldOnScreen) {
+		ShieldOnScreen = shieldOnScreen;
 	}
 
 	/**
-	 * Check coin scroll.
-	 */
-	private void checkCoinScroll() {
-		if (CoinsOnScreen.size() > 0) {
-			if (!CoinsOnScreen.get(CoinsOnScreen.size() - 1).isEmpty()) {
-				Coin coin1 = CoinsOnScreen.get(CoinsOnScreen.size() - 1).get(0);
-				if ((int) coin1.getStack().getTranslateY() > 280 - (int) coin1.getStack().getLayoutY()) {
-					setCoins(-70);
-				}
-			} else {
-				setCoins(-70);
-			}
-
-			if (!CoinsOnScreen.get(0).isEmpty()) {
-				Coin coin2 = CoinsOnScreen.get(0).get(0);
-				if (coin2.getStack().getTranslateY() >= 1300) {
-					CoinsOnScreen.remove(0);
-				}
-			}
-		} else {
-			setCoins(-70);
-		}
-	}
-
-	/**
-	 * Sets the coins.
+	 * Gets the magnet on screen.
 	 *
-	 * @param dis the new coins
+	 * @return the magnet on screen
 	 */
-	private void setCoins(int dis) {
-		ArrayList<Coin> coinList = new ArrayList<>();
-		int c = (int) (Math.random() * 1 + 1);
-		for (int i = 0; i < c; i++) {
-			int x = (int) (Math.random() * 200 + 15);
-			int y = (int) (dis);
-			while (!checkCoinPosition(x, y, coinList) && y >= -100) {
-				x = (int) (Math.random() * 200 + 15);
-				y = y - 1;
-			}
-			if (y >= -100) {
-				System.out.println("setting");
-				Coin s = new Coin(x, y, mode);
-				coinList.add(s);
-				root.getChildren().add(s.getStack());
-			}
-		}
-		CoinsOnScreen.add(coinList);
+	public Magnet getMagnetOnScreen() {
+		return MagnetOnScreen;
 	}
 
 	/**
-	 * Check coin position.
+	 * Sets the magnet on screen.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param coinList the coin list
-	 * @return true, if successful
+	 * @param magnetOnScreen the new magnet on screen
 	 */
-	private boolean checkCoinPosition(int x, int y, ArrayList<Coin> coinList) {
-
-		for (int j = 0; j < BallsOnScreen.size(); j++) {
-			for (int k = 0; k < BallsOnScreen.get(j).size(); k++) {
-				StackPane ball = BallsOnScreen.get(j).get(k).getPane();
-				int ballPosX = (int) ball.getLayoutX();
-				int ballPosY = (int) (ball.getLayoutY() + ball.getTranslateY());
-				if (x >= ballPosX - 40 && x <= ballPosX + 40 && y >= ballPosY - 40 && y <= ballPosY + 40) {
-					return false;
-				}
-			}
-		}
-
-		for (int j = 0; j < BlockOnScreen.size(); j++) {
-			for (int k = 0; k < BlockOnScreen.get(j).size(); k++) {
-				StackPane block = BlockOnScreen.get(j).get(k).getStack();
-				int blockPosX = (int) block.getLayoutX();
-				int blockPosY = (int) (block.getLayoutY() + block.getTranslateY());
-				if (x >= blockPosX - 20 && x <= blockPosX + 120 && y >= blockPosY - 20 && y <= blockPosY + 120) {
-					return false;
-				}
-			}
-		}
-		for (int j = 0; j < coinList.size(); j++) {
-			float coinPosX = coinList.get(j).getLOCATION_X();
-			float coinPosY = coinList.get(j).getLOCATION_Y();
-			if (x >= coinPosX - 40 && x <= coinPosX + 40 && y >= coinPosY - 40 && y <= coinPosY + 40) {
-				return false;
-			}
-		}
-		for (int j = 0; j < WallsOnScreen.size(); j++) {
-			for (int k = 0; k < WallsOnScreen.get(j).size(); k++) {
-				int wallPosX = (int) WallsOnScreen.get(j).get(k).getLocationX();
-				int wallPosY = (int) (WallsOnScreen.get(j).get(k).getLoactionY()
-						+ WallsOnScreen.get(j).get(k).getRect().getTranslateY());
-				int heightWall = (int) WallsOnScreen.get(j).get(k).getHeight();
-				if (x >= wallPosX - 40 && x <= wallPosX + 40 && y >= wallPosY - 40 && y <= wallPosY + heightWall + 40) {
-					return false;
-				}
-			}
-		}
-
-		if (MagnetOnScreen != null) {
-			StackPane magnet = MagnetOnScreen.getStack();
-			int magnetPosX = (int) magnet.getLayoutX();
-			int magnetPosY = (int) (magnet.getLayoutY() + magnet.getTranslateY());
-			if (x >= magnetPosX - 40 && x <= magnetPosX + 40 && y >= magnetPosY - 40 && y <= magnetPosY + 40) {
-				return false;
-			}
-		}
-
-		if (DestroyBlockOnScreen != null) {
-			StackPane DB = DestroyBlockOnScreen.getStack();
-			int DBPosX = (int) DB.getLayoutX();
-			int DBPosY = (int) (DB.getLayoutY() + DB.getTranslateY());
-			if (x >= DBPosX - 40 && x <= DBPosX + 40 && y >= DBPosY - 40 && y <= DBPosY + 40) {
-				return false;
-			}
-		}
-
-		if (ShieldOnScreen != null) {
-			StackPane shield = ShieldOnScreen.getStack();
-			int shieldPosX = (int) shield.getLayoutX();
-			int shieldPosY = (int) (shield.getLayoutY() + shield.getTranslateY());
-			if (x >= shieldPosX - 40 && x <= shieldPosX + 40 && y >= shieldPosY - 40 && y <= shieldPosY + 40) {
-				return false;
-			}
-		}
-
-		return true;
+	public void setMagnetOnScreen(Magnet magnetOnScreen) {
+		MagnetOnScreen = magnetOnScreen;
 	}
 
 	/**
-	 * Snake intersect block.
+	 * Gets the destroy block on screen.
 	 *
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @return the destroy block on screen
 	 */
-	public void snakeIntersectBlock() throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		if (!end) {
-			try {
-				Circle snakeHead = Snake.getSnakeLength().get(0);
-				for (int i = 0; i < BlockOnScreen.size(); i++) {
-					for (Block block : BlockOnScreen.get(i)) {
-						if (snakeHead.intersects(block.getStack().getBoundsInParent()) && block.isEaten() == false) {
-							if (snakeHead.getCenterX() > block.getStack().getLayoutX() - 10
-									&& snakeHead.getCenterX() < block.getStack().getLayoutX() + 110) {
-								if (!shield) {
-									System.out.println(block.getValue());
-									hitBlock = block;
-									BLOCK_HIT = true;
-									snake.eatBlock(block, this);
-								} else {
-									block.getStack().setVisible(false);
-									block.setEaten(true);
-									updateScore(block.getValue());
-								}
-								if (block.isEaten()) {
-									Bounds blockBounds = block.getStack().getBoundsInParent();
-									PlayBurst(blockBounds, false, block.getColor());
-								}
-							}
-						}
-					}
-				}
-
-			} catch (Exception e) {
-			}
-		}
+	public DestroyBlock getDestroyBlockOnScreen() {
+		return DestroyBlockOnScreen;
 	}
 
 	/**
-	 * Snake intersect ball.
-	 */
-	public void snakeIntersectBall() {
-		// TODO Auto-generated method stub
-		if (!end) {
-			Circle snakeHead = Snake.getSnakeLength().get(0);
-			for (int i = 0; i < BallsOnScreen.size(); i++) {
-				for (Ball ball : BallsOnScreen.get(i)) {
-					if (snakeHead.intersects(ball.getPane().getBoundsInParent()) && !ball.isEaten()) {
-						playerTokensBalls.stop();
-						playerTokensBalls.play();
-						ball.setEaten(true);
-						ball.getPane().setVisible(false);
-						PlayBurst(ball.getPane().getBoundsInParent(), true, Color.YELLOW);
-						int inc = ball.getValue();
-						int L = Snake.getSnakeLength().size();
-						snake.increaseLength(inc, this);
-						for (int j = 0; j < inc; j++) {
-							root.getChildren().add(Snake.getSnakeLength().get(L + j));
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Snake intersects DB.
-	 */
-	public void snakeIntersectsDB() {
-		if (!end) {
-			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (DestroyBlockOnScreen != null
-					&& snakeHead.intersects(DestroyBlockOnScreen.getStack().getBoundsInParent())) {
-				for (int i = 0; i < BlockOnScreen.size(); i++) {
-					for (Block block : BlockOnScreen.get(i)) {
-						int y = (int) (block.getStack().getTranslateY() + block.getStack().getLayoutY());
-						if (y > 0 && y < 1000 && !block.isEaten()) {
-							playerTokensBalls.stop();
-							playerTokensBalls.play();
-							block.getStack().setVisible(false);
-							block.setEaten(true);
-							updateScore(block.getValue());
-							PlayBurst(block.getStack().getBoundsInParent(), true, block.getColor());
-						}
-					}
-				}
-				DestroyBlockOnScreen.getStack().setVisible(false);
-				PlayBurst(DestroyBlockOnScreen.getStack().getBoundsInParent(), false, null);
-			}
-		}
-	}
-
-	/**
-	 * Snake intersects shield.
-	 */
-	public void snakeIntersectsShield() {
-		if (!end) {
-			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (ShieldOnScreen != null && snakeHead.intersects(ShieldOnScreen.getStack().getBoundsInParent())
-					&& ShieldOnScreen.getStack().isVisible()) {
-				shield = true;
-				ShieldOnScreen.getStack().setVisible(false);
-				timerLabel.setVisible(true);
-				IntegerProperty timeSeconds = new SimpleIntegerProperty(ShieldTimer);
-				timerLabel.textProperty().bind(timeSeconds.asString());
-				Timer timer = new Timer();
-				TimerTask task = new TimerTask() {
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						Timeline timeline = new Timeline();
-						timeline.getKeyFrames()
-								.add(new KeyFrame(Duration.seconds(ShieldTimer), new KeyValue(timeSeconds, -2)));
-						timeline.playFromStart();
-						if (end) {
-							timer.cancel();
-						}
-					}
-				};
-				timer.scheduleAtFixedRate(task, 0, 1000);
-				TimerTask taskEnd = new TimerTask() {
-					public void run() {
-						playerTokensBalls.stop();
-						playerTokensBalls.play();
-						shield = false;
-						snake.originalColors();
-						timerLabel.setVisible(false);
-						PlayBurst(ShieldOnScreen.getStack().getBoundsInParent(), true, null);
-						timer.cancel();
-					}
-
-				};
-
-				timer.schedule(taskEnd, (long) (ShieldTimer * 1000));
-			}
-		}
-	}
-
-	/**
-	 * Snake intersects magnet.
-	 */
-	public void snakeIntersectsMagnet() {
-		if (!end) {
-			Circle snakeHead = Snake.getSnakeLength().get(0);
-			if (MagnetOnScreen != null && snakeHead.intersects(MagnetOnScreen.getStack().getBoundsInParent())
-					&& MagnetOnScreen.getStack().isVisible()) {
-				playerTokensBalls.stop();
-				playerTokensBalls.play();
-				MagnetOnScreen.getStack().setVisible(false);
-				PlayBurst(MagnetOnScreen.getStack().getBoundsInParent(), true, null);
-				CoinAttractionAnimation();
-				timerLabel.setVisible(true);
-				IntegerProperty timeSeconds = new SimpleIntegerProperty(MagnetTimer);
-				timerLabel.textProperty().bind(timeSeconds.asString());
-				Timer timer = new Timer();
-				TimerTask task = new TimerTask() {
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						Timeline timeline = new Timeline();
-						timeline.getKeyFrames()
-								.add(new KeyFrame(Duration.seconds(MagnetTimer), new KeyValue(timeSeconds, -2)));
-						timeline.playFromStart();
-					}
-				};
-				timer.scheduleAtFixedRate(task, 0, 1000);
-				TimerTask taskEnd = new TimerTask() {
-					public void run() {
-						timerLabel.setVisible(false);
-						timer.cancel();
-					}
-				};
-				timer.schedule(taskEnd, (long) (MagnetTimer * 1000));
-			}
-		}
-	}
-
-	/**
-	 * Snake intersect coin.
-	 */
-	public void snakeIntersectCoin() {
-		if (!end) {
-			Circle snakeHead = Snake.getSnakeLength().get(0);
-			for (int i = 0; i < CoinsOnScreen.size(); i++) {
-				for (int j = 0; j < CoinsOnScreen.get(i).size(); j++) {
-					Coin coin = CoinsOnScreen.get(i).get(j);
-					if (snakeHead.intersects(coin.getStack().getBoundsInParent()) && !coin.isEaten()) {
-						coin.getStack().setVisible(false);
-						coin.setEaten(true);
-						PlayBurst(coin.getStack().getBoundsInParent(), true, Color.YELLOW);
-						playerTokensBalls.stop();
-						playerTokensBalls.play();
-						updateCoin(1);
-						bonusCoin++;
-					}
-				}
-			}
-		}
-
-	}
-
-	/**
-	 * Gets the root.
+	 * Sets the destroy block on screen.
 	 *
-	 * @return the root
+	 * @param destroyBlockOnScreen the new destroy block on screen
 	 */
-	public Group getRoot() {
-		return root;
+	public void setDestroyBlockOnScreen(DestroyBlock destroyBlockOnScreen) {
+		DestroyBlockOnScreen = destroyBlockOnScreen;
 	}
 
 	/**
-	 * Sets the block hit.
+	 * Gets the snake.
 	 *
-	 * @param b the new block hit
+	 * @return the snake
 	 */
-	public void setBlockHit(boolean b) {
-		BLOCK_HIT = b;
+	public Snake getSnake() {
+		return snake;
+	}
+
+	/**
+	 * Sets the snake.
+	 *
+	 * @param snake the new snake
+	 */
+	public void setSnake(Snake snake) {
+		this.snake = snake;
+	}
+
+	/**
+	 * Gets the score.
+	 *
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * Sets the score.
+	 *
+	 * @param score the new score
+	 */
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	/**
+	 * Gets the velocity.
+	 *
+	 * @return the velocity
+	 */
+	public double getVelocity() {
+		return velocity;
+	}
+
+	/**
+	 * Sets the velocity.
+	 *
+	 * @param v the new velocity
+	 */
+	public void setVelocity(double v) {
+		this.velocity = v;
+	}
+
+	/**
+	 * Update velocity.
+	 *
+	 * @param inc the inc
+	 */
+	public void updateVelocity(double inc) {
+		this.velocity = velocity + inc;
+	}
+
+	/**
+	 * Gets the score label.
+	 *
+	 * @return the score label
+	 */
+	public Text getScoreLabel() {
+		return scoreLabel;
+	}
+
+	/**
+	 * Sets the score label.
+	 *
+	 * @param scoreLabel the new score label
+	 */
+	public void setScoreLabel(Text scoreLabel) {
+		this.scoreLabel = scoreLabel;
+	}
+
+	/**
+	 * Gets the coin label.
+	 *
+	 * @return the coin label
+	 */
+	public Text getCoinLabel() {
+		return coinLabel;
+	}
+
+	/**
+	 * Sets the coin label.
+	 *
+	 * @param coinLabel the new coin label
+	 */
+	public void setCoinLabel(Text coinLabel) {
+		this.coinLabel = coinLabel;
+	}
+
+	/**
+	 * Gets the length label.
+	 *
+	 * @return the length label
+	 */
+	public Text getLengthLabel() {
+		return lengthLabel;
+	}
+
+	/**
+	 * Sets the length label.
+	 *
+	 * @param lengthLabel the new length label
+	 */
+	public void setLengthLabel(Text lengthLabel) {
+		this.lengthLabel = lengthLabel;
+	}
+
+	/**
+	 * Gets the timer label.
+	 *
+	 * @return the timer label
+	 */
+	public Label getTimerLabel() {
+		return timerLabel;
+	}
+
+	/**
+	 * Sets the timer label.
+	 *
+	 * @param timerLabel the new timer label
+	 */
+	public void setTimerLabel(Label timerLabel) {
+		this.timerLabel = timerLabel;
+	}
+
+	/**
+	 * Gets the drop down menu.
+	 *
+	 * @return the drop down menu
+	 */
+	public ChoiceBox<String> getDropDownMenu() {
+		return dropDownMenu;
+	}
+
+	/**
+	 * Sets the drop down menu.
+	 *
+	 * @param dropDownMenu the new drop down menu
+	 */
+	public void setDropDownMenu(ChoiceBox<String> dropDownMenu) {
+		this.dropDownMenu = dropDownMenu;
 	}
 
 	/**
@@ -1886,30 +621,37 @@ public class Main extends Application {
 	/**
 	 * Sets the hit block.
 	 *
-	 * @param b the new hit block
+	 * @param hitBlock the new hit block
 	 */
-	public void setHitBlock(Block b) {
-		hitBlock = b;
+	public void setHitBlock(Block hitBlock) {
+		this.hitBlock = hitBlock;
 	}
 
 	/**
-	 * Sets the velocity.
+	 * Checks if is shield.
 	 *
-	 * @param inc the new velocity
+	 * @return true, if is shield
 	 */
-	public void setVelocity(double inc) {
-		if (velocity < 8.5) {
-			velocity += inc;
-		}
+	public boolean isShield() {
+		return shield;
 	}
 
 	/**
-	 * Gets the score.
+	 * Sets the shield.
 	 *
-	 * @return the score
+	 * @param shield the new shield
 	 */
-	public int getScore() {
-		return score;
+	public void setShield(boolean shield) {
+		this.shield = shield;
+	}
+
+	/**
+	 * Checks if is end.
+	 *
+	 * @return true, if is end
+	 */
+	public boolean isEnd() {
+		return end;
 	}
 
 	/**
@@ -1922,12 +664,435 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Sets the score.
+	 * Checks if is block hit.
 	 *
-	 * @param score the new score
+	 * @return true, if is block hit
 	 */
-	public void setScore(int score) {
-		this.score = score;
+	public boolean isBLOCK_HIT() {
+		return BLOCK_HIT;
+	}
+
+	/**
+	 * Sets the block hit.
+	 *
+	 * @param bLOCK_HIT the new block hit
+	 */
+	public void setBLOCK_HIT(boolean bLOCK_HIT) {
+		BLOCK_HIT = bLOCK_HIT;
+	}
+
+	/**
+	 * Checks if is restart.
+	 *
+	 * @return true, if is restart
+	 */
+	public boolean isRestart() {
+		return restart;
+	}
+
+	/**
+	 * Sets the restart.
+	 *
+	 * @param restart the new restart
+	 */
+	public void setRestart(boolean restart) {
+		this.restart = restart;
+	}
+
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
+	 */
+	public Group getRoot() {
+		return root;
+	}
+
+	/**
+	 * Sets the root.
+	 *
+	 * @param root the new root
+	 */
+	public void setRoot(Group root) {
+		this.root = root;
+	}
+
+	/**
+	 * Gets the scene.
+	 *
+	 * @return the scene
+	 */
+	public Scene getScene() {
+		return scene;
+	}
+
+	/**
+	 * Sets the scene.
+	 *
+	 * @param scene the new scene
+	 */
+	public void setScene(Scene scene) {
+		this.scene = scene;
+	}
+
+	/**
+	 * Gets the stage.
+	 *
+	 * @return the stage
+	 */
+	public static Stage getStage() {
+		return stage;
+	}
+
+	/**
+	 * Sets the stage.
+	 *
+	 * @param stage the new stage
+	 */
+	public static void setStage(Stage stage) {
+		Main.stage = stage;
+	}
+
+	/**
+	 * Gets the bonus coin.
+	 *
+	 * @return the bonus coin
+	 */
+	public static int getBonusCoin() {
+		return bonusCoin;
+	}
+
+	/**
+	 * Sets the bonus coin.
+	 *
+	 * @param bonusCoin the new bonus coin
+	 */
+	public static void setBonusCoin(int bonusCoin) {
+		Main.bonusCoin = bonusCoin;
+	}
+
+	/**
+	 * Gets the tempscore.
+	 *
+	 * @return the tempscore
+	 */
+	public static int getTempscore() {
+		return tempscore;
+	}
+
+	/**
+	 * Sets the tempscore.
+	 *
+	 * @param tempscore the new tempscore
+	 */
+	public static void setTempscore(int tempscore) {
+		Main.tempscore = tempscore;
+	}
+
+	/**
+	 * Gets the mode.
+	 *
+	 * @return the mode
+	 */
+	public static int getMode() {
+		return mode;
+	}
+
+	/**
+	 * Sets the mode.
+	 *
+	 * @param mode the new mode
+	 */
+	public static void setMode(int mode) {
+		Main.mode = mode;
+	}
+
+	/**
+	 * Gets the color ball.
+	 *
+	 * @return the color ball
+	 */
+	public static Color getColorBall() {
+		return colorBall;
+	}
+
+	/**
+	 * Sets the color ball.
+	 *
+	 * @param colorBall the new color ball
+	 */
+	public static void setColorBall(Color colorBall) {
+		Main.colorBall = colorBall;
+	}
+
+	/**
+	 * Gets the shield timer.
+	 *
+	 * @return the shield timer
+	 */
+	public static int getShieldTimer() {
+		return ShieldTimer;
+	}
+
+	/**
+	 * Sets the shield timer.
+	 *
+	 * @param shieldTimer the new shield timer
+	 */
+	public static void setShieldTimer(int shieldTimer) {
+		ShieldTimer = shieldTimer;
+	}
+
+	/**
+	 * Gets the magnet timer.
+	 *
+	 * @return the magnet timer
+	 */
+	public static int getMagnetTimer() {
+		return MagnetTimer;
+	}
+
+	/**
+	 * Sets the magnet timer.
+	 *
+	 * @param magnetTimer the new magnet timer
+	 */
+	public static void setMagnetTimer(int magnetTimer) {
+		MagnetTimer = magnetTimer;
+	}
+
+	/**
+	 * Gets the ball factory.
+	 *
+	 * @return the ball factory
+	 */
+	public BallFactory getBallFactory() {
+		return ballFactory;
+	}
+
+	/**
+	 * Sets the ball factory.
+	 *
+	 * @param ballFactory the new ball factory
+	 */
+	public void setBallFactory(BallFactory ballFactory) {
+		this.ballFactory = ballFactory;
+	}
+
+	/**
+	 * Gets the wall factory.
+	 *
+	 * @return the wall factory
+	 */
+	public WallFactory getWallFactory() {
+		return wallFactory;
+	}
+
+	/**
+	 * Sets the wall factory.
+	 *
+	 * @param wallFactory the new wall factory
+	 */
+	public void setWallFactory(WallFactory wallFactory) {
+		this.wallFactory = wallFactory;
+	}
+
+	/**
+	 * Gets the block factory.
+	 *
+	 * @return the block factory
+	 */
+	public BlockFactory getBlockFactory() {
+		return blockFactory;
+	}
+
+	/**
+	 * Sets the block factory.
+	 *
+	 * @param blockFactory the new block factory
+	 */
+	public void setBlockFactory(BlockFactory blockFactory) {
+		this.blockFactory = blockFactory;
+	}
+
+	/**
+	 * Gets the coin factory.
+	 *
+	 * @return the coin factory
+	 */
+	public CoinFactory getCoinFactory() {
+		return coinFactory;
+	}
+
+	/**
+	 * Sets the coin factory.
+	 *
+	 * @param coinFactory the new coin factory
+	 */
+	public void setCoinFactory(CoinFactory coinFactory) {
+		this.coinFactory = coinFactory;
+	}
+
+	/**
+	 * Gets the token factory.
+	 *
+	 * @return the token factory
+	 */
+	public TokenFactory getTokenFactory() {
+		return tokenFactory;
+	}
+
+	/**
+	 * Sets the token factory.
+	 *
+	 * @param tokenFactory the new token factory
+	 */
+	public void setTokenFactory(TokenFactory tokenFactory) {
+		this.tokenFactory = tokenFactory;
+	}
+
+	/**
+	 * Gets the labels.
+	 *
+	 * @return the labels
+	 */
+	public Labels getLabels() {
+		return labels;
+	}
+
+	/**
+	 * Sets the labels.
+	 *
+	 * @param labels the new labels
+	 */
+	public void setLabels(Labels labels) {
+		this.labels = labels;
+	}
+
+	/**
+	 * Gets the game state.
+	 *
+	 * @return the game state
+	 */
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	/**
+	 * Sets the game state.
+	 *
+	 * @param gameState the new game state
+	 */
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+	/**
+	 * Gets the deserializer.
+	 *
+	 * @return the deserializer
+	 */
+	public Deserializer getDeserializer() {
+		return deserializer;
+	}
+
+	/**
+	 * Sets the deserializer.
+	 *
+	 * @param deserializer the new deserializer
+	 */
+	public void setDeserializer(Deserializer deserializer) {
+		this.deserializer = deserializer;
+	}
+
+	/**
+	 * Gets the serializer.
+	 *
+	 * @return the serializer
+	 */
+	public Serializer getSerializer() {
+		return serializer;
+	}
+
+	/**
+	 * Sets the serializer.
+	 *
+	 * @param serializer the new serializer
+	 */
+	public void setSerializer(Serializer serializer) {
+		this.serializer = serializer;
+	}
+
+	/**
+	 * Gets the drop down.
+	 *
+	 * @return the drop down
+	 */
+	public DropDown getDropDown() {
+		return dropDown;
+	}
+
+	/**
+	 * Sets the drop down.
+	 *
+	 * @param dropDown the new drop down
+	 */
+	public void setDropDown(DropDown dropDown) {
+		this.dropDown = dropDown;
+	}
+
+	/**
+	 * Gets the snake motion.
+	 *
+	 * @return the snake motion
+	 */
+	public SnakeMotion getSnakeMotion() {
+		return snakeMotion;
+	}
+
+	/**
+	 * Sets the snake motion.
+	 *
+	 * @param snakeMotion the new snake motion
+	 */
+	public void setSnakeMotion(SnakeMotion snakeMotion) {
+		this.snakeMotion = snakeMotion;
+	}
+
+	/**
+	 * Gets the burst animation.
+	 *
+	 * @return the burst animation
+	 */
+	public burstAnimation getBurstAnimation() {
+		return BurstAnimation;
+	}
+
+	/**
+	 * Sets the burst animation.
+	 *
+	 * @param burstAnimation the new burst animation
+	 */
+	public void setBurstAnimation(burstAnimation burstAnimation) {
+		BurstAnimation = burstAnimation;
+	}
+
+	/**
+	 * Gets the magnet handler.
+	 *
+	 * @return the magnet handler
+	 */
+	public MagnetHandler getMagnetHandler() {
+		return magnetHandler;
+	}
+
+	/**
+	 * Sets the magnet handler.
+	 *
+	 * @param magnetHandler the new magnet handler
+	 */
+	public void setMagnetHandler(MagnetHandler magnetHandler) {
+		this.magnetHandler = magnetHandler;
 	}
 
 	/**
@@ -1938,5 +1103,4 @@ public class Main extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

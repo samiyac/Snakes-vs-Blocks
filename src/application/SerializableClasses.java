@@ -106,6 +106,7 @@ class SerializableWall implements Serializable {
 	public Wall constructWall(Main main) {
 		Wall wall = new Wall(LOCATION_X, LOCATION_Y, Translate_Y, height);
 		main.getRoot().getChildren().add(wall.getRect());
+		System.out.println("wall set");
 		return wall;
 	}
 }
@@ -154,6 +155,7 @@ class SerializableSnake implements Serializable {
 	 * @return the snake
 	 */
 	public Snake constructSnake(Main main) {
+		System.out.println(length+" length");
 		Snake snake = new Snake(length, LOCATION_X, LOCATION_Y, snakeHeadPosX, radius, color, main);
 		return snake;
 	}
@@ -433,6 +435,7 @@ public class SerializableClasses {
 		for (int i = 0; i < serializableWalls.size(); i++) {
 			walls.add(new ArrayList<Wall>());
 			for (SerializableWall sWall : serializableWalls.get(i)) {
+				System.out.println("walls");
 				Wall temp = sWall.constructWall(main);
 				walls.get(i).add(temp);
 			}
