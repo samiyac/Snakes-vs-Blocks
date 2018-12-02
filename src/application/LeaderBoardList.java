@@ -32,7 +32,7 @@ public class LeaderBoardList implements Serializable {
 	}
 
 	/**
-	 * Serialise.
+	 * Serialise the leader board list.
 	 */
 	public void serialise() {
 
@@ -48,7 +48,7 @@ public class LeaderBoardList implements Serializable {
 	}
 
 	/**
-	 * Deserialise.
+	 * Deserialise the leader board list 
 	 *
 	 * @return the array list
 	 */
@@ -68,12 +68,13 @@ public class LeaderBoardList implements Serializable {
 	}
 
 	/**
-	 * The Class sortList.
+	 * The Class sortList , to sort the list according to scores.
 	 */
 	private class sortList implements Comparator<Node> {
 
 		/* (non-Javadoc)
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 * Comparator function compare to check score 
 		 */
 		@Override
 		public int compare(Node n1, Node n2) {
