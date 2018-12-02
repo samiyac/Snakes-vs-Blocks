@@ -97,7 +97,7 @@ public class burstAnimation {
 		final long duration = java.time.Duration.ofSeconds(10).toNanos();
 		
 		/** The side. */
-		final int side = 150;
+		final int side = 100;
 		
 		/** The radius. */
 		final double radius = Math.sqrt(2) * side;
@@ -150,7 +150,7 @@ public class burstAnimation {
 				public void handle(long now) {
 					// TODO Auto-generated method stub
 					k++;
-					if (k < 800) {
+					if (k < 500) {
 						for (int i = 0; i < 50; i++) {
 							Rectangle rect = rectangles[i];
 							long time = (now - delays.get(i)) % duration;

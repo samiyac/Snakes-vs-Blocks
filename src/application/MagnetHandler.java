@@ -43,7 +43,7 @@ public class MagnetHandler {
 	public void CoinAttractionAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.5), new CoinAttractionHandler());
 		Timeline timeline = new Timeline(kf);
-		timeline.setCycleCount(6);
+		timeline.setCycleCount(main.getMagnetTimer()+1);
 		timeline.play();
 		if (main.isEnd()) {
 			timeline.stop();
