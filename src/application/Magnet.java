@@ -18,9 +18,9 @@ class Magnet extends Token {
 	/**
 	 * Instantiates a new magnet.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param mode the mode
+	 * @param x the position x
+	 * @param y the position y
+	 * @param mode the Game mode
 	 */
 	public Magnet(float x, float y, int mode) {
 		super(x, y, mode);
@@ -45,11 +45,11 @@ class Magnet extends Token {
 	/**
 	 * Instantiates a new magnet.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @param translate_Y the translate Y
-	 * @param mode the mode
-	 * @param img the img
+	 * @param mode the Game mode
+	 * @param img the image source
 	 */
 	public Magnet(float x, float y, double translate_Y, int mode, String img) {
 		// TODO Auto-generated constructor stub
