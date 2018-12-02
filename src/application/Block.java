@@ -42,11 +42,11 @@ public class Block {
 	 *
 	 * @param LOCATION_X the location x
 	 * @param LOCATION_Y the location y
-	 * @param w the w
-	 * @param h the h
+	 * @param w the width
+	 * @param h the height
 	 * @param color the color
-	 * @param val the val
-	 * @param text the text
+	 * @param val the weight of the block
+	 * @param text the text on the block
 	 */
 	public Block(int LOCATION_X, int LOCATION_Y, int w, int h, Color color, int val, Text text) {
 		this.LOCATION_X = LOCATION_X;
@@ -74,10 +74,10 @@ public class Block {
 	 * @param height the height
 	 * @param color the color
 	 * @param val the val
-	 * @param eaten the eaten
-	 * @param lOCATION_X the l OCATIO N X
-	 * @param lOCATION_Y the l OCATIO N Y
-	 * @param translate_Y the translate Y
+	 * @param eaten if is eaten
+	 * @param lOCATION_X the lOCATION X
+	 * @param lOCATION_Y the lOCATION Y
+	 * @param translate_Y the translateY
 	 */
 	public Block(int width, int height, String color, int val, boolean eaten, int lOCATION_X, int lOCATION_Y,
 			double translate_Y) {
@@ -152,7 +152,7 @@ public class Block {
 	/**
 	 * Sets the eaten.
 	 *
-	 * @param eaten the new eaten
+	 * @param eaten to set the block as eaten or not 
 	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;
@@ -188,7 +188,7 @@ public class Block {
 	/**
 	 * Update value.
 	 *
-	 * @param v the v
+	 * @param v the updated value
 	 */
 	public void updateValue(int v) {
 		this.value = v;

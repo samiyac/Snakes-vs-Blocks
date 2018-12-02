@@ -9,7 +9,7 @@ import javafx.scene.layout.StackPane;
  */
 class Coin extends Token {
 	
-	/** The image src. */
+	/** The image source. */
 	private final String IMAGE_SRC;
 	
 	/** The stack. */
@@ -21,8 +21,8 @@ class Coin extends Token {
 	/**
 	 * Instantiates a new coin.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @param mode the mode
 	 */
 	public Coin(float x, float y, int mode) {
@@ -50,12 +50,12 @@ class Coin extends Token {
 	/**
 	 * Instantiates a new coin.
 	 *
-	 * @param lOCATION_X the l OCATIO N X
-	 * @param lOCATION_Y the l OCATIO N Y
+	 * @param lOCATION_X the lOCATION X
+	 * @param lOCATION_Y the lOCATION Y
 	 * @param translate_Y the translate Y
-	 * @param eaten2 the eaten 2
-	 * @param mode the mode
-	 * @param img the img
+	 * @param eaten2 if the coin is eaten
+	 * @param mode the Game mode
+	 * @param img the image source
 	 */
 	public Coin(float lOCATION_X, float lOCATION_Y, double translate_Y, boolean eaten2, int mode, String img) {
 		// TODO Auto-generated constructor stub
@@ -99,7 +99,7 @@ class Coin extends Token {
 	/**
 	 * Sets the eaten.
 	 *
-	 * @param eaten the new eaten
+	 * @param eaten sets if the coin is eaten
 	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;

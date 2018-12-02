@@ -18,9 +18,9 @@ class DestroyBlock extends Token {
 	/**
 	 * Instantiates a new destroy block.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param mode the mode
+	 * @param x the position x
+	 * @param y the position y
+	 * @param mode the Game mode
 	 */
 	public DestroyBlock(float x, float y, int mode) {
 		super(x, y, mode);
@@ -45,10 +45,10 @@ class DestroyBlock extends Token {
 	/**
 	 * Instantiates a new destroy block.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @param translate_Y the translate Y
-	 * @param mode the mode
+	 * @param mode the Game mode
 	 * @param img the img
 	 */
 	public DestroyBlock(float x, float y, double translate_Y, int mode, String img) {

@@ -23,20 +23,20 @@ public class Ball extends Token {
 	/** The value. */
 	private final int value;
 	
-	/** The eaten. */
+	/** The eaten , true if the block is eaten. */
 	private boolean eaten = false;
 	
-	/** The Pane. */
+	/** The StackPane. */
 	private final StackPane Pane = new StackPane();
 
 	/**
 	 * Instantiates a new ball.
 	 *
-	 * @param xpos the xpos
-	 * @param ypos the ypos
+	 * @param xpos the xposition
+	 * @param ypos the yposition
 	 * @param radius the radius
 	 * @param color the color
-	 * @param mode the mode
+	 * @param mode the Gamemode
 	 */
 	public Ball(float xpos, float ypos, float radius, Color color, int mode) {
 		super(xpos, ypos, mode);
@@ -53,14 +53,14 @@ public class Ball extends Token {
 	/**
 	 * Instantiates a new ball.
 	 *
-	 * @param lOCATION_X the l OCATIO N X
-	 * @param lOCATION_Y the l OCATIO N Y
-	 * @param translateY the translate Y
+	 * @param lOCATION_X the lOCATIONX
+	 * @param lOCATION_Y the lOCATIONY
+	 * @param translateY the translateY
 	 * @param radius the radius
 	 * @param color the color
 	 * @param eaten the eaten
 	 * @param value the value
-	 * @param mode the mode
+	 * @param mode the Gamemode
 	 */
 	public Ball(float lOCATION_X, float lOCATION_Y, double translateY, float radius, String color, boolean eaten,
 			int value, int mode) {
@@ -92,7 +92,7 @@ public class Ball extends Token {
 	/**
 	 * Sets the eaten.
 	 *
-	 * @param eaten the new eaten
+	 * @param sets the ball as eaten
 	 */
 	public void setEaten(boolean eaten) {
 		this.eaten = eaten;

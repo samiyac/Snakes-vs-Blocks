@@ -95,7 +95,7 @@ public class BlockFactory {
 	/**
 	 * Sets the blocks.
 	 *
-	 * @param distance the new blocks
+	 * @param distance the distance after which new blocks are created 
 	 */
 	public void setBlocks(int distance) {
 		System.out.println("setting blocks");
@@ -195,8 +195,8 @@ public class BlockFactory {
 	/**
 	 * Check block position.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @return true, if successful
 	 */
 	private boolean checkBlockPosition(int x, int y) {

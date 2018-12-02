@@ -18,7 +18,7 @@ public class Labels {
 	private final Main main;
 
 	/**
-	 * Instantiates a new labels.
+	 * Instantiates a new label.
 	 *
 	 * @param main the main
 	 */

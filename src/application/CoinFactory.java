@@ -119,9 +119,9 @@ public class CoinFactory {
 	/**
 	 * Check coin position.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param coinList the coin list
+	 * @param x the position x
+	 * @param y the position y
+	 * @param coinList the list of coins on screen
 	 * @return true, if successful
 	 */
 	private boolean checkCoinPosition(int x, int y, ArrayList<Coin> coinList) {

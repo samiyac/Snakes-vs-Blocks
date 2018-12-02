@@ -24,12 +24,12 @@ import javafx.util.Duration;
 public class burstAnimation {
 	
 	/** The main. */
-	private Main main;
+	private final Main main;
 	
 	/** The block music. */
 	private final Media blockMusic;
 	
-	/** The player block. */
+	/** The media player. */
 	private final MediaPlayer playerBlock;
 
 	/**
@@ -48,7 +48,7 @@ public class burstAnimation {
 	 * Play burst.
 	 *
 	 * @param bounds the bounds
-	 * @param destroyB the destroy B
+	 * @param destroyB if destroy block or not 
 	 * @param color the color
 	 */
 	public void PlayBurst(Bounds bounds, boolean destroyB, Color color) {
@@ -66,8 +66,8 @@ public class burstAnimation {
 	/**
 	 * Burst animation.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @param color the color
 	 */
 	public void BurstAnimation(double x, double y, Color color) {
@@ -82,10 +82,10 @@ public class burstAnimation {
 	 */
 	private class BurstAnimationHandler implements EventHandler<ActionEvent> {
 
-		/** The x. */
+		/** The position x. */
 		final double x;
 		
-		/** The y. */
+		/** The position y. */
 		final double y;
 		
 		/** The color. */
@@ -112,8 +112,8 @@ public class burstAnimation {
 		/**
 		 * Instantiates a new burst animation handler.
 		 *
-		 * @param x the x
-		 * @param y the y
+		 * @param x the position x
+		 * @param y the position y
 		 * @param color the color
 		 */
 		public BurstAnimationHandler(double x, double y, Color color) {

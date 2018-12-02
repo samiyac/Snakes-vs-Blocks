@@ -114,9 +114,9 @@ public class BallFactory {
 	/**
 	 * Check ball position.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param ballList the ball list
+	 * @param x the poition x
+	 * @param y the position y
+	 * @param ballList the list of balls currently on screen
 	 * @return true, if successful
 	 */
 	private boolean checkBallPosition(int x, int y, ArrayList<Ball> ballList) {

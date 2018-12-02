@@ -27,27 +27,26 @@ import java.util.Stack;
  */
 public class EndGame implements Initializable {
 
-	/** The s. */
+	/** The stage. */
 	Stage s;
 	
 	/** The score. */
 	int score;
 
-	/** The score D. */
+	/** The score Label. */
 	@FXML
 	Label scoreD = new Label();
 
 	/**
 	 * Instantiates a new end game.
 	 *
-	 * @param s the s
-	 * @param n the n
+	 * @param s the stage
+	 * @param n the score
 	 */
 	public EndGame(Stage s, int n) {
 		System.out.println("endgame 1");
 		this.s = s;
 		this.score = n;
-		// scoreD.setText(Integer.toString(n));
 	}
 
 	/**
@@ -125,6 +124,7 @@ public class EndGame implements Initializable {
 
 	/* (non-Javadoc)
 	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
+	 * Initialise the score label
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
