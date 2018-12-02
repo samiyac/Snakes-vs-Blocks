@@ -171,7 +171,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Startpage.
+	 * Load Startpage.
 	 *
 	 * @param primaryStage the primary stage
 	 * @throws Exception the exception
@@ -188,7 +188,7 @@ public class Main extends Application {
 	 * Playgame.
 	 *
 	 * @param s
-	 *            the s
+	 *            the stage
 	 */
 	public final void playgame(Stage s) {
 		if (colorBall == null) {
