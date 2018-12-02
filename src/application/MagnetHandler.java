@@ -34,7 +34,7 @@ public class MagnetHandler {
 	}
 
 	/**
-	 * Coin attraction animation.
+	 * Coin attraction animation , coins move towards the snake.
 	 */
 	public void CoinAttractionAnimation() {
 		KeyFrame kf = new KeyFrame(Duration.seconds(0.5), new CoinAttractionHandler());
