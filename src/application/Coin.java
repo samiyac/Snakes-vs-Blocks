@@ -1,9 +1,12 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Coin.
  */

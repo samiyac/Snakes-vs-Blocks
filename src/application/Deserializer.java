@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -16,7 +20,7 @@ import javafx.scene.paint.Color;
 public class Deserializer {
 
 	/** The main. */
-	private Main main;
+	private final Main main;
 
 	/**
 	 * Instantiates a new deserializer.

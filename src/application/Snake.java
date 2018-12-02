@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.io.File;
@@ -36,16 +40,16 @@ public class Snake extends Circle {
 	/** The color. */
 	private Color color;
 	
-	/** The l. */
+	/** The leader board list. */
 	private LeaderBoardList l = new LeaderBoardList();
 
 	/**
 	 * Instantiates a new snake.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param r the r
-	 * @param col the col
+	 * @param x the position x
+	 * @param y the position y
+	 * @param r the radius
+	 * @param col the colour
 	 */
 	public Snake(int x, int y, double r, Color col)
 
@@ -71,9 +75,9 @@ public class Snake extends Circle {
 	 * Instantiates a new snake.
 	 *
 	 * @param length the length
-	 * @param lOCATION_X the l OCATIO N X
-	 * @param lOCATION_Y the l OCATIO N Y
-	 * @param snakeHeadPosX the snake head pos X
+	 * @param lOCATION_X the lOCATION X
+	 * @param lOCATION_Y the lOCATION Y
+	 * @param snakeHeadPosX the snake head position X
 	 * @param radius the radius
 	 * @param color the color
 	 * @param main the main
@@ -173,7 +177,7 @@ public class Snake extends Circle {
 	}
 
 	/**
-	 * Move R.
+	 * Move Right.
 	 */
 	public void moveR() {
 		for (int i = 0; i < snakeLength.size(); i++) {
@@ -183,7 +187,7 @@ public class Snake extends Circle {
 	}
 
 	/**
-	 * Move L.
+	 * Move Left.
 	 */
 	public void moveL() {
 		for (int i = 0; i < snakeLength.size(); i++) {
@@ -244,7 +248,7 @@ public class Snake extends Circle {
 	}
 
 	/**
-	 * Block less than 5.
+	 * Eat a block with value less than 5.
 	 *
 	 * @param count the count
 	 * @param block the block
@@ -324,7 +328,7 @@ public class Snake extends Circle {
 		int x = main.getScore();
 		String Date = java.time.LocalDate.now().toString();
 		Node n = new Node(x, Date);
-		l.board.add(n);
+		l.getBoard().add(n);
 		l.serialise();
 		File tmpDir = new File("SnakeVsBlock");
 		boolean exists = tmpDir.exists();

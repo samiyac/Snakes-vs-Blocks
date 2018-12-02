@@ -1,3 +1,6 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
 package application;
 
 
@@ -17,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class burstAnimation.
  */

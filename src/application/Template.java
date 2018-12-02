@@ -1,11 +1,21 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,10 +29,13 @@ public class Template implements Initializable {
 
 	/** The coin. */
 	@FXML
-	Label coin = new Label();
+	private Label coin = new Label();
+	
+	/** The s. */
+	private final Stage s = Main.getStage();
 
 	/**
-	 * Start classic.
+	 * Start classic game.
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -40,7 +53,7 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Start christmas.
+	 * Start game with christmas theme.
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -58,7 +71,7 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Start halloween.
+	 * Start game with halloween theme.
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -76,7 +89,7 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Start summer.
+	 * Start game with summer theme.
 	 *
 	 * @throws ClassNotFoundException the class not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -94,31 +107,41 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Increase shield.
+	 * Increase shield timer.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void IncreaseShield() {
+	public void IncreaseShield() throws IOException {
 		if (Main.bonusCoin >= 10) {
 			Main.ShieldTimer = (Main.ShieldTimer + 2);
 			Main.bonusCoin = (Main.bonusCoin - 10);
 			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
 		}
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("bonusCoin"));
+		os.writeObject(Main.getBonusCoin());
+		os.close();
 	}
 
 	/**
-	 * Increase magnet.
+	 * Increase magnet timer.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	@FXML
-	public void IncreaseMagnet() {
+	public void IncreaseMagnet() throws IOException {
 		if (Main.bonusCoin >= 10) {
 			Main.MagnetTimer = (Main.MagnetTimer + 2);
 			Main.bonusCoin = (Main.bonusCoin - 10);
 			coin.setText("Coins : " + Integer.toString(Main.bonusCoin));
 		}
+		ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("bonusCoin"));
+		os.writeObject(Main.getBonusCoin());
+		os.close();
 	}
 
 	/**
-	 * Sets the green.
+	 * Sets the snake as green.
 	 */
 	@FXML
 	public void SetGreen() {
@@ -126,7 +149,7 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Sets the blue.
+	 * Sets the snake as blue.
 	 */
 	@FXML
 	public void SetBlue() {
@@ -134,7 +157,7 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Sets the red.
+	 * Sets the snake as red.
 	 */
 	@FXML
 	public void SetRed() {
@@ -142,12 +165,26 @@ public class Template implements Initializable {
 	}
 
 	/**
-	 * Sets the yellow.
+	 * Sets the snake as yellow.
 	 */
 	@FXML
 	public void SetYellow() {
 		Main.colorBall = Color.web("#f5ee24");
 	}
+	
+	/**
+	 * Return home.
+	 *
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	@FXML 
+	 public void ReturnHome() throws IOException{ 
+		s.setTitle("Snake vs Block");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("StartPage.fxml"));
+		Parent root1 = (Parent) fxmlLoader.load();
+		s.setScene(new Scene(root1));
+		s.show();
+	 }
 
 	/*
 	 * (non-Javadoc)

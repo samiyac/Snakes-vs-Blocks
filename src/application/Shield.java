@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.scene.image.ImageView;
@@ -18,9 +22,9 @@ class Shield extends Token {
 	/**
 	 * Instantiates a new shield.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param mode the mode
+	 * @param x the position x
+	 * @param y the position y
+	 * @param mode the Game mode
 	 */
 	public Shield(float x, float y, int mode) {
 		super(x, y, mode);
@@ -46,10 +50,10 @@ class Shield extends Token {
 	/**
 	 * Instantiates a new shield.
 	 *
-	 * @param x the x
-	 * @param y the y
+	 * @param x the position x
+	 * @param y the position y
 	 * @param translate_Y the translate Y
-	 * @param mode the mode
+	 * @param mode the Game mode
 	 * @param img the img
 	 */
 	public Shield(float x, float y, double translate_Y, int mode, String img) {

@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.application.Application;
@@ -188,7 +192,7 @@ public class Main extends Application {
 	 * Playgame.
 	 *
 	 * @param s
-	 *            the stage
+	 *            the Stage
 	 */
 	public final void playgame(Stage s) {
 		if (colorBall == null) {
@@ -265,7 +269,7 @@ public class Main extends Application {
 	/**
 	 * Close request.
 	 *
-	 * @param s the s
+	 * @param s the Stage
 	 */
 	public void closeRequest(Stage s) {
 		s.setOnCloseRequest(event -> {
@@ -293,7 +297,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Checks if is wall.
+	 * Checks if snake is trying to cross wall.
 	 *
 	 * @throws InvalidMoveException the invalid move exception
 	 */

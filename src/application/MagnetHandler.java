@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -22,7 +26,7 @@ import javafx.util.Duration;
 public class MagnetHandler {
 
 	/** The main. */
-	private Main main;
+	private final Main main;
 
 	/**
 	 * Instantiates a new magnet handler.

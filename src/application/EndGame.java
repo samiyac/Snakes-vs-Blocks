@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.application.Application;
@@ -28,10 +32,10 @@ import java.util.Stack;
 public class EndGame implements Initializable {
 
 	/** The stage. */
-	Stage s;
+	final Stage s;
 	
 	/** The score. */
-	int score;
+	final int score;
 
 	/** The score Label. */
 	@FXML

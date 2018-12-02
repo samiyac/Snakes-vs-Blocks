@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.application.Application;
@@ -30,99 +34,98 @@ import java.util.ResourceBundle;
 public class LeaderBoardDisplay implements Initializable {
 
 	/** The s. */
-	Stage s= Main.getStage();
-	
+	private final Stage s = Main.getStage();
+
 	/**
-	*All labels
-	*/
-	
+	 * All labels
+	 */
+
 	/** The a. */
 	@FXML
-	private Label A = new Label(" ");
-	
+	private final Label A = new Label(" ");
+
 	/** The b. */
 	@FXML
-	private Label B = new Label(" ");
-	
+	private final Label B = new Label(" ");
+
 	/** The c. */
 	@FXML
-	private Label C = new Label(" ");
-	
+	private final Label C = new Label(" ");
+
 	/** The d. */
 	@FXML
-	private Label D = new Label(" ");
-	
+	private final Label D = new Label(" ");
+
 	/** The e. */
 	@FXML
-	private Label E = new Label(" ");
-	
+	private final Label E = new Label(" ");
+
 	/** The f. */
 	@FXML
-	private Label F = new Label(" ");
-	
+	private final Label F = new Label(" ");
+
 	/** The g. */
 	@FXML
-	private Label G = new Label(" ");
-	
+	private final Label G = new Label(" ");
+
 	/** The h. */
 	@FXML
-	private Label H = new Label(" ");
-	
+	private final Label H = new Label(" ");
+
 	/** The i. */
 	@FXML
-	private Label I = new Label(" ");
-	
+	private final Label I = new Label(" ");
+
 	/** The j. */
 	@FXML
-	private Label J = new Label(" ");
-	
+	private final Label J = new Label(" ");
+
 	/** The k. */
 	@FXML
-	private Label K = new Label(" ");
-	
+	private final Label K = new Label(" ");
+
 	/** The l. */
 	@FXML
-	private Label L = new Label(" ");
-	
+	private final Label L = new Label(" ");
+
 	/** The m. */
 	@FXML
-	private Label M = new Label(" ");
-	
+	private final Label M = new Label(" ");
+
 	/** The n. */
 	@FXML
-	private Label N = new Label(" ");
-	
+	private final Label N = new Label(" ");
+
 	/** The o. */
 	@FXML
-	private Label O = new Label(" ");
-	
+	private final Label O = new Label(" ");
+
 	/** The p. */
 	@FXML
-	private Label P = new Label(" ");
-	
+	private final Label P = new Label(" ");
+
 	/** The q. */
 	@FXML
-	private Label Q = new Label(" ");
-	
+	private final Label Q = new Label(" ");
+
 	/** The r. */
 	@FXML
-	private Label R = new Label(" ");
-	
+	private final Label R = new Label(" ");
+
 	/** The s. */
 	@FXML
-	private Label S = new Label(" ");
-	
+	private final Label S = new Label(" ");
+
 	/** The t. */
 	@FXML
-	private Label T = new Label(" ");
-	
+	private final Label T = new Label(" ");
+
 	/** The List. */
-	// private Label B = new Label();
-	ArrayList<Label> List = new ArrayList<>();
-	
+	private final ArrayList<Label> List = new ArrayList<>();
+
 	/** The leaderBoard list with scores and day. */
-	
-	LeaderBoardList l;
+
+	private final LeaderBoardList l;
 
 	/**
 	 * Instantiates a new leader board display.
@@ -150,60 +153,61 @@ public class LeaderBoardDisplay implements Initializable {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see javafx.fxml.Initializable#initialize(java.net.URL, java.util.ResourceBundle)
-	 * To initialise all the labels with scores and date from leaderBoard List
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.fxml.Initializable#initialize(java.net.URL,
+	 * java.util.ResourceBundle)
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		if (l.board.size() > 0) {
-			A.setText(Integer.toString(l.board.get(0).getScore()));
-			B.setText(l.board.get(0).getDate());
+		if (l.getBoard().size() > 0) {
+			A.setText(Integer.toString(l.getBoard().get(0).getScore()));
+			B.setText(l.getBoard().get(0).getDate());
 		}
-		if (l.board.size() > 1) {
-			C.setText(Integer.toString(l.board.get(1).getScore()));
-			D.setText(l.board.get(1).getDate());
+		if (l.getBoard().size() > 1) {
+			C.setText(Integer.toString(l.getBoard().get(1).getScore()));
+			D.setText(l.getBoard().get(1).getDate());
 		}
-		if (l.board.size() > 2) {
-			E.setText(Integer.toString(l.board.get(2).getScore()));
-			F.setText(l.board.get(2).getDate());
+		if (l.getBoard().size() > 2) {
+			E.setText(Integer.toString(l.getBoard().get(2).getScore()));
+			F.setText(l.getBoard().get(2).getDate());
 
 		}
-		if (l.board.size() > 3) {
-			G.setText(Integer.toString(l.board.get(3).getScore()));
-			H.setText(l.board.get(3).getDate());
+		if (l.getBoard().size() > 3) {
+			G.setText(Integer.toString(l.getBoard().get(3).getScore()));
+			H.setText(l.getBoard().get(3).getDate());
 
 		}
-		if (l.board.size() > 4) {
-			I.setText(Integer.toString(l.board.get(4).getScore()));
-			J.setText(l.board.get(4).getDate());
-		}
-		
-		if (l.board.size() > 5) {
-			K.setText(Integer.toString(l.board.get(5).getScore()));
-			L.setText(l.board.get(1).getDate());
-		}
-		if (l.board.size() > 6) {
-			M.setText(Integer.toString(l.board.get(6).getScore()));
-			N.setText(l.board.get(2).getDate());
-
-		}
-		if (l.board.size() > 7) {
-			O.setText(Integer.toString(l.board.get(7).getScore()));
-			P.setText(l.board.get(3).getDate());
-
-		}
-		if (l.board.size() > 8) {
-			Q.setText(Integer.toString(l.board.get(8).getScore()));
-			R.setText(l.board.get(4).getDate());
-		}
-		if (l.board.size() > 9) {
-			S.setText(Integer.toString(l.board.get(9).getScore()));
-			T.setText(l.board.get(4).getDate());
+		if (l.getBoard().size() > 4) {
+			I.setText(Integer.toString(l.getBoard().get(4).getScore()));
+			J.setText(l.getBoard().get(4).getDate());
 		}
 
-		
+		if (l.getBoard().size() > 5) {
+			K.setText(Integer.toString(l.getBoard().get(5).getScore()));
+			L.setText(l.getBoard().get(1).getDate());
+		}
+		if (l.getBoard().size() > 6) {
+			M.setText(Integer.toString(l.getBoard().get(6).getScore()));
+			N.setText(l.getBoard().get(2).getDate());
+
+		}
+		if (l.getBoard().size() > 7) {
+			O.setText(Integer.toString(l.getBoard().get(7).getScore()));
+			P.setText(l.getBoard().get(3).getDate());
+
+		}
+		if (l.getBoard().size() > 8) {
+			Q.setText(Integer.toString(l.getBoard().get(8).getScore()));
+			R.setText(l.getBoard().get(4).getDate());
+		}
+		if (l.getBoard().size() > 9) {
+			S.setText(Integer.toString(l.getBoard().get(9).getScore()));
+			T.setText(l.getBoard().get(4).getDate());
+		}
+
 	}
 
 }

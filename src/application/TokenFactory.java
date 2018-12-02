@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.util.ArrayList;
@@ -114,7 +118,7 @@ public class TokenFactory {
 	/**
 	 * Sets the magnet.
 	 *
-	 * @param distance the new magnet
+	 * @param distance at which the new magnet is created.
 	 */
 	public void setMagnet(int distance) {
 		// TODO Auto-generated method stub
@@ -128,7 +132,7 @@ public class TokenFactory {
 	/**
 	 * Sets the shield.
 	 *
-	 * @param distance the new shield
+	 * @param distance at which the new shield is created.
 	 */
 	public void setShield(int distance) {
 		// TODO Auto-generated method stub
@@ -140,9 +144,9 @@ public class TokenFactory {
 	}
 
 	/**
-	 * Sets the db.
+	 * Sets the Destroy Block.
 	 *
-	 * @param distance the new db
+	 * @param distance at which the new Destroy Block is created.
 	 */
 	public void setDB(int distance) {
 		// TODO Auto-generated method stub

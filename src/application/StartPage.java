@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import javafx.event.ActionEvent;
@@ -16,8 +20,8 @@ import java.io.IOException;
  */
 public class StartPage {
 
-	/** The s. */
-	Stage s;
+	/** The stage. */
+	private final Stage s;
 
 	/**
 	 * Instantiates a new start page.
@@ -27,7 +31,7 @@ public class StartPage {
 	}
 
 	/**
-	 * Show leader.
+	 * Show leaderboard page.
 	 *
 	 * @param event the event
 	 * @throws IOException Signals that an I/O exception has occurred.
@@ -56,7 +60,7 @@ public class StartPage {
 	}
 
 	/**
-	 * Serial game.
+	 * Load old game.
 	 *
 	 * @param event the event
 	 * @throws IOException Signals that an I/O exception has occurred.

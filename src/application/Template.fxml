@@ -52,5 +52,6 @@
       <Circle fx:id="Yellow" fill="#f5eb24" layoutX="298.0" layoutY="871.0" onMouseClicked="#SetYellow" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
       <Button fx:id="Magnet" layoutX="314.0" layoutY="650.0" mnemonicParsing="false" onAction="#IncreaseMagnet" text="For Magnet" />
       <Label fx:id="coin" alignment="CENTER_RIGHT" layoutX="388.0" layoutY="27.0" prefHeight="39.0" prefWidth="90.0" text="Label" textFill="#e4e4e4" />
+      <Button fx:id="home" layoutX="250.0" layoutY="928.0" mnemonicParsing="false" onAction="#ReturnHome" prefHeight="39.0" prefWidth="204.0" text="Return to Main Page" />
    </children>
 </AnchorPane>

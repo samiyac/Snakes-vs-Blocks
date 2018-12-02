@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -16,7 +20,7 @@ import javafx.scene.layout.Background;
 public class DropDown {
 
 	/** The main. */
-	private Main main;
+	private final Main main;
 
 	/**
 	 * Instantiates a new drop down.

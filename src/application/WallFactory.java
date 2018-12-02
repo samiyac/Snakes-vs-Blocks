@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -131,9 +135,9 @@ public class WallFactory {
 	/**
 	 * Check wall position.
 	 *
-	 * @param x the x
-	 * @param y the y
-	 * @param h the h
+	 * @param x the position x
+	 * @param y the position y
+	 * @param h the height
 	 * @return true, if successful
 	 */
 	private boolean checkWallPosition(int x, int y, int h) {

@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.io.Serializable;
@@ -45,8 +49,8 @@ public class Wall implements Serializable {
 	/**
 	 * Instantiates a new wall.
 	 *
-	 * @param lOCATION_X the l OCATIO N X
-	 * @param lOCATION_Y the l OCATIO N Y
+	 * @param lOCATION_X the location X
+	 * @param lOCATION_Y the location Y
 	 * @param translate_Y the translate Y
 	 * @param height the height
 	 */
@@ -80,9 +84,9 @@ public class Wall implements Serializable {
 	}
 
 	/**
-	 * Gets the loaction Y.
+	 * Gets the location Y.
 	 *
-	 * @return the loaction Y
+	 * @return the location Y
 	 */
 	public float getLoactionY() {
 		return LOCATION_Y;

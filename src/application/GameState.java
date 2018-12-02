@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -11,7 +15,7 @@ import java.util.ArrayList;
 public class GameState {
 
 	/** The main. */
-	private Main main;
+	private final Main main;
 
 	/**
 	 * Instantiates a new game state.

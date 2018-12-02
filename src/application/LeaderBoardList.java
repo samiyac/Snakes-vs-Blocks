@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.io.*;
@@ -12,7 +16,7 @@ import java.util.Comparator;
 public class LeaderBoardList implements Serializable {
 
 	/** The board. */
-	ArrayList<Node> board;
+	private final ArrayList<Node> board;
 
 	/**
 	 * Instantiates a new leader board list.
@@ -48,7 +52,7 @@ public class LeaderBoardList implements Serializable {
 	}
 
 	/**
-	 * Deserialise the leader board list 
+	 * Deserialise the leader board list.
 	 *
 	 * @return the array list
 	 */
@@ -74,7 +78,6 @@ public class LeaderBoardList implements Serializable {
 
 		/* (non-Javadoc)
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 * Comparator function compare to check score 
 		 */
 		@Override
 		public int compare(Node n1, Node n2) {
@@ -89,4 +92,12 @@ public class LeaderBoardList implements Serializable {
 
 	}
 
+	/**
+	 * Gets the board.
+	 *
+	 * @return the board
+	 */
+	public ArrayList<Node> getBoard() {
+		return board;
+	}
 }

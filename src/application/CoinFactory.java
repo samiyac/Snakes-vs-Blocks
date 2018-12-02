@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -11,7 +15,6 @@ import javafx.event.EventHandler;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-// TODO: Auto-generated Javadoc
 /**
  * A factory for creating Coin objects.
  */

@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 
@@ -14,7 +18,7 @@ import java.util.ArrayList;
 public class Serializer {
 
 	/** The main. */
-	private Main main;
+	private final Main main;
 
 	/**
 	 * Instantiates a new serializer.
@@ -77,7 +81,7 @@ public class Serializer {
 	}
 	
 	/**
-	 * Serialize.
+	 * Serialize number of coins.
 	 *
 	 * @throws FileNotFoundException the file not found exception
 	 * @throws IOException Signals that an I/O exception has occurred.

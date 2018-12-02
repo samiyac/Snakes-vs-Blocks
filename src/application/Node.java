@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.io.Serializable;
@@ -13,10 +17,10 @@ import java.util.Date;
 public class Node implements Serializable {
 
 	/** The score. */
-	private int score;
+	private final int score;
 	
 	/** The Date. */
-	String Date;
+	private final String Date;
 
 	/**
 	 * Instantiates a new node.
@@ -48,16 +52,7 @@ public class Node implements Serializable {
 	}
 
 	/**
-	 * Sets the score.
-	 *
-	 * @param score the new score
-	 */
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	/**
-	 * Prints the.
+	 * Prints the score with date.
 	 */
 	public void print() {
 		System.out.println(score + "\t\t" + Date);

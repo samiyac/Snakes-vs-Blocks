@@ -1,3 +1,7 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
+
 package application;
 
 import java.io.Serializable;
@@ -24,11 +28,11 @@ abstract public class Token implements Serializable {
 	 * Instantiates a new token.
 	 *
 	 * @param x
-	 *            the x
+	 *            the position x
 	 * @param y
-	 *            the y
+	 *            the position y
 	 * @param mode
-	 *            the mode
+	 *            the Game mode
 	 */
 	public Token(float x, float y, int mode) {
 		LOCATION_X = x;

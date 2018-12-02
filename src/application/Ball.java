@@ -1,3 +1,6 @@
+/*
+ * @author Priya Kaushal and Samiya Caur
+ */
 package application;
 
 import javafx.scene.layout.StackPane;
