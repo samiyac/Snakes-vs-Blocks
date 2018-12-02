@@ -40,83 +40,83 @@ public class LeaderBoardDisplay implements Initializable {
 
 	/** The a. */
 	@FXML
-	private final Label A = new Label(" ");
+	private Label A = new Label(" ");
 
 	/** The b. */
 	@FXML
-	private final Label B = new Label(" ");
+	private Label B = new Label(" ");
 
 	/** The c. */
 	@FXML
-	private final Label C = new Label(" ");
+	private Label C = new Label(" ");
 
 	/** The d. */
 	@FXML
-	private final Label D = new Label(" ");
+	private Label D = new Label(" ");
 
 	/** The e. */
 	@FXML
-	private final Label E = new Label(" ");
+	private Label E = new Label(" ");
 
 	/** The f. */
 	@FXML
-	private final Label F = new Label(" ");
+	private Label F = new Label(" ");
 
 	/** The g. */
 	@FXML
-	private final Label G = new Label(" ");
+	private Label G = new Label(" ");
 
 	/** The h. */
 	@FXML
-	private final Label H = new Label(" ");
+	private Label H = new Label(" ");
 
 	/** The i. */
 	@FXML
-	private final Label I = new Label(" ");
+	private Label I = new Label(" ");
 
 	/** The j. */
 	@FXML
-	private final Label J = new Label(" ");
+	private Label J = new Label(" ");
 
 	/** The k. */
 	@FXML
-	private final Label K = new Label(" ");
+	private Label K = new Label(" ");
 
 	/** The l. */
 	@FXML
-	private final Label L = new Label(" ");
+	private Label L = new Label(" ");
 
 	/** The m. */
 	@FXML
-	private final Label M = new Label(" ");
+	private Label M = new Label(" ");
 
 	/** The n. */
 	@FXML
-	private final Label N = new Label(" ");
+	private Label N = new Label(" ");
 
 	/** The o. */
 	@FXML
-	private final Label O = new Label(" ");
+	private Label O = new Label(" ");
 
 	/** The p. */
 	@FXML
-	private final Label P = new Label(" ");
+	private Label P = new Label(" ");
 
 	/** The q. */
 	@FXML
-	private final Label Q = new Label(" ");
+	private Label Q = new Label(" ");
 
 	/** The r. */
 	@FXML
-	private final Label R = new Label(" ");
+	private Label R = new Label(" ");
 
 	/** The s. */
 	@FXML
-	private final Label S = new Label(" ");
+	private Label S = new Label(" ");
 
 	/** The t. */
 	@FXML
-	private final Label T = new Label(" ");
+	private Label T = new Label(" ");
 
 	/** The List. */
 	private final ArrayList<Label> List = new ArrayList<>();
@@ -138,8 +138,10 @@ public class LeaderBoardDisplay implements Initializable {
 	/**
 	 * Return to start game page.
 	 *
-	 * @param event the event
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @param event
+	 *            the event
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	@FXML
 	protected void returntoMain(ActionEvent event) throws IOException {
@@ -161,49 +163,88 @@ public class LeaderBoardDisplay implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		if (l.getBoard().size() > 0) {
+			System.out.println(l.getBoard().get(0).getDate());
 			A.setText(Integer.toString(l.getBoard().get(0).getScore()));
 			B.setText(l.getBoard().get(0).getDate());
+		}else {
+			A.setText(" ");
+			B.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 1) {
 			C.setText(Integer.toString(l.getBoard().get(1).getScore()));
 			D.setText(l.getBoard().get(1).getDate());
+		} else {
+			C.setText(" ");
+			D.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 2) {
 			E.setText(Integer.toString(l.getBoard().get(2).getScore()));
 			F.setText(l.getBoard().get(2).getDate());
 
+		} else {
+			E.setText(" ");
+			F.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 3) {
 			G.setText(Integer.toString(l.getBoard().get(3).getScore()));
 			H.setText(l.getBoard().get(3).getDate());
 
+		} else {
+			G.setText(" ");
+			H.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 4) {
 			I.setText(Integer.toString(l.getBoard().get(4).getScore()));
 			J.setText(l.getBoard().get(4).getDate());
+		} else {
+			I.setText(" ");
+			J.setText(" ");
 		}
-
+		
 		if (l.getBoard().size() > 5) {
 			K.setText(Integer.toString(l.getBoard().get(5).getScore()));
 			L.setText(l.getBoard().get(1).getDate());
+		} else {
+			K.setText(" ");
+			L.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 6) {
 			M.setText(Integer.toString(l.getBoard().get(6).getScore()));
 			N.setText(l.getBoard().get(2).getDate());
 
+		} else {
+			M.setText(" ");
+			N.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 7) {
 			O.setText(Integer.toString(l.getBoard().get(7).getScore()));
 			P.setText(l.getBoard().get(3).getDate());
 
+		} else {
+			O.setText(" ");
+			P.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 8) {
 			Q.setText(Integer.toString(l.getBoard().get(8).getScore()));
 			R.setText(l.getBoard().get(4).getDate());
+		} else {
+			Q.setText(" ");
+			R.setText(" ");
 		}
+		
 		if (l.getBoard().size() > 9) {
 			S.setText(Integer.toString(l.getBoard().get(9).getScore()));
 			T.setText(l.getBoard().get(4).getDate());
+		} else {
+			S.setText(" ");
+			T.setText(" ");
 		}
 
 	}

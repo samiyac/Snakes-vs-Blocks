@@ -30,6 +30,7 @@ public class LeaderBoardList implements Serializable {
 	 */
 	public void printList() {
 		Collections.sort(board, new sortList());
+		System.out.println("hey");
 		for (int i = 0; i < board.size(); i++) {
 			board.get(i).print();
 		}
@@ -65,6 +66,7 @@ public class LeaderBoardList implements Serializable {
 			ObjectInputStream in = new ObjectInputStream(f);
 			List = (ArrayList<Node>) in.readObject();
 		} catch (Exception e) {
+			List = new ArrayList<Node>();
 		}
 
 		return List;
